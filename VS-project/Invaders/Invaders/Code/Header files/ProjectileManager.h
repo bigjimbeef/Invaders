@@ -7,8 +7,13 @@
 // player- and enemy-based.
 //-----------------------------------------------------------------------------
 
-// Uses STL vector for managing projectiles.
-#include <vector>
+// Uses STL list for managing projectiles.
+#include <list>
+
+#include "Projectile.h"
+
+// Forward declare Game to allow access to Game singleton.
+class Game;
 
 class ProjectileManager
 {
@@ -20,15 +25,18 @@ class ProjectileManager
 		}
 		virtual ~ProjectileManager();
 
-		void Update();
+		void Update(float frameTime);
 
 		void Render();
 
+		// Spawn a projectile. The position and other properties of
+		// the projectile will be detailed in the Projectile itself.
+		void SpawnProjectile(Projectile* proj);
 
 	private:
 
-		std::vector<Projectile*> m_projectiles;
-
+		// A list of all projectiles in the game world.
+		std::list<Projectile*> m_projectiles;
 
 		// Private default ctor to facilitate Singleton pattern.
 		ProjectileManager();

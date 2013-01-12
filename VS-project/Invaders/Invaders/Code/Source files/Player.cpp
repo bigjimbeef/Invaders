@@ -11,9 +11,6 @@ Player::Player(float xPos, float yPos) :
 }
 Player::~Player()
 {
-	// Destroy the player sprite and free its memory.
-	mp_sprite->destroy();
-	delete mp_sprite;
 }
 
 void Player::Init()
@@ -38,4 +35,9 @@ void Player::Move(int direction, float elapsedTime)
 	}
 
 	m_position.x += offset;
+}
+
+void Player::Fire()
+{
+	ProjectileManager::GetInstance().SpawnProjectile(new Rocket());
 }

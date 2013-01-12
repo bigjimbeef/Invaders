@@ -22,24 +22,27 @@ void InputController::HandleInput(float frameTime)
 		// Move the player in negative X.
 		Game::GetInstance().GetPlayer().Move(-1, frameTime);
 	}
-	else if ( keystate.right )
+	
+	if ( keystate.right )
 	{
 		// Move the player in position X.
 		Game::GetInstance().GetPlayer().Move(1, frameTime);
 	}
-	else if ( keystate.fire )
+	
+	if ( keystate.fire )
 	{
 		// We can only shoot again if we've let go of the key.
 		// Don't really want the player to be able to machine gun fire
 		// by just holding down the spacebar!
 		if ( !m_wasFiring)
 		{
-			// Game::GetInstance().GetPlayer()->Fire();
+			// Make the player fire a rocket.
+			Game::GetInstance().GetPlayer().Fire();
 		}
-
-		// Cache whether or not we were firing.
-		m_wasFiring = keystate.fire;
 	}
+
+	// Cache whether or not we were firing.
+	m_wasFiring = keystate.fire;
 
 #ifdef _DEBUG
 	Position playerPos = Game::GetInstance().GetPlayer().GetPosition();

@@ -4,6 +4,8 @@
 // Include our base class.
 #include "Renderable.h"
 
+#include "Rocket.h"
+
 // Forward declare Game to allow access to Game singleton.
 class Game;
 
@@ -26,6 +28,9 @@ class Player : public IRenderable
 		// indicating the cardinality of the X move:
 		//     1 is right, -1 is left.
 		void Move(int direction, float elapsedTime);
+
+		// Controls the player firing a rocket.
+		void Fire();
 
 	private:
 		// The current health of the player.

@@ -3,25 +3,30 @@
 
 //-----------------------------------------------------------------------------
 // Projectile.h
-// The base class for both player and enemy projectiles, which maintains
-// commonality between their functioning.
+// The abstract base class for both player and enemy projectiles, which
+// maintains commonality between their functioning.
 //-----------------------------------------------------------------------------
 
 // Include our base class.
 #include "Renderable.h"
 
-class Projectile : IRenderable
+class Projectile : public IRenderable
 {
 	public:
-		Projectile(float xPos = 0.0f, float yPos = 0.0f);
 		virtual ~Projectile();
 
-		void Update();
+		virtual void Init() { }
+
+		virtual void Update(float frameTime) { }
 
 		// This is an abstract base class. Mark it as such with pure virtual.
 		virtual void IsAbstract() = 0;
 
-	private:
+		//---------------------------------------------------------------------
+		// Accessors
+		virtual inline bool IsAlive() { return m_alive; }
+	
+	protected:
 
 		// Has the projectile hit anything or gone off-screen?
 		bool m_alive;

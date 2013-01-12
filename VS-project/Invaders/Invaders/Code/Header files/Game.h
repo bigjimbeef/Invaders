@@ -13,9 +13,12 @@
 
 #include "InputController.h"
 #include "Player.h"
-#include "Debug.h"
+#include "InputController.h"
+#include "ProjectileManager.h"
 
 #ifdef _DEBUG
+#include "Debug.h"
+
 // Stringstream include, used for converting ints to strings for debugging.
 #include <sstream>
 #endif

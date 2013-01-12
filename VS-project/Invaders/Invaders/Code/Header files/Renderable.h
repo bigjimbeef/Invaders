@@ -14,6 +14,8 @@ struct ISprite;
 class IRenderable
 {
 	public:
+		~IRenderable();
+
 		// This pure virtual function marks this class as an abstract base
 		// class.
 		virtual void IsAbstract() = 0;

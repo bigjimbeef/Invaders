@@ -21,9 +21,8 @@ Game::Game() :
 }
 Game::~Game()
 {
-	// Destroy the game system and tidy its memory.
+	// Destroy the game system.
 	mp_system->destroy();
-	delete mp_system;
 
 	// Tidy up.
 	delete mp_library;
@@ -60,7 +59,11 @@ void Game::Run()
 	// previous iteration of this function loop.
 
 	// TODO: We need to exit if this update function returns false!
-	mp_system->update();
+	if ( !mp_system->update() )
+	{
+		m_gameRunning = false;
+		return;
+	}
 
 	// Use the DiceInvaders library to get the elapsed frame time.
 	float newTime = mp_system->getElapsedTime();
@@ -94,6 +97,7 @@ void Game::Update(float frameTime)
 	// Update the EnemyManager, which will in turn update the Enemies.
 
 	// Update the ProjectileManager, which will in turn update the projectiles.
+	ProjectileManager::GetInstance().Update(frameTime);
 
 	// Update the GameStateManager, which holds score, current wave, etc.
 }
@@ -106,10 +110,12 @@ void Game::Render()
 	// Render the EnemyManager, which will in turn render the Enemies.
 
 	// Render the ProjectileManager, which will in turn render the projectiles.
+	ProjectileManager::GetInstance().Render();
 
 #ifdef _DEBUG
 	// Render the debug text, but only in Debug mode.
-	Debug::GetInstance().Render();
+	// TODO: Maybe reenable Debug.
+	// Debug::GetInstance().Render();
 #endif
 }
 
