@@ -42,6 +42,7 @@ void Player::Move(int direction, float elapsedTime)
 
 void Player::Fire()
 {
+	// We only fire if we don't already have a rocket in motion.
 	if ( mp_rocket == 0 )
 	{
 		mp_rocket = new Rocket();

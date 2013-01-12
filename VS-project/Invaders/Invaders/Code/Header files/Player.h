@@ -35,6 +35,11 @@ class Player : public IRenderable
 		// Removes the player's rocket.
 		inline void KillRocket() { mp_rocket = 0; }
 
+		//---------------------------------------------------------------------
+		// Accessors
+		inline int GetTotalHealth() { return STARTING_HEALTH; }
+		inline int GetCurrentHealth() { return m_health; }
+
 	private:
 		// The current health of the player.
 		int m_health;

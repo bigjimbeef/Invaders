@@ -117,6 +117,9 @@ void Game::Render()
 	// Render the ProjectileManager, which will in turn render the projectiles.
 	ProjectileManager::GetInstance().Render();
 
+	// Render the (rudimentary) UI for the game.
+	GameState::GetInstance().RenderUI();
+
 #ifdef _DEBUG
 	// Render the debug text, but only in Debug mode.
 	// TODO: Maybe reenable Debug.

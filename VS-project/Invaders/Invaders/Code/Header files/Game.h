@@ -15,6 +15,7 @@
 #include "Player.h"
 #include "InputController.h"
 #include "ProjectileManager.h"
+#include "GameState.h"
 
 #define MEMLEAK_DEBUGGING
 #ifdef MEMLEAK_DEBUGGING
@@ -29,6 +30,7 @@
 	   #endif
 	#endif  // _DEBUG
 #endif
+
 
 #ifdef _DEBUG
 #include "Debug.h"
@@ -69,6 +71,7 @@ class Game
 		inline IDiceInvaders& GetSystem() { return *mp_system; }
 		
 		inline int GetScreenWidth() { return SCREEN_WIDTH; }
+		inline int GetScreenHeight() { return SCREEN_HEIGHT; }
 
 	private:
 		// Is the game initialised?
@@ -85,9 +88,9 @@ class Game
 		char* m_libPath;
 		IDiceInvaders* mp_system;
 
-		// Game world size.
-		static const int SCREEN_WIDTH = 800;
-		static const int SCREEN_HEIGHT = 600;
+		// Game world dimensions
+		static const int SCREEN_WIDTH = 640;
+		static const int SCREEN_HEIGHT = 480;
 
 		// The player object.
 		Player* mp_player;
@@ -96,7 +99,7 @@ class Game
 		static const int PLAYER_START_X = ( SCREEN_WIDTH / 2 ) - 16;
 
 		// Sprite height plus a bit more for aesthetic padding.
-		static const int PLAYER_Y_OFFSET = 40; 
+		static const int PLAYER_Y_OFFSET = 80; 
 		static const int PLAYER_START_Y = SCREEN_HEIGHT - PLAYER_Y_OFFSET;
 
 		// Private default ctor to facilitate Singleton pattern.
