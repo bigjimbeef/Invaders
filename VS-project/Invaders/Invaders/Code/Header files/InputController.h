@@ -8,6 +8,7 @@
 
 // Forward declare Game to allow access to Game singleton.
 class Game;
+class Debug;
 
 class InputController
 {

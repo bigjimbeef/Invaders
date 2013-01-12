@@ -21,7 +21,6 @@ class Player : public IRenderable
 		void Init();
 
 		void Update(float frameTime);
-		void Render();
 
 		// Used to the move the player around the screen, with the direction
 		// indicating the cardinality of the X move:

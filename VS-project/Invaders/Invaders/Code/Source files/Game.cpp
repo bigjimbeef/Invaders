@@ -15,7 +15,9 @@ Game::Game() :
 	mp_library = new DiceInvadersLib(m_libPath);
 
 	// Create the player object.
-	mp_player = new Player(PLAYER_START_X, PLAYER_START_Y);
+	mp_player = new Player(static_cast<float>(PLAYER_START_X),
+						   static_cast<float>(PLAYER_START_Y)
+						   );
 }
 Game::~Game()
 {
@@ -60,6 +62,7 @@ void Game::Run()
 	// TODO: We need to exit if this update function returns false!
 	mp_system->update();
 
+	// Use the DiceInvaders library to get the elapsed frame time.
 	float newTime = mp_system->getElapsedTime();
 	float frameTime = newTime - m_lastTime;
 
@@ -103,5 +106,10 @@ void Game::Render()
 	// Render the EnemyManager, which will in turn render the Enemies.
 
 	// Render the ProjectileManager, which will in turn render the projectiles.
+
+#ifdef _DEBUG
+	// Render the debug text, but only in Debug mode.
+	Debug::GetInstance().Render();
+#endif
 }
 

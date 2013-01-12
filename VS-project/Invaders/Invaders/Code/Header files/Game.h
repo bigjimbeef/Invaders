@@ -9,8 +9,16 @@
 // External library include for drawing/updating game.
 #include "DiceInvadersLib.h"
 
+#include <string>
+
 #include "InputController.h"
 #include "Player.h"
+#include "Debug.h"
+
+#ifdef _DEBUG
+// Stringstream include, used for converting ints to strings for debugging.
+#include <sstream>
+#endif
 
 class Game
 {

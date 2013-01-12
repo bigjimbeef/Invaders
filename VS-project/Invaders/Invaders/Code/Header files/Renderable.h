@@ -27,6 +27,9 @@ class IRenderable
 		// in the game are square.
 		inline int GetSpriteWidth() { return SPRITE_WIDTH; }
 
+		// Draws the sprite.
+		virtual void Render();
+
 	protected:
 		// The position that the renderable object is currently at.
 		Position m_position;

@@ -27,24 +27,14 @@ void Player::Update(float frameTime)
 
 }
 
-void Player::Render()
-{
-	mp_sprite->draw(int(m_position.x), int(m_position.y));
-}
-
 void Player::Move(int direction, float elapsedTime)
 {
 	float offset = elapsedTime * PLAYER_VELOCITY;
 
-	switch ( direction )
+	if ( direction == -1 )
 	{
-		case 1: // Moving right.
-			break;
-		case -1: // Moving left.
-			offset = -offset;
-			break;
-		default:
-			break;
+		// Moving to the left.
+		offset = -offset;
 	}
 
 	m_position.x += offset;

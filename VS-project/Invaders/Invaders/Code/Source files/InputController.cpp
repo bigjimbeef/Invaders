@@ -40,4 +40,14 @@ void InputController::HandleInput(float frameTime)
 		// Cache whether or not we were firing.
 		m_wasFiring = keystate.fire;
 	}
+
+#ifdef _DEBUG
+	Position playerPos = Game::GetInstance().GetPlayer().GetPosition();
+	
+	std::stringstream ss;
+	ss << "Player is at: [" << playerPos.x << ", " << playerPos.y << "]";
+	std::string pos = ss.str();
+
+	Game::GetInstance().GetSystem().drawText(0, 0, pos.c_str());
+#endif
 }
