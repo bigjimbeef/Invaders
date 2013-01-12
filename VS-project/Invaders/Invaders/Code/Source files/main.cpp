@@ -9,7 +9,6 @@
 
 #include "Game.h"
 
-
 int APIENTRY WinMain(
 	HINSTANCE instance,
 	HINSTANCE previousInstance,
@@ -20,6 +19,10 @@ int APIENTRY WinMain(
 	{
 		Game::GetInstance().Run();
 	}
+
+#ifdef MEMLEAK_DEBUGGING
+	_CrtDumpMemoryLeaks();
+#endif
 
 	return 0;
 }

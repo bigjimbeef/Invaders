@@ -4,13 +4,16 @@
 #include "Game.h"
 
 Player::Player(float xPos, float yPos) :
-	m_health(STARTING_HEALTH)
+	m_health(STARTING_HEALTH),
+	mp_rocket(0)
 {
 	// Initialise the player's position.
 	m_position = Position(xPos, yPos);
 }
 Player::~Player()
 {
+	// Destroy the sprite (which frees its memory).
+	// mp_sprite->destroy();
 }
 
 void Player::Init()
@@ -39,5 +42,9 @@ void Player::Move(int direction, float elapsedTime)
 
 void Player::Fire()
 {
-	ProjectileManager::GetInstance().SpawnProjectile(new Rocket());
+	if ( mp_rocket == 0 )
+	{
+		mp_rocket = new Rocket();
+		ProjectileManager::GetInstance().SpawnProjectile(mp_rocket);
+	}
 }

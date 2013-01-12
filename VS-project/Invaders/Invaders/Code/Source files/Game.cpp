@@ -23,9 +23,14 @@ Game::~Game()
 {
 	// Destroy the game system.
 	mp_system->destroy();
+	mp_system = 0;
 
 	// Tidy up.
 	delete mp_library;
+	mp_library = 0;
+
+	delete mp_player;
+	mp_player = 0;
 }
 
 void Game::Init()

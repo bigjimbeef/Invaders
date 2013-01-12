@@ -9,6 +9,11 @@ Rocket::Rocket() :
 }
 Rocket::~Rocket()
 {
+	// Destroy the sprite (which frees its memory).
+	mp_sprite->destroy();
+
+	// The player now has no rocket.
+	Game::GetInstance().GetPlayer().KillRocket();
 }
 
 void Rocket::Init()
@@ -19,6 +24,7 @@ void Rocket::Init()
 	// Initialise the position of the rocket based on the
 	// Player's position.
 	m_position = Game::GetInstance().GetPlayer().GetPosition();
+	m_position.y += ROCKET_OFFSET;
 }
 
 void Rocket::Update(float frameTime)

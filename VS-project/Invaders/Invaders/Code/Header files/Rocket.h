@@ -33,6 +33,7 @@ class Rocket : public Projectile
 	private:
 
 		static const int ROCKET_VELOCITY = 350;
+		static const int ROCKET_OFFSET = -20;
 
 	protected:
 		bool m_alive;

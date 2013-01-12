@@ -19,7 +19,7 @@ ProjectileManager::~ProjectileManager()
 void ProjectileManager::Update(float frameTime)
 {
 	std::list<Projectile*>::iterator it = m_projectiles.begin();
-	for ( it; it != m_projectiles.end(); ++it )
+	for ( it = m_projectiles.begin(); it != m_projectiles.end(); )
 	{
 		// Update this individual projectile.
 		Projectile* proj = static_cast<Projectile*>(*it);
@@ -28,10 +28,13 @@ void ProjectileManager::Update(float frameTime)
 		if ( !proj->IsAlive() )
 		{
 			// If that is the case, we must remove and delete it from the list.
-			if ( *it != NULL ) {
-				m_projectiles.erase(it++);
-				//delete *it;
-			}
+			delete *it;
+			*it = 0;
+			it = m_projectiles.erase(it);
+		}
+		else
+		{
+			++it;
 		}
 	}
 

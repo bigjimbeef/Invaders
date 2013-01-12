@@ -5,9 +5,6 @@
 
 IRenderable::~IRenderable()
 {
-	// Destroy the sprite and free its memory.
-	mp_sprite->destroy();
-	delete mp_sprite;
 }
 
 void IRenderable::Render()
