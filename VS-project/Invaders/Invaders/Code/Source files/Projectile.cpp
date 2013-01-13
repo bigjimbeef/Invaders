@@ -1,5 +1,10 @@
 #include "Projectile.h"
 
-Projectile::~Projectile()
+IProjectile::IProjectile() :
+	m_alive(1)
+{
+}
+
+IProjectile::~IProjectile()
 {
 }

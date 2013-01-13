@@ -21,6 +21,11 @@ Game::Game() :
 }
 Game::~Game()
 {
+	delete mp_player;
+	mp_player = 0;
+
+	ResourceManager::Destroy();
+
 	// Destroy the game system.
 	mp_system->destroy();
 	mp_system = 0;
@@ -28,9 +33,6 @@ Game::~Game()
 	// Tidy up.
 	delete mp_library;
 	mp_library = 0;
-
-	delete mp_player;
-	mp_player = 0;
 }
 
 void Game::Init()
@@ -39,6 +41,10 @@ void Game::Init()
 	mp_system = mp_library->get();
 	mp_system->init(SCREEN_WIDTH, SCREEN_HEIGHT);
 
+	// Initialise the ResourceManager, which sets the static pointers to
+	// the sprites, for use in drawing all IRenderables.
+	ResourceManager::Init();
+
 	// Initialise the player.
 	mp_player->Init();
 
@@ -46,6 +52,8 @@ void Game::Init()
 	EnemyManager::GetInstance().SpawnWave();
 
 	// Initialise the ProjectileManager, allowing access to projectiles.
+
+
 
 	// We have no initialised the game.
 	m_initialised = true;

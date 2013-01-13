@@ -31,12 +31,12 @@ class ProjectileManager
 
 		// Spawn a projectile. The position and other properties of
 		// the projectile will be detailed in the Projectile itself.
-		void SpawnProjectile(Projectile* proj);
+		void SpawnProjectile(IProjectile* proj);
 
 	private:
 
 		// A list of all projectiles in the game world.
-		std::list<Projectile*> m_projectiles;
+		std::list<IProjectile*> m_projectiles;
 
 		// Private default ctor to facilitate Singleton pattern.
 		ProjectileManager();

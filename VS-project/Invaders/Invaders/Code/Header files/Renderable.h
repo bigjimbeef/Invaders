@@ -14,11 +14,15 @@ struct ISprite;
 class IRenderable
 {
 	public:
+		IRenderable();
 		virtual ~IRenderable();
 
 		// This pure virtual function marks this class as an abstract base
 		// class.
 		virtual void IsAbstract() = 0;
+
+		// Draws the sprite.
+		virtual void Render() { }
 
 		//---------------------------------------------------------------------
 		// Accessors
@@ -27,14 +31,23 @@ class IRenderable
 
 		// Note that we only need an accessor for the width, as all sprites
 		// in the game are square.
-		inline int GetSpriteWidth() { return SPRITE_WIDTH; }
+		inline int GetSpriteBounds() { return SPRITE_WIDTH; }
 
-		// Draws the sprite.
-		virtual void Render();
+		inline int GetXOffset() { return m_spriteClipXOffset; }
+		inline int GetYOffset() { return m_spriteClipYOffset; }
+		inline int GetWidth() { return m_spriteClipWidth; }
+		inline int GetHeight() { return m_spriteClipHeight; }
 
 	protected:
 		// The position that the renderable object is currently at.
 		Position m_position;
+
+		// These variables are used for collision testing. It would look
+		// very peculiar if projectiles collided with things they hadn't hit.
+		int m_spriteClipWidth;
+		int m_spriteClipHeight;
+		int m_spriteClipXOffset;
+		int m_spriteClipYOffset;
 
 		// Pointer to the sprite object as defined in the DiceInvaders lib.
 		ISprite* mp_sprite;

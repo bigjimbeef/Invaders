@@ -10,11 +10,16 @@ PlayerUI::PlayerUI(float xPos, float yPos)
 }
 PlayerUI::~PlayerUI()
 {
-	// delete mp_sprite;
+	mp_sprite = NULL;
 }
 
 void PlayerUI::Init()
 {
-	// Create the sprite for the player.
-	mp_sprite = Game::GetInstance().GetSystem().createSprite("data/player.bmp");
+	// Get a pointer to the player sprite from the Resource manager.
+	mp_sprite = ResourceManager::GetPlayerSprite();
+}
+
+void PlayerUI::Render()
+{
+	mp_sprite->draw(int(m_position.x), int(m_position.y));
 }

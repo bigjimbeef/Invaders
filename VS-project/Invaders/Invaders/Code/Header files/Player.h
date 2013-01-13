@@ -1,6 +1,9 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
+// Needed for abs
+#include <cmath>
+
 // Include our base class.
 #include "Renderable.h"
 
@@ -14,7 +17,7 @@ class Player : public IRenderable
 	public:
 		// Default ctor.
 		Player(float xPos, float yPos);
-		~Player();
+		virtual ~Player();
 
 		// Implement this function to show that this class is not abstract.
 		inline void IsAbstract() { /* Do nothing */ }
@@ -22,7 +25,8 @@ class Player : public IRenderable
 		// Initialises the player.
 		void Init();
 
-		void Update(float frameTime);
+		virtual void Update(float frameTime);
+		virtual void Render();
 
 		// Used to the move the player around the screen, with the direction
 		// indicating the cardinality of the X move:
@@ -34,6 +38,12 @@ class Player : public IRenderable
 
 		// Removes the player's rocket.
 		inline void KillRocket() { mp_rocket = 0; }
+
+		// Check collision between two Renderable objects.
+		bool CheckCollision(IRenderable* objectOne, IRenderable* objectTwo);
+		Position GetCollisionMidpoint(IRenderable& object);
+		bool BroadPhase(Position& one, Position& two, int bounds);
+		bool NarrowPhase(IRenderable& objectOne, IRenderable& objectTwo);
 
 		//---------------------------------------------------------------------
 		// Accessors

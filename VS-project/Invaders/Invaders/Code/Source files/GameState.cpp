@@ -22,7 +22,8 @@ GameState::~GameState()
 {
 	for ( int i = 0; i < Game::GetInstance().GetPlayer().GetTotalHealth(); ++i )
 	{
-		delete[] mp_playerUI[i];
+		delete mp_playerUI[i];
+		mp_playerUI[i] = NULL;
 	}
 }
 

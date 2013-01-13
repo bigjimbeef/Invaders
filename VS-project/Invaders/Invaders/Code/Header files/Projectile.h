@@ -10,14 +10,16 @@
 // Include our base class.
 #include "Renderable.h"
 
-class Projectile : public IRenderable
+class IProjectile : public IRenderable
 {
 	public:
-		virtual ~Projectile();
+		IProjectile();
+		virtual ~IProjectile();
 
 		virtual void Init() { }
 
 		virtual void Update(float frameTime) { }
+		virtual void Render() { }
 
 		// This is an abstract base class. Mark it as such with pure virtual.
 		virtual void IsAbstract() = 0;
@@ -25,6 +27,7 @@ class Projectile : public IRenderable
 		//---------------------------------------------------------------------
 		// Accessors
 		virtual inline bool IsAlive() { return m_alive; }
+		virtual inline void Kill() { m_alive = false; }
 	
 	protected:
 

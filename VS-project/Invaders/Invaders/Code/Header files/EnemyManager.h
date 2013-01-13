@@ -32,13 +32,23 @@ class EnemyManager
 		// Spawn a new wave of enemies.
 		void SpawnWave();
 
+		// This function is used when enemies in the outside cols are killed.
+		// It ensures the EnemyManager knows the boundaries of the enemy wave.
+		void CalculateNewColWidth();
+
+		//---------------------------------------------------------------------
+		// Accessors
+		inline std::list<Enemy*>& GetEnemyList() { return m_enemies; }
+		inline int GetNumRemainingCols() { return m_remainingCols; }
+
 	private:
 
 		// A list of all enemies in the game world.
 		std::list<Enemy*> m_enemies;
+
 		// This integer holds the width of the remaining enemy wave.
 		// This is used for calculating when they should alternate direction.
-		int m_maxColWidth;
+		int m_remainingCols;
 			
 		// How long should the enemies pause for before moving?
 		// (This decreases as fewer enemies remain)

@@ -6,23 +6,27 @@
 ProjectileManager::ProjectileManager()
 {
 	// Create a new vector for holding projectiles.
-	m_projectiles = std::list<Projectile*>(); 
+	m_projectiles = std::list<IProjectile*>(); 
 }
 ProjectileManager::~ProjectileManager()
 {
-	// TODO: We need to loop through the projectile list and ensure
-	// that we correctly delete each item in it.
+	// We loop through the projectile list and ensure that we correctly
+	// delete each item in it.
+	while (!m_projectiles.empty()) {
+		delete m_projectiles.back();
+		m_projectiles.pop_back();
+	}
 
 	m_projectiles.clear();
 }
 
 void ProjectileManager::Update(float frameTime)
 {
-	std::list<Projectile*>::iterator it = m_projectiles.begin();
+	std::list<IProjectile*>::iterator it = m_projectiles.begin();
 	for ( it = m_projectiles.begin(); it != m_projectiles.end(); )
 	{
 		// Update this individual projectile.
-		Projectile* proj = static_cast<Projectile*>(*it);
+		IProjectile* proj = static_cast<IProjectile*>(*it);
 		proj->Update(frameTime);
 		
 		if ( !proj->IsAlive() )
@@ -50,16 +54,16 @@ void ProjectileManager::Update(float frameTime)
 
 void ProjectileManager::Render()
 {
-	std::list<Projectile*>::iterator it = m_projectiles.begin();
+	std::list<IProjectile*>::iterator it = m_projectiles.begin();
 	for ( it; it != m_projectiles.end(); ++it )
 	{
 		// Render the projectile.
-		Projectile* proj = static_cast<Projectile*>(*it);
+		IProjectile* proj = static_cast<IProjectile*>(*it);
 		proj->Render();
 	}
 }
 
-void ProjectileManager::SpawnProjectile(Projectile* proj)
+void ProjectileManager::SpawnProjectile(IProjectile* proj)
 {
 	// Initialise and add the passed projectile to the list of projectiles.
 	proj->Init();

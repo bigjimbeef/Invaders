@@ -19,6 +19,7 @@ class PlayerUI : public IRenderable
 		virtual ~PlayerUI();
 
 		virtual void Init();
+		virtual void Render();
 
 		// Implement this function to show that this class is not abstract.
 		inline void IsAbstract() { /* Do nothing */ }

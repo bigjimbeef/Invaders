@@ -17,8 +17,9 @@
 #include "ProjectileManager.h"
 #include "GameState.h"
 #include "EnemyManager.h"
+#include "ResourceManager.h"
 
-#define MEMLEAK_DEBUGGING
+//#define MEMLEAK_DEBUGGING
 #ifdef MEMLEAK_DEBUGGING
 	#define _CRTDBG_MAP_ALLOC
 	#include <stdlib.h>
@@ -32,6 +33,9 @@
 	#endif  // _DEBUG
 
 #endif
+
+
+#include <vld.h>
 
 
 #ifdef _DEBUG

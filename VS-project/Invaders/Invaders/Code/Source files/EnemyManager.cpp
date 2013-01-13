@@ -4,9 +4,9 @@
 #include "Game.h"
 
 EnemyManager::EnemyManager() :
-	m_maxColWidth(NUM_COLS),
+	m_remainingCols(NUM_COLS),
 	m_pauseDuration(0.0f),
-	m_basePauseDuration(0.5f),
+	m_basePauseDuration(1.0f),
 	m_currentPause(0.0f)
 {
 	m_pauseDuration = m_basePauseDuration;
@@ -16,8 +16,8 @@ EnemyManager::EnemyManager() :
 }
 EnemyManager::~EnemyManager()
 {
-	// TODO: We need to loop through the projectile list and ensure
-	// that we correctly delete each item in it.
+	// We loop through the projectile list and ensure that we correctly
+	// delete each item in it.
 	while (!m_enemies.empty()) {
 		delete m_enemies.back();
 		m_enemies.pop_back();
@@ -70,7 +70,10 @@ void EnemyManager::Render()
 	{
 		// Render the enemy.
 		Enemy* enemy = static_cast<Enemy*>(*it);
-		enemy->Render();
+		if ( enemy->IsAlive() )
+		{
+			enemy->Render();
+		}
 	}
 }
 
@@ -99,12 +102,33 @@ void EnemyManager::SpawnWave()
 		float yPos = static_cast<float>(baseYPosition + ( ROW_OFFSET * currentRow ));
 
 		// Create a new enemy, then spawn it.
-		Enemy* p_baddie = new Enemy(xPos, yPos, currentRow, score);
+		Enemy* p_baddie = new Enemy(xPos, yPos, currentRow, currentCol, score);
 		p_baddie->Init();
 		
 		m_enemies.push_back(p_baddie);
 	}
 
 	// We have a complete field.
-	m_maxColWidth = NUM_COLS;
+	m_remainingCols = NUM_COLS;
+}
+
+void EnemyManager::CalculateNewColWidth()
+{
+	int max = 0;
+
+	std::list<Enemy*>::iterator it = m_enemies.begin();
+	for ( it; it != m_enemies.end(); ++it )
+	{
+		Enemy* enemy = static_cast<Enemy*>(*it);
+		if ( enemy->IsAlive() )
+		{
+			if ( enemy->GetCol() > max )
+			{
+				max = enemy->GetCol();
+			}
+		}
+	}
+
+	// We now cache the new number of cols remaining.
+	m_remainingCols = max;
 }

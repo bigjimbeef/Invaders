@@ -6,11 +6,14 @@
 Rocket::Rocket() :
 	m_alive(true)
 {
+	m_spriteClipWidth = 6;
+	m_spriteClipHeight = 19;
+	m_spriteClipXOffset = 13;
+	m_spriteClipYOffset = 7;
 }
 Rocket::~Rocket()
 {
-	// Destroy the sprite (which frees its memory).
-	mp_sprite->destroy();
+	mp_sprite = NULL;
 
 	// The player now has no rocket.
 	Game::GetInstance().GetPlayer().KillRocket();
@@ -19,7 +22,7 @@ Rocket::~Rocket()
 void Rocket::Init()
 {
 	// Create the sprite for the player.
-	mp_sprite = Game::GetInstance().GetSystem().createSprite("data/rocket.bmp");
+	mp_sprite = ResourceManager::GetRocketSprite();
 
 	// Initialise the position of the rocket based on the
 	// Player's position.
@@ -29,12 +32,20 @@ void Rocket::Init()
 
 void Rocket::Update(float frameTime)
 {
-	float offset = frameTime * ROCKET_VELOCITY;
-	m_position.y -= offset;
-
-	// This represents the projectile going off-screen on the top.
-	if ( m_position.y < ( 0 - SPRITE_WIDTH ) )
+	if ( m_alive )
 	{
-		m_alive = false;
+		float offset = frameTime * ROCKET_VELOCITY;
+		m_position.y -= offset;
+
+		// This represents the projectile going off-screen on the top.
+		if ( m_position.y < ( 0 - SPRITE_WIDTH ) )
+		{
+			m_alive = false;
+		}
 	}
+}
+
+void Rocket::Render()
+{
+	mp_sprite->draw(int(m_position.x), int(m_position.y));
 }
