@@ -5,6 +5,7 @@
 
 GameState::GameState() :
 	m_playerScore(0),
+	m_waveNumber(0),
 	m_lineDrawn(0)
 {
 	for ( int i = 0; i < Game::GetInstance().GetPlayer().GetTotalHealth(); ++i )

@@ -16,6 +16,7 @@
 #include "InputController.h"
 #include "ProjectileManager.h"
 #include "GameState.h"
+#include "EnemyManager.h"
 
 #define MEMLEAK_DEBUGGING
 #ifdef MEMLEAK_DEBUGGING
@@ -29,6 +30,7 @@
 		  #define new DBG_NEW
 	   #endif
 	#endif  // _DEBUG
+
 #endif
 
 
@@ -99,7 +101,7 @@ class Game
 		static const int PLAYER_START_X = ( SCREEN_WIDTH / 2 ) - 16;
 
 		// Sprite height plus a bit more for aesthetic padding.
-		static const int PLAYER_Y_OFFSET = 80; 
+		static const int PLAYER_Y_OFFSET = 100; 
 		static const int PLAYER_START_Y = SCREEN_HEIGHT - PLAYER_Y_OFFSET;
 
 		// Private default ctor to facilitate Singleton pattern.

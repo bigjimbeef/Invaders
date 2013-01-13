@@ -29,7 +29,6 @@ void ProjectileManager::Update(float frameTime)
 		{
 			// If that is the case, we must remove and delete it from the list.
 			delete *it;
-			*it = 0;
 			it = m_projectiles.erase(it);
 		}
 		else

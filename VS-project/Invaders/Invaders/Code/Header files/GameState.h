@@ -32,8 +32,16 @@ class GameState
 		// The function draws the player's remaining lives.
 		void RenderLives();
 
+		//---------------------------------------------------------------------
+		// Accessors
+		inline int GetWaveNumber() { return m_waveNumber; }
+
 	private:
 		int m_playerScore;
+
+		// Tracks what enemy wave we are on. This is used as the enemies
+		// begin further down the screen in later waves.
+		int m_waveNumber;
 		
 		// Have we drawn the line at the bottom of the screen?
 		bool m_lineDrawn;

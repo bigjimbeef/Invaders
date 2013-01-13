@@ -42,7 +42,8 @@ void Game::Init()
 	// Initialise the player.
 	mp_player->Init();
 
-	// Initialise the EnemyManager, which will initialise the Enemies.
+	// Spawn a wave of enemies.
+	EnemyManager::GetInstance().SpawnWave();
 
 	// Initialise the ProjectileManager, allowing access to projectiles.
 
@@ -100,6 +101,7 @@ void Game::Update(float frameTime)
 	mp_player->Update(frameTime);
 
 	// Update the EnemyManager, which will in turn update the Enemies.
+	EnemyManager::GetInstance().Update(frameTime);
 
 	// Update the ProjectileManager, which will in turn update the projectiles.
 	ProjectileManager::GetInstance().Update(frameTime);
@@ -113,6 +115,7 @@ void Game::Render()
 	mp_player->Render();
 
 	// Render the EnemyManager, which will in turn render the Enemies.
+	EnemyManager::GetInstance().Render();
 
 	// Render the ProjectileManager, which will in turn render the projectiles.
 	ProjectileManager::GetInstance().Render();

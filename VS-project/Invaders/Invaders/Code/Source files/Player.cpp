@@ -24,7 +24,7 @@ void Player::Init()
 
 void Player::Update(float frameTime)
 {
-
+	// TODO: Update player's health.
 }
 
 void Player::Move(int direction, float elapsedTime)
@@ -37,6 +37,7 @@ void Player::Move(int direction, float elapsedTime)
 		offset = -offset;
 	}
 
+	// Update the player's position
 	m_position.x += offset;
 }
 
@@ -45,7 +46,9 @@ void Player::Fire()
 	// We only fire if we don't already have a rocket in motion.
 	if ( mp_rocket == 0 )
 	{
+		// Create a new rocket ...
 		mp_rocket = new Rocket();
+		// ... and spawn it with the ProjectileManager.
 		ProjectileManager::GetInstance().SpawnProjectile(mp_rocket);
 	}
 }
