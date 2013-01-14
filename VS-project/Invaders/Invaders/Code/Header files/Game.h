@@ -10,6 +10,8 @@
 #include "DiceInvadersLib.h"
 
 #include <string>
+// Stringstream include, used for converting ints to strings.
+#include <sstream>
 
 #include "InputController.h"
 #include "Player.h"
@@ -31,18 +33,14 @@
 		  #define new DBG_NEW
 	   #endif
 	#endif  // _DEBUG
-
 #endif
 
-
+#ifdef _DEBUG
 #include <vld.h>
-
+#endif
 
 #ifdef _DEBUG
 #include "Debug.h"
-
-// Stringstream include, used for converting ints to strings for debugging.
-#include <sstream>
 #endif
 
 class Game

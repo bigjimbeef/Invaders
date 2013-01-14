@@ -74,3 +74,13 @@ void GameState::RenderUI()
 	// Draw the player lives UI.
 	RenderLives();
 }
+
+void GameState::IncrementWaveNumber()
+{ 
+	m_waveNumber++;
+
+	if ( m_waveNumber > MAX_WAVES ) 
+	{ 
+		m_waveNumber = 0; 
+	} 
+}

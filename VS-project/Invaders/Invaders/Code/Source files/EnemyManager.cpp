@@ -12,6 +12,7 @@ EnemyManager::EnemyManager() :
 	m_pauseDuration(0.0f),
 	m_basePauseDuration(0.75f),
 	m_currentPause(0.0f),
+	m_respawnTime(1.0f),
 	m_minStep(0.01f),
 	m_stepReductionPerKill(0.0f)
 {
@@ -25,6 +26,11 @@ EnemyManager::EnemyManager() :
 		( m_basePauseDuration - m_minStep ) / (NUM_COLS * NUM_ROWS );
 }
 EnemyManager::~EnemyManager()
+{
+	ClearEnemyList();
+}
+
+void EnemyManager::ClearEnemyList()
 {
 	// We loop through the enemy list and ensure that we correctly
 	// delete each item in it.
@@ -89,6 +95,23 @@ void EnemyManager::Update(float frameTime)
 	// Increment the timer.
 	m_currentPause += frameTime;
 
+	// Check if the enemy list is empty and we need to spawn a new wave.
+	if ( m_enemies.size() <= 0 )
+	{
+		if ( m_currentPause > m_respawnTime )
+		{
+			GameState::GetInstance().IncrementWaveNumber();
+			
+			// Spawn a new wave.
+			SpawnWave();
+
+			// Reset the timer.
+			m_currentPause = 0.0f;
+		}
+
+		return;
+	}
+
 	// We time the enemy movement so that they move to a rhythm.
 	if ( m_currentPause > m_pauseDuration )
 	{
@@ -96,12 +119,6 @@ void EnemyManager::Update(float frameTime)
 		// we update them.
 		// i.e. We need to know which way to travel, and whether to drop down
 		bool shouldDrop = CheckForDrop();
-
-		// Check if the enemy list is empty and we need to spawn a new wave.
-		if ( m_enemies.size() <= 0 )
-		{
-
-		}
 
 		std::list<Enemy*>::iterator it = m_enemies.begin();
 		for ( it = m_enemies.begin(); it != m_enemies.end(); )
@@ -163,8 +180,6 @@ void EnemyManager::Render()
 			enemy->Render();
 		}
 	}
-
-	ResourceManager::GetEnemyOneSprite()->draw(608, 0);
 }
 
 void EnemyManager::SpawnWave()
@@ -172,6 +187,8 @@ void EnemyManager::SpawnWave()
 	// Enemies are spawned from the top-left initially. This is offset
 	// by a single row based on the wave number.
 	int baseXPosition = 0;
+	m_currentX = static_cast<float>(baseXPosition);
+
 	int baseYPosition = 
 		0 + ( GameState::GetInstance().GetWaveNumber() * ROW_OFFSET );
 
@@ -180,6 +197,9 @@ void EnemyManager::SpawnWave()
 	int backTwoRowCount = ( NUM_COLS * 2 );
 	int totalNumEnemies = NUM_ROWS * NUM_COLS;
 	
+	int currentCol = 0;
+	int currentRow = 0;
+
 	for ( int i = 0; i < totalNumEnemies; ++i )
 	{
 		// The back two rows of enemies are worth more points.
@@ -188,8 +208,8 @@ void EnemyManager::SpawnWave()
 			: FRONT_ENEMY_SCORE;
 
 		// As we are using a 1D list, we need to calculate row and col number.
-		int currentCol = i % NUM_COLS;
-		int currentRow = i % NUM_ROWS;
+		currentCol = i % NUM_COLS;
+		currentRow = i / NUM_COLS;
 
 		float xPos = 
 			static_cast<float>(baseXPosition + ( COL_OFFSET * currentCol ));
@@ -206,7 +226,11 @@ void EnemyManager::SpawnWave()
 	// We have a complete field. Note that this is -1 as it is used as an array
 	// index.
 	m_maxCol = NUM_COLS - 1;
+	m_minCol = 0;
 	m_remainingEnemies = totalNumEnemies;
+	
+	// Start moving to the right.
+	m_directionOfTravel = 1;
 }
 
 void EnemyManager::CalculateNewColWidth()
@@ -237,6 +261,12 @@ void EnemyManager::CalculateNewColWidth()
 				p_minEnemy = enemy;
 			}
 		}
+	}
+
+	// If we reach this point without an Enemy*, the list is empty.
+	if ( p_minEnemy == NULL )
+	{
+		return;
 	}
 
 	// We now cache the new number of cols remaining.

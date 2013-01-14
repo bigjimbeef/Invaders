@@ -48,12 +48,15 @@ class EnemyManager
 		inline int GetRemainingEnemies() { return m_remainingEnemies; }
 
 	private:
-
+		// Manages when the enemies need to drop down to the next line.
 		bool CheckForDrop();
 
 		// This function will update the apparent movement speed of the enemies
 		// by reducing the duration between jumps as fewer enemies remain.
 		void UpdateMovementSpeed();
+
+		// Deletes the items from the enemy list, and clears the list.
+		void ClearEnemyList();
 
 		// A list of all enemies in the game world.
 		std::list<Enemy*> m_enemies;
@@ -76,12 +79,15 @@ class EnemyManager
 		float m_basePauseDuration;
 		// How long have they been pausing for so far?
 		float m_currentPause;
+		float m_respawnTime;
+
 		// Variables for tracking the speed up from killing enemies.
 		float m_minStep;
 		float m_stepReductionPerKill;
 
 		static const int NUM_ROWS = 5;
-		static const int NUM_COLS = 13;
+		static const int NUM_COLS = 12;
+
 		static const int SPRITE_WIDTH = 32;
 
 		static const int ROW_OFFSET = 40;

@@ -31,10 +31,13 @@ class GameState
 		void RenderScore();
 		// The function draws the player's remaining lives.
 		void RenderLives();
+		// Increase the wave number, capping at MAX_WAVES
+		void IncrementWaveNumber();
 
 		//---------------------------------------------------------------------
 		// Accessors
 		inline int GetWaveNumber() { return m_waveNumber; }
+		inline void IncrementScore(int amount) { m_playerScore += amount; }
 
 	private:
 		int m_playerScore;
@@ -42,6 +45,7 @@ class GameState
 		// Tracks what enemy wave we are on. This is used as the enemies
 		// begin further down the screen in later waves.
 		int m_waveNumber;
+		static const int MAX_WAVES = 5;
 		
 		// Have we drawn the line at the bottom of the screen?
 		bool m_lineDrawn;

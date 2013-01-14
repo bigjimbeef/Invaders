@@ -74,6 +74,9 @@ void Enemy::Kill()
 	// This enemy is no longer alive.
 	m_alive = false;
 
+	// Add to the player's score.
+	GameState::GetInstance().IncrementScore(m_score);
+
 	// When the enemy is killed, we need to check if it is in the current
 	// outside column. If it is, we need to check if there are any more
 	// in the column. If not, we update the EnemyManager's column width
@@ -81,11 +84,8 @@ void Enemy::Kill()
 	if ( m_col == EnemyManager::GetInstance().GetMaxCol()
 	  || m_col == EnemyManager::GetInstance().GetMinCol() )
 	{
-		if ( EnemyManager::GetInstance().GetRemainingEnemies() > 0 )
-		{
-			// Pass the column width calculations back to the EnemyManager.
- 			EnemyManager::GetInstance().CalculateNewColWidth();
-		}
+		// Pass the column width calculations back to the EnemyManager.
+ 		EnemyManager::GetInstance().CalculateNewColWidth();
 	}
 }
 
