@@ -12,6 +12,7 @@
 
 // Forward declare Game to allow access to Game singleton.
 class Game;
+class Enemy;
 
 class Bomb : public IProjectile
 {
@@ -29,17 +30,21 @@ class Bomb : public IProjectile
 		// Implement this function to show that this class is not abstract.
 		inline void IsAbstract() { /* Do nothing */ }
 
+		// Override the base class function.
+		virtual bool IsBomb() const { return true; }
+
 		//---------------------------------------------------------------------
 		// Accessors
 
 		inline bool IsAlive() { return m_alive; }
 		inline void Kill() { m_alive = false; }
+		inline Enemy& GetOwner() { return m_bombOwner; }
 
 	private:
 	    // The enemy that fired this bomb.
 	    Enemy& m_bombOwner;
 
-		static const int BOMB_VELOCITY = 350;
+		static const int BOMB_VELOCITY = 200;
 		static const int BOMB_OFFSET = 20;
 
 	protected:

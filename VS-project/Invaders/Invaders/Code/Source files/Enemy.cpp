@@ -5,6 +5,9 @@
 
 Enemy::Enemy(float xPos, float yPos, int row, int col, int score) :
 	m_alive(1),
+	m_canFire(0),
+	m_bombTimer(0.0f),
+	m_bombFireTarget(0.0f),
 	m_row(row),
 	m_col(col),
 	m_score(score),
@@ -33,10 +36,44 @@ void Enemy::Init()
 		ResourceManager::GetEnemyTwoSprite();
 }
 
-void Enemy::Update(float frameTime, int direction, bool dropDown)
+void Enemy::Update(float frameTime)
 {
-	// Make our move.
-	Move(direction, frameTime, dropDown);
+	// No need to process the rest of the function if we can't fire.
+	if ( !m_canFire )
+	{
+		return;
+	}
+
+	// Ensure we can't fire too many bombs.
+    if ( m_bombs.size() < MAX_BOMBS )
+    {
+		if ( m_bombFireTarget == 0.0f )
+		{
+			m_bombFireTarget = static_cast<float>(MIN_FIRE_TIME);
+			
+			// Random no. from 0-100
+			int random = ( rand() % 101 );
+			float randomPercentOffset =
+				static_cast<float>(MAX_FIRE_TIME) * ( random / 100.0f );
+
+			// Ensure we can't go below the minimum fire time.
+			m_bombFireTarget = max(m_bombFireTarget, randomPercentOffset);
+		}
+
+		// Increment the timer.
+		m_bombTimer += frameTime;
+
+		// If we've reached the timer duration.
+        if ( m_bombTimer > m_bombFireTarget )
+        {
+			// Attempt to fire a bomb after a random timer has elapsed.
+			Fire();
+
+			// Reset the timer variables.
+			m_bombFireTarget = 0.0f;
+			m_bombTimer = 0.0f;
+        }
+    }
 }
 
 void Enemy::Render()
@@ -57,14 +94,12 @@ void Enemy::Render()
 	mp_sprite->draw(int(m_position.x), int(m_position.y));
 }
 
-void Enemy::Move(int direction, float elapsedTime, bool dropDown)
+void Enemy::Move(bool dropDown)
 {
 	// If we're not dropping down, we move across the screen.
 	if ( !dropDown )
 	{
 		m_position.x += EnemyManager::GetInstance().GetMoveDelta();
-
-		// When we move, we attempt to fire a bomb.
 	}
 	else
 	{
@@ -92,22 +127,41 @@ void Enemy::Kill()
 		// Pass the column width calculations back to the EnemyManager.
  		EnemyManager::GetInstance().CalculateNewColWidth();
 	}
+
+	// Get the maximum row for this column. If this enemy is the maximum,
+	// we need to make the EnemyManager calculate the new maximum.
+	if ( m_row == EnemyManager::GetInstance().GetMaxRow(m_col) )
+	{
+		EnemyManager::GetInstance().CalculateNewMaxRow(m_col);
+	}
+}
+
+void Enemy::KillBomb(Bomb& dyingBomb)
+{
+	std::list<Bomb*>::iterator bombIt = m_bombs.begin();
+	for ( bombIt; bombIt != m_bombs.end(); ++bombIt )
+	{
+		Bomb* p_bomb = static_cast<Bomb*>(*bombIt);
+		// Compare the mem locations of the bombs.
+		if ( p_bomb == &dyingBomb )
+		{
+			// Remove the bomb from the local array.
+			// (deletion is handled in projectile manager)
+			bombIt = m_bombs.erase(bombIt);
+			
+			// Don't need to continue.
+			return;
+		}
+	}
 }
 
 void Enemy::Fire()
 {
-    if ( m_bombs.size() < MAX_BOMBS )
-    {
-        // We can fire up to three bombs at once, and have a chance to fire
-        // one on move.
-        int doFire = ( rand() % 100 ) + 1;
-
-        if ( doFire < FIRING_CHANCE )
-        {
-            // Create a new bomb, initialise it, and add it to the list.
-            Bomb* p_bomb = new Bomb(*this);
-            p_bomb->Init();
-            m_bombs.push_back(newBomb);
-        }
-    }
+	// Create a new bomb, then spawn it with the projectile manager.
+    Bomb* p_bomb = new Bomb(*this);
+    ProjectileManager::GetInstance().SpawnProjectile(p_bomb);
+            
+	// We also manage the list internally too, though the memory
+	// management is handled in the ProjectileManager.
+	m_bombs.push_back(p_bomb);
 }

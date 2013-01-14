@@ -6,7 +6,7 @@
 // Creates, updates, and manages the enemies within the game.
 //-----------------------------------------------------------------------------
 
-// Uses STL list for managing projectiles.
+// Uses STL list for managing enemies.
 #include <list>
 
 #include "Enemy.h"
@@ -36,6 +36,11 @@ class EnemyManager
 		// It ensures the EnemyManager knows the boundaries of the enemy wave.
 		void CalculateNewColWidth();
 
+		// This function is used when the nearest enemy is a column is killed,
+		// and works out the next nearest enemy in the row. This is used for
+		// determining which enemies can shoot.
+		void CalculateNewMaxRow(int col);
+
 		//---------------------------------------------------------------------
 		// Accessors
 		inline std::list<Enemy*>& GetEnemyList() { return m_enemies; }
@@ -46,6 +51,7 @@ class EnemyManager
 		inline int GetDropDistance() { return DROP_DISTANCE; }
 
 		inline int GetRemainingEnemies() { return m_remainingEnemies; }
+		inline int GetMaxRow(int col) { return m_maximumRows[col]; }
 
 	private:
 		// Manages when the enemies need to drop down to the next line.
@@ -58,14 +64,23 @@ class EnemyManager
 		// Deletes the items from the enemy list, and clears the list.
 		void ClearEnemyList();
 
+		// Deletes enemies from the list either immediately or when their bombs
+		// are all dead.
+		void HandleEnemyDeletion();
+
 		// A list of all enemies in the game world.
 		std::list<Enemy*> m_enemies;
+		// A list of the enemies that are currently awaiting deletion. This 
+		// situation arises when the enemies are killed but have one or more of
+		// their bombs remaining in the game world.
+		std::list<Enemy*> m_deadEnemies;
 
 		// This integer holds the width of the remaining enemy wave.
 		// This is used for calculating when they should alternate direction.
 		int m_maxCol;
 		// Similarly to the above, but for the left side.		
 		int m_minCol;
+		// The current direction the enemies are moving.
 		int m_directionOfTravel;
 		// This is the current X position of the far left of the field.
 		float m_currentX;
@@ -84,9 +99,12 @@ class EnemyManager
 		// Variables for tracking the speed up from killing enemies.
 		float m_minStep;
 		float m_stepReductionPerKill;
-
+		
 		static const int NUM_ROWS = 5;
 		static const int NUM_COLS = 12;
+
+		// This array contains the row of the nearest enemy in each column.
+		int m_maximumRows[NUM_COLS];
 
 		static const int SPRITE_WIDTH = 32;
 

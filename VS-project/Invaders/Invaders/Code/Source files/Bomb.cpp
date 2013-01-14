@@ -17,8 +17,7 @@ Bomb::~Bomb()
 {
 	mp_sprite = NULL;
 
-	// TODO: Remove a single bomb from the enemy that fired it.
-	// Game::GetInstance().GetPlayer().KillRocket();
+	// Deletion of the Bomb* in m_bombs is handled by ProjectileManager.
 }
 
 void Bomb::Init()
@@ -36,8 +35,8 @@ void Bomb::Update(float frameTime)
 {
 	if ( m_alive )
 	{
-		float offset = frameTime * Bomb_VELOCITY;
-		m_position.y -= offset;
+		float offset = frameTime * BOMB_VELOCITY;
+		m_position.y += offset;
 
 		// This represents the projectile going off-screen at the bottom.
 		if ( m_position.y > Game::GetInstance().GetScreenHeight() )

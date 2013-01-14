@@ -1,6 +1,9 @@
 #ifndef ENEMY_H
 #define ENEMY_H
 
+// Uses STL list for managing projectiles.
+#include <list>
+
 // Include our base class.
 #include "Renderable.h"
 
@@ -22,18 +25,20 @@ class Enemy : public IRenderable
 		// Initialises the enemy.
 		void Init();
 
-		void Update(float frameTime, int direction, bool dropDown);
+		void Update(float frameTime);
 		virtual void Render();
 
 		// Moves the enemy around the screen.
-		void Move(int direction, float elapsedTime, bool dropDown);
+		void Move(bool dropDown);
 
 		// Controls the enemy firing a bomb.
-		// void Fire();
+		void Fire();
 
 		// Removes one of the enemy's bombs.
-		// inline void KillBomb() { mp_rocket = 0; }
+		void KillBomb(Bomb& dyingBomb);
 
+		// Kill the enemy. This needs to update more than the bool below, so it
+		// is declared in the cpp.
 		void Kill();
 
 		//---------------------------------------------------------------------
@@ -43,9 +48,24 @@ class Enemy : public IRenderable
 		inline int GetRow() { return m_row; }
 		inline int GetCol() { return m_col; }
 
+		inline void EnableWeapon() { m_canFire = true; }
+		
+		// Check if we have any bombs currently alive.
+		inline bool HasLiveBomb() { return (m_bombs.size() > 0); }
+
 	private:
 		// Is this enemy alive?
 		bool m_alive;
+
+		// Can this enemy fire?
+		bool m_canFire;
+
+		// These variables are used to control the randomly-timed firing.
+		// See the Fire function for more details.
+		float m_bombTimer;
+		float m_bombFireTarget;
+		static const int MIN_FIRE_TIME = 1;
+		static const int MAX_FIRE_TIME = 20;
 
 		// The starting row for the enemy. This controls their look.
 		int m_row;
@@ -58,10 +78,9 @@ class Enemy : public IRenderable
 		// This handles basic animation of sprites.
 		bool m_altSprite;
 
-		// Each enemy is allowed three bombs at once. This array represents
-		// the bombs.
+		// Each enemy is allowed a static number of bombs at once. This array
+		// holds the bombs.
 		std::list<Bomb*> m_bombs;
-		static const int FIRING_CHANCE = 10;
         static const int MAX_BOMBS = 3;
 };
 

@@ -112,6 +112,44 @@ void EnemyManager::Update(float frameTime)
 		return;
 	}
 
+	// Delete remaining dead enemies before processing the live ones.
+	HandleEnemyDeletion();
+
+	// Update the enemies, which updates when they can fire.
+	std::list<Enemy*>::iterator it = m_enemies.begin();
+	for ( it = m_enemies.begin(); it != m_enemies.end(); )
+	{
+		// Update this individual enemy ...
+		Enemy* enemy = static_cast<Enemy*>(*it);
+		// ... if it's alive.
+		if ( enemy->IsAlive() )
+		{
+			enemy->Update(frameTime);
+
+			it++;
+		}
+		else
+		{
+			// As Bombs are stored on Enemies, we can't delete them if they
+			// have any live bombs currently.
+			if ( enemy->HasLiveBomb() )
+			{
+				// Add this enemy to the list to be deleted.
+				m_deadEnemies.push_back(enemy);
+			}
+			else
+			{
+				// If the enemy has no live bombs, we delete it immediately
+				delete *it;
+				*it = NULL;
+			}
+			it = m_enemies.erase(it);
+				
+			// Decrement the number of enemies remaining.
+			m_remainingEnemies--;
+		}
+	}
+
 	// We time the enemy movement so that they move to a rhythm.
 	if ( m_currentPause > m_pauseDuration )
 	{
@@ -121,25 +159,14 @@ void EnemyManager::Update(float frameTime)
 		bool shouldDrop = CheckForDrop();
 
 		std::list<Enemy*>::iterator it = m_enemies.begin();
-		for ( it = m_enemies.begin(); it != m_enemies.end(); )
+		for ( it = m_enemies.begin(); it != m_enemies.end(); ++it )
 		{
-			// Update this individual enemy.
+			// Move this individual enemy ...
 			Enemy* enemy = static_cast<Enemy*>(*it);
-			enemy->Update(frameTime, m_directionOfTravel, shouldDrop);
-		
-			if ( !enemy->IsAlive() )
+			// ... if it's alive.
+			if ( enemy->IsAlive() )
 			{
-				// If that is the case, we remove and delete it from the list.
-				delete *it;
-				*it = 0;
-				it = m_enemies.erase(it);
-				
-				// Decrement the number of enemies remaining.
-				m_remainingEnemies--;
-			}
-			else
-			{
-				++it;
+				enemy->Move(shouldDrop);
 			}
 		}
 
@@ -155,17 +182,39 @@ void EnemyManager::Update(float frameTime)
 	}
 
 #ifdef _DEBUG
+	int numEnemies = m_enemies.size();
+	
 	std::stringstream ss;
-	ss << "Min: " << m_minCol;
-	std::string min = ss.str();
+	ss << numEnemies << " enemies";
+	std::string enemies = ss.str();
 
-	ss.str("");
-	ss << "Max: " << m_maxCol;
-	std::string max = ss.str();
-
-	Game::GetInstance().GetSystem().drawText(0, 250, min.c_str());
-	Game::GetInstance().GetSystem().drawText(0, 270, max.c_str());
+	Game::GetInstance().GetSystem().drawText(0, 40, enemies.c_str());
 #endif
+}
+
+
+void EnemyManager::HandleEnemyDeletion()
+{
+	// Now attempt to delete all enemies that have live bombs.
+	if ( m_deadEnemies.size() > 0 )
+	{
+		std::list<Enemy*>::iterator del = m_deadEnemies.begin();
+		for ( del = m_deadEnemies.begin(); del != m_deadEnemies.end(); )
+		{
+			Enemy* enemy = static_cast<Enemy*>(*del);
+			if ( !enemy->HasLiveBomb() )
+			{
+				delete *del;
+				*del = NULL;
+
+				del = m_deadEnemies.erase(del);
+			}
+			else
+			{
+				del++;
+			}
+		}
+	}
 }
 
 void EnemyManager::Render()
@@ -219,6 +268,14 @@ void EnemyManager::SpawnWave()
 		// Create a new enemy, then spawn it.
 		Enemy* p_baddie = new Enemy(xPos, yPos, currentRow, currentCol, score);
 		p_baddie->Init();
+
+		// We can fire if we're in the front row.
+		if ( currentRow == NUM_ROWS - 1 )
+		{
+			p_baddie->EnableWeapon();
+			// Initialise the maximum rows array.
+			m_maximumRows[currentCol] = currentRow;
+		}
 		
 		m_enemies.push_back(p_baddie);
 	}
@@ -275,4 +332,40 @@ void EnemyManager::CalculateNewColWidth()
 
 	// The furthest left enemy's x position is now the x position of the wave.
 	m_currentX = p_minEnemy->GetPosition().x;
+}
+
+void EnemyManager::CalculateNewMaxRow(int col)
+{
+	// Check for array OOB.
+	if ( col < 0 || col >= NUM_COLS )
+	{
+		return;
+	}
+
+	int maxRow = 0;
+	Enemy* p_maxEnemy = NULL;
+
+	std::list<Enemy*>::iterator it = m_enemies.begin();
+	for ( it; it != m_enemies.end(); ++it )
+	{
+		Enemy* enemy = static_cast<Enemy*>(*it);
+		if ( enemy->IsAlive() )
+		{
+			if ( enemy->GetCol() == col && enemy->GetRow() > maxRow )
+			{
+				maxRow = enemy->GetRow();
+				p_maxEnemy = enemy;
+			}
+		}
+	}
+
+	// Update this index of the max rows array ...
+	m_maximumRows[col] = maxRow;
+
+	// ... and if there's an enemy, then ...
+	if ( p_maxEnemy != NULL )
+	{
+		// ... let it know that it's ok to fire.
+		p_maxEnemy->EnableWeapon();
+	}
 }

@@ -31,8 +31,17 @@ void ProjectileManager::Update(float frameTime)
 		
 		if ( !proj->IsAlive() )
 		{
+			if ( proj->IsBomb() )
+			{
+				Bomb* p_bomb = static_cast<Bomb*>(*it);
+				// If this is a bomb, we want to remove it from the list of
+				// bombs that its owner has.
+				p_bomb->GetOwner().KillBomb(*p_bomb);
+			}
+
 			// If that is the case, we must remove and delete it from the list.
 			delete *it;
+			*it = NULL;
 			it = m_projectiles.erase(it);
 		}
 		else
