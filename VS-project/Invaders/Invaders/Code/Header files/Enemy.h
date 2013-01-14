@@ -20,11 +20,11 @@ class Enemy : public IRenderable
 		// Initialises the enemy.
 		void Init();
 
-		virtual void Update(float frameTime);
+		void Update(float frameTime, int direction, bool dropDown);
 		virtual void Render();
 
 		// Moves the enemy around the screen.
-		void Move(int direction, float elapsedTime);
+		void Move(int direction, float elapsedTime, bool dropDown);
 
 		// Controls the enemy firing a bomb.
 		// void Fire();
@@ -53,12 +53,12 @@ class Enemy : public IRenderable
 		// The score that the player will be awarded for killing this enemy.
 		int m_score;
 
+		// This handles basic animation of sprites.
+		bool m_altSprite;
+
 		// Each enemy is allowed three bombs at once. This array represents
 		// the bombs.
 		// Bomb* mp_bombs[3];
-
-		static ISprite*	s_enemySprite1;
-		static ISprite*	s_enemySprite2;
 
 };
 

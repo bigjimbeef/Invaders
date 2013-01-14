@@ -15,7 +15,9 @@ class ResourceManager
 {
 	public:
 		static inline ISprite* GetEnemyOneSprite() { return s_enemyOneSprite; }
+		static inline ISprite* GetEnemyOneAltSprite() { return s_enemyOneAltSprite; }
 		static inline ISprite* GetEnemyTwoSprite() { return s_enemyTwoSprite; }
+		static inline ISprite* GetEnemyTwoAltSprite() { return s_enemyTwoAltSprite; }
 		static inline ISprite* GetPlayerSprite() { return s_playerSprite; }
 		static inline ISprite* GetRocketSprite() { return s_rocketSprite; }
 		static inline ISprite* GetBombSprite() { return s_bombSprite; }
@@ -25,7 +27,9 @@ class ResourceManager
 
 	private:
 		static ISprite* s_enemyOneSprite;
+		static ISprite* s_enemyOneAltSprite;
 		static ISprite* s_enemyTwoSprite;
+		static ISprite* s_enemyTwoAltSprite;
 		static ISprite* s_playerSprite;
 		static ISprite* s_rocketSprite;
 		static ISprite* s_bombSprite;
