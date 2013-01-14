@@ -4,6 +4,8 @@
 // Include our base class.
 #include "Renderable.h"
 
+#include "Bomb.h"
+
 // Forward declare Game to allow access to Game singleton.
 class Game;
 
@@ -37,7 +39,7 @@ class Enemy : public IRenderable
 		//---------------------------------------------------------------------
 		// Accessors
 		inline bool IsAlive() { return m_alive; }
-		
+
 		inline int GetRow() { return m_row; }
 		inline int GetCol() { return m_col; }
 
@@ -58,8 +60,9 @@ class Enemy : public IRenderable
 
 		// Each enemy is allowed three bombs at once. This array represents
 		// the bombs.
-		// Bomb* mp_bombs[3];
-
+		std::list<Bomb*> m_bombs;
+		static const int FIRING_CHANCE = 10;
+        static const int MAX_BOMBS = 3;
 };
 
 #endif // ENEMY_H

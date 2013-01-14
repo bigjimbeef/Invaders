@@ -10,7 +10,10 @@ Enemy::Enemy(float xPos, float yPos, int row, int col, int score) :
 	m_score(score),
 	m_altSprite(0)
 {
-	// Initialise the player's position.
+    // Create a std::list for holding the bombs.
+    m_bombs = std::list<Bomb*>();
+
+	// Initialise the enemy's position.
 	m_position = Position(xPos, yPos);
 
 	m_spriteClipWidth = ( row < 2 ) ? 24 : 30;
@@ -60,6 +63,8 @@ void Enemy::Move(int direction, float elapsedTime, bool dropDown)
 	if ( !dropDown )
 	{
 		m_position.x += EnemyManager::GetInstance().GetMoveDelta();
+
+		// When we move, we attempt to fire a bomb.
 	}
 	else
 	{
@@ -89,9 +94,20 @@ void Enemy::Kill()
 	}
 }
 
-/*
 void Enemy::Fire()
 {
-	
+    if ( m_bombs.size() < MAX_BOMBS )
+    {
+        // We can fire up to three bombs at once, and have a chance to fire
+        // one on move.
+        int doFire = ( rand() % 100 ) + 1;
+
+        if ( doFire < FIRING_CHANCE )
+        {
+            // Create a new bomb, initialise it, and add it to the list.
+            Bomb* p_bomb = new Bomb(*this);
+            p_bomb->Init();
+            m_bombs.push_back(newBomb);
+        }
+    }
 }
-*/
