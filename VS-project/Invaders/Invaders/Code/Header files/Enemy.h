@@ -25,11 +25,11 @@ class Enemy : public IRenderable
 		// Initialises the enemy.
 		void Init();
 
-		void Update(float frameTime);
+		virtual void Update(const float frameTime);
 		virtual void Render();
 
 		// Moves the enemy around the screen.
-		void Move(bool dropDown);
+		void Move(const bool dropDown);
 
 		// Controls the enemy firing a bomb.
 		void Fire();
@@ -43,17 +43,15 @@ class Enemy : public IRenderable
 
 		//---------------------------------------------------------------------
 		// Accessors
-		inline bool IsAlive() { return m_alive; }
+		inline bool IsAlive() const { return m_alive; }
 
-		inline int GetRow() { return m_row; }
-		inline int GetCol() { return m_col; }
+		inline int GetRow() const { return m_row; }
+		inline int GetCol() const { return m_col; }
 
 		inline void EnableWeapon() { m_canFire = true; }
 		
 		// Check if we have any bombs currently alive.
-		inline bool HasLiveBomb() { return (m_bombs.size() > 0); }
-
-		inline std::list<Bomb*>& GetBombList() { return m_bombs; }
+		inline bool HasLiveBomb() const { return (m_bombs.size() > 0); }
 
 	private:
 		// Is this enemy alive?

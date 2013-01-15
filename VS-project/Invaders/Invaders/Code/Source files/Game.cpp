@@ -11,13 +11,12 @@ Game::Game() :
 	// Initialising these variables outside of the initialisation list,
 	// as re-ordering the header file could cause problems with initialisation
 	// order.
-	m_libPath = "DiceInvaders.dll";
-	mp_library = new DiceInvadersLib(m_libPath);
+	mp_libPath = "DiceInvaders.dll";
+	mp_library = new DiceInvadersLib(mp_libPath);
 
 	// Create the player object.
 	mp_player = new Player(static_cast<float>(PLAYER_START_X),
-						   static_cast<float>(PLAYER_START_Y)
-						   );
+						   static_cast<float>(PLAYER_START_Y));
 }
 Game::~Game()
 {
@@ -99,13 +98,13 @@ void Game::Run()
 }
 
 
-void Game::HandleInput(float frameTime)
+void Game::HandleInput(const float frameTime)
 {
 	// Farm the input handling out to the input controller.
 	InputController::GetInstance().HandleInput(frameTime);
 }
 
-void Game::Update(float frameTime)
+void Game::Update(const float frameTime)
 {
 	// Update the player.
 	mp_player->Update(frameTime);

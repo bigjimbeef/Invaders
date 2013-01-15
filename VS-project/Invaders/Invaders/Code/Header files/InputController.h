@@ -24,13 +24,14 @@ class InputController
 
 		// The only function of note, this deals with the player input
 		// processing, through use of the DiceInvadersLib functions.
-		void HandleInput(float frameTime);
+		void HandleInput(const float frameTime);
 
 		// Controls for whilst the game is running.
-		void GameControls(IDiceInvaders::KeyStatus keystate, float frameTime);
+		void GameControls(const IDiceInvaders::KeyStatus keystate,
+						  const float frameTime);
 
 		// Controls for the game over "screen".
-		void GameOverControls(IDiceInvaders::KeyStatus keystate);
+		void GameOverControls(const IDiceInvaders::KeyStatus keystate);
 
 	private:
 		// Holds the state of the player keys at any given time.

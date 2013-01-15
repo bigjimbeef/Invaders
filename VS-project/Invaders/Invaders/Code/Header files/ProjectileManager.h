@@ -31,11 +31,12 @@ class ProjectileManager
 
 		// Spawn a projectile. The position and other properties of
 		// the projectile will be detailed in the Projectile itself.
-		void SpawnProjectile(IProjectile* proj);
+		void SpawnProjectile(IProjectile& proj);
 
 		//---------------------------------------------------------------------
 		// Accessors
-		inline std::list<IProjectile*>& GetProjectileList() { return m_projectiles; }
+		inline const std::list<IProjectile*>& 
+			GetProjectileList() const { return m_projectiles; }
 
 	private:
 

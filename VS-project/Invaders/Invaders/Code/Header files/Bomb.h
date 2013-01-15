@@ -24,7 +24,7 @@ class Bomb : public IProjectile
 
 		virtual void Init();
 
-		virtual void Update(float frameTime);
+		virtual void Update(const float frameTime);
 		virtual void Render();
 
 		// Implement this function to show that this class is not abstract.
@@ -36,9 +36,9 @@ class Bomb : public IProjectile
 		//---------------------------------------------------------------------
 		// Accessors
 
-		inline bool IsAlive() { return m_alive; }
+		inline bool IsAlive() const { return m_alive; }
 		inline void Kill() { m_alive = false; }
-		inline Enemy& GetOwner() { return m_bombOwner; }
+		inline Enemy& GetOwner() const { return m_bombOwner; }
 
 	private:
 	    // The enemy that fired this bomb.

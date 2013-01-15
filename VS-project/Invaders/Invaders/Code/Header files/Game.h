@@ -47,7 +47,7 @@ class Game
 			static Game instance;
 			return instance;
 		}
-		virtual ~Game();
+		~Game();
 
 		// Initialises the game, setting up all necessary data structures.
 		void Init();
@@ -57,25 +57,23 @@ class Game
 
 		// These three functions handle the three separate logical stages
 		// of player interaction with the game: Input, updating, rendering.
-		void HandleInput(float frameTime);
-		void Update(float frameTime);
+		void HandleInput(const float frameTime);
+		void Update(const float frameTime);
 		void Render();
 
 		//---------------------------------------------------------------------
 		// Accessors
 
-		inline bool IsRunning() { return m_gameRunning; }
+		inline bool IsRunning() const { return m_gameRunning; }
 		inline void SetRunning(bool running) { m_gameRunning = running; }
 
-		inline Player& GetPlayer() { return *mp_player; }
+		inline Player& GetPlayer() const { return *mp_player; }
 
-		inline IDiceInvaders& GetSystem() { return *mp_system; }
+		inline IDiceInvaders& GetSystem() const { return *mp_system; }
 		
-		inline int GetScreenWidth() { return SCREEN_WIDTH; }
-		inline int GetScreenHeight() { return SCREEN_HEIGHT; }
-		inline int GetSpriteSize() { return SPRITE_SIZE; }
-
-		inline int GetPlayerStartY() { return PLAYER_START_Y; }
+		static int GetScreenWidth() { return SCREEN_WIDTH; }
+		static int GetScreenHeight() { return SCREEN_HEIGHT; }
+		static int GetSpriteSize() { return SPRITE_SIZE; }
 
 	private:
 		// Is the game initialised?
@@ -89,7 +87,7 @@ class Game
 
 		// Instance of the external library for world drawing and updating.
 		DiceInvadersLib* mp_library;
-		char* m_libPath;
+		const char* mp_libPath;
 		IDiceInvaders* mp_system;
 
 		// Game world dimensions

@@ -18,7 +18,7 @@ GameState::GameState() :
 	{
 		float xPos = static_cast<float>(LIVES_XPOS + ( i * LIVES_XPOS ));
 		float yPos = 
-			static_cast<float>(Game::GetInstance().GetScreenHeight() - UI_OFFSET);
+			static_cast<float>(Game::GetScreenHeight() - UI_OFFSET);
 
 		// Create and initialise the player UI elements.
 		mp_playerUI[i] = new PlayerUI(xPos, yPos);
@@ -30,11 +30,11 @@ GameState::GameState() :
 	// I am simply hard-coding approximate string lengths.
 	int messageXLength = 80;
 	int messageYLength = 15;
-	m_gameOverMsgXPos = ( Game::GetInstance().GetScreenWidth() - messageXLength ) / 2;
-	m_gameOverMsgYPos = ( Game::GetInstance().GetScreenHeight() - messageYLength ) / 2;
+	m_gameOverMsgXPos = ( Game::GetScreenWidth() - messageXLength ) / 2;
+	m_gameOverMsgYPos = ( Game::GetScreenHeight() - messageYLength ) / 2;
 
 	int pressStartXLength = 160;
-	m_pressStartXPos = ( Game::GetInstance().GetScreenWidth() - pressStartXLength ) / 2;
+	m_pressStartXPos = ( Game::GetScreenWidth() - pressStartXLength ) / 2;
 	m_pressStartYPos = m_gameOverMsgYPos + messageYLength; // Offset by height of string.
 }
 GameState::~GameState()
@@ -49,7 +49,7 @@ GameState::~GameState()
 void GameState::RenderLine()
 {
 	// Draw the line which contains the player health/score UI.
-	int yPos = Game::GetInstance().GetScreenHeight() - LINE_OFFSET;
+	int yPos = Game::GetScreenHeight() - LINE_OFFSET;
 	std::string sLine = "";
 	for( int i = 0; i < LINE_LENGTH; ++i )
 	{
@@ -61,7 +61,7 @@ void GameState::RenderLine()
 void GameState::RenderScore()
 {
 	int scorePos = 
-		Game::GetInstance().GetScreenHeight() - UI_OFFSET + SCORE_OFFSET;
+		Game::GetScreenHeight() - UI_OFFSET + SCORE_OFFSET;
 
 	// Convert the score to a std::string with a stringstream.
 	std::stringstream ss;

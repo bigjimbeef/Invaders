@@ -30,7 +30,7 @@ void Bomb::Init()
 	m_position.y += BOMB_OFFSET;
 }
 
-void Bomb::Update(float frameTime)
+void Bomb::Update(const float frameTime)
 {
 	if ( m_alive )
 	{
@@ -38,7 +38,7 @@ void Bomb::Update(float frameTime)
 		m_position.y += offset;
 
 		// This represents the projectile going off-screen at the bottom.
-		if ( m_position.y > Game::GetInstance().GetScreenHeight() )
+		if ( m_position.y > Game::GetScreenHeight() )
 		{
 			m_alive = false;
 		}

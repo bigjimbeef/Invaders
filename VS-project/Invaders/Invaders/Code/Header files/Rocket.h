@@ -23,7 +23,7 @@ class Rocket : public IProjectile
 
 		virtual void Init();
 
-		virtual void Update(float frameTime);
+		virtual void Update(const float frameTime);
 		virtual void Render();
 
 		// Implement this function to show that this class is not abstract.
@@ -31,12 +31,10 @@ class Rocket : public IProjectile
 
 		//---------------------------------------------------------------------
 		// Accessors
-
-		inline bool IsAlive() { return m_alive; }
+		inline bool IsAlive() const { return m_alive; }
 		inline void Kill() { m_alive = false; }
 
 	private:
-
 		static const int ROCKET_VELOCITY = 350;
 		static const int ROCKET_OFFSET = -20;
 

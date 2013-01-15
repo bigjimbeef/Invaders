@@ -10,7 +10,7 @@ InputController::~InputController()
 {
 }
 
-void InputController::HandleInput(float frameTime)
+void InputController::HandleInput(const float frameTime)
 {
 	// Populate the key state from the game system.
 	IDiceInvaders::KeyStatus keystate;
@@ -30,8 +30,8 @@ void InputController::HandleInput(float frameTime)
 	}
 }
 
-void InputController::GameControls(IDiceInvaders::KeyStatus keystate,
-									 float frameTime)
+void InputController::GameControls(const IDiceInvaders::KeyStatus keystate,
+								   const float frameTime)
 {
 	// Process the key state.
 	if ( keystate.left )
@@ -72,7 +72,7 @@ void InputController::GameControls(IDiceInvaders::KeyStatus keystate,
 #endif
 }
 
-void InputController::GameOverControls(IDiceInvaders::KeyStatus keystate)
+void InputController::GameOverControls(const IDiceInvaders::KeyStatus keystate)
 {
 	if ( keystate.fire )
 	{

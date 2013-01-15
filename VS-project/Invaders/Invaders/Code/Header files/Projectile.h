@@ -18,7 +18,7 @@ class IProjectile : public IRenderable
 
 		virtual void Init() { }
 
-		virtual void Update(float frameTime) { }
+		virtual void Update(const float frameTime) { }
 		virtual void Render() { }
 
 		// This is an abstract base class. Mark it as such with pure virtual.
@@ -29,7 +29,7 @@ class IProjectile : public IRenderable
 
 		//---------------------------------------------------------------------
 		// Accessors
-		virtual inline bool IsAlive() { return m_alive; }
+		virtual inline bool IsAlive() const { return m_alive; }
 		virtual inline void Kill() { m_alive = false; }
 	
 	protected:
@@ -39,4 +39,4 @@ class IProjectile : public IRenderable
 
 };
 
-#endif // PROJECTILEMANAGER_H
+#endif // PROJECTILE_H

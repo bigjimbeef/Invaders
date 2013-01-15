@@ -25,7 +25,7 @@ class EnemyManager
 		}
 		virtual ~EnemyManager();
 
-		void Update(float frameTime);
+		void Update(const float frameTime);
 
 		void Render();
 
@@ -39,21 +39,22 @@ class EnemyManager
 		// This function is used when the nearest enemy is a column is killed,
 		// and works out the next nearest enemy in the row. This is used for
 		// determining which enemies can shoot.
-		void CalculateNewMaxRow(int col);
+		void CalculateNewMaxRow(const int col);
 
 		//---------------------------------------------------------------------
 		// Accessors
-		inline std::list<Enemy*>& GetEnemyList() { return m_enemies; }
-		inline int GetMaxCol() { return m_maxCol; }
-		inline int GetMinCol() { return m_minCol; }
+		inline const std::list<Enemy*>& GetEnemyList() const { return m_enemies; }
+		inline int GetMaxCol() const { return m_maxCol; }
+		inline int GetMinCol() const { return m_minCol; }
 
-		inline int GetMoveDelta() { return ( m_directionOfTravel * MOVE_DISTANCE ); }
-		inline int GetDropDistance() { return DROP_DISTANCE; }
-
-		inline int GetRemainingEnemies() { return m_remainingEnemies; }
-		inline int GetMaxRow(int col) { return m_maximumRows[col]; }
+		inline int GetMoveDelta() const { return ( m_directionOfTravel * MOVE_DISTANCE ); }
+	
+		inline int GetRemainingEnemies() const { return m_remainingEnemies; }
+		inline int GetMaxRow(unsigned int col) const { return m_maximumRows[col]; }
 
 		inline void SetProgress(float progress) { m_enemyProgress = progress; }
+
+		static int GetDropDistance() { return DROP_DISTANCE; }
 
 	private:
 		// Manages when the enemies need to drop down to the next line.

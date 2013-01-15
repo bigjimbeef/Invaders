@@ -21,18 +21,18 @@ class IRenderable
 		// class.
 		virtual void IsAbstract() = 0;
 
-		// Draws the sprite.
+		virtual void Update(const float frameTime) { }
 		virtual void Render() { }
 
 		//---------------------------------------------------------------------
 		// Accessors
-		inline Position GetPosition() { return m_position; }
+		inline Position GetPosition() const { return m_position; }
 		inline void SetPosition(Position newPos) { m_position = newPos; }
 
-		inline int GetXOffset() { return m_spriteClipXOffset; }
-		inline int GetYOffset() { return m_spriteClipYOffset; }
-		inline int GetWidth() { return m_spriteClipWidth; }
-		inline int GetHeight() { return m_spriteClipHeight; }
+		inline int GetXOffset() const { return m_spriteClipXOffset; }
+		inline int GetYOffset() const { return m_spriteClipYOffset; }
+		inline int GetWidth() const { return m_spriteClipWidth; }
+		inline int GetHeight() const { return m_spriteClipHeight; }
 
 	protected:
 		// The position that the renderable object is currently at.

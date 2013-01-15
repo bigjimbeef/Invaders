@@ -37,7 +37,7 @@ void Enemy::Init()
 		ResourceManager::GetEnemyTwoSprite();
 }
 
-void Enemy::Update(float frameTime)
+void Enemy::Update(const float frameTime)
 {
 	// No need to process the rest of the function if we can't fire.
 	if ( !m_canFire )
@@ -95,7 +95,7 @@ void Enemy::Render()
 	mp_sprite->draw(int(m_position.x), int(m_position.y));
 }
 
-void Enemy::Move(bool dropDown)
+void Enemy::Move(const bool dropDown)
 {
 	// If we're not dropping down, we move across the screen.
 	if ( !dropDown )
@@ -104,7 +104,7 @@ void Enemy::Move(bool dropDown)
 	}
 	else
 	{
-		int drop = EnemyManager::GetInstance().GetDropDistance();
+		int drop = EnemyManager::GetDropDistance();
 		m_dropDistance += drop;
 		m_position.y += drop;
 		
@@ -166,7 +166,7 @@ void Enemy::Fire()
 {
 	// Create a new bomb, then spawn it with the projectile manager.
     Bomb* p_bomb = new Bomb(*this);
-    ProjectileManager::GetInstance().SpawnProjectile(p_bomb);
+    ProjectileManager::GetInstance().SpawnProjectile(*p_bomb);
             
 	// We also manage the list internally too, though the memory
 	// management is handled in the ProjectileManager.

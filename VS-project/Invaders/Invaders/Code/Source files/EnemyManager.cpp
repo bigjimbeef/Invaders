@@ -53,13 +53,11 @@ bool EnemyManager::CheckForDrop()
 		// To calculate the right of the pack, we use the col width for each
 		// but the last column, where we use the sprite width.
 		int packWidth = 
-			(COL_OFFSET * ( m_maxCol - m_minCol )) 
-			+ Game::GetInstance().GetSpriteSize();
+			(COL_OFFSET * ( m_maxCol - m_minCol )) + Game::GetSpriteSize();
 
 		float packRight = m_currentX + static_cast<float>(packWidth);
 
-		float screenRight = 
-			static_cast<float>( Game::GetInstance().GetScreenWidth() );
+		float screenRight = static_cast<float>( Game::GetScreenWidth() );
 
 		if ( packRight >= screenRight )
 		{
@@ -95,7 +93,7 @@ void EnemyManager::UpdateMovementSpeed()
 	m_pauseDuration = duration;
 }
 
-void EnemyManager::Update(float frameTime)
+void EnemyManager::Update(const float frameTime)
 {
 	// Increment the timer.
 	m_currentPause += frameTime;
@@ -371,7 +369,7 @@ void EnemyManager::CalculateNewColWidth()
 	m_currentX = p_minEnemy->GetPosition().x;
 }
 
-void EnemyManager::CalculateNewMaxRow(int col)
+void EnemyManager::CalculateNewMaxRow(const int col)
 {
 	// Check for array OOB.
 	if ( col < 0 || col >= NUM_COLS )
