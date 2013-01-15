@@ -106,8 +106,6 @@ class EnemyManager
 		// This array contains the row of the nearest enemy in each column.
 		int m_maximumRows[NUM_COLS];
 
-		static const int SPRITE_WIDTH = 32;
-
 		static const int ROW_OFFSET = 40;
 		static const int COL_OFFSET = 40;
 

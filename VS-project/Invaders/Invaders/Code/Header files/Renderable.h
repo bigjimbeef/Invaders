@@ -29,10 +29,6 @@ class IRenderable
 		inline Position GetPosition() { return m_position; }
 		inline void SetPosition(Position newPos) { m_position = newPos; }
 
-		// Note that we only need an accessor for the width, as all sprites
-		// in the game are square.
-		inline int GetSpriteBounds() { return SPRITE_WIDTH; }
-
 		inline int GetXOffset() { return m_spriteClipXOffset; }
 		inline int GetYOffset() { return m_spriteClipYOffset; }
 		inline int GetWidth() { return m_spriteClipWidth; }
@@ -51,7 +47,6 @@ class IRenderable
 
 		// Pointer to the sprite object as defined in the DiceInvaders lib.
 		ISprite* mp_sprite;
-		static const int SPRITE_WIDTH = 32;
 };
 
 #endif // RENDERABLE_H

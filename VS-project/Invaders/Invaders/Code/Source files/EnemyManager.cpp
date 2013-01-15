@@ -50,7 +50,10 @@ bool EnemyManager::CheckForDrop()
 		// pack has touched the right hand edge.
 		// To calculate the right of the pack, we use the col width for each
 		// but the last column, where we use the sprite width.
-		int packWidth = (COL_OFFSET * ( m_maxCol - m_minCol )) + SPRITE_WIDTH;
+		int packWidth = 
+			(COL_OFFSET * ( m_maxCol - m_minCol )) 
+			+ Game::GetInstance().GetSpriteSize();
+
 		float packRight = m_currentX + static_cast<float>(packWidth);
 
 		float screenRight = 
@@ -191,7 +194,6 @@ void EnemyManager::Update(float frameTime)
 	Game::GetInstance().GetSystem().drawText(0, 40, enemies.c_str());
 #endif
 }
-
 
 void EnemyManager::HandleEnemyDeletion()
 {
@@ -351,10 +353,14 @@ void EnemyManager::CalculateNewMaxRow(int col)
 		Enemy* enemy = static_cast<Enemy*>(*it);
 		if ( enemy->IsAlive() )
 		{
-			if ( enemy->GetCol() == col && enemy->GetRow() > maxRow )
+			if ( enemy->GetCol() == col )
 			{
-				maxRow = enemy->GetRow();
-				p_maxEnemy = enemy;
+				// >= as there may only be an enemy in row 0 remaining.
+				if ( enemy->GetRow() >= maxRow )
+				{
+					maxRow = enemy->GetRow();
+					p_maxEnemy = enemy;
+				}
 			}
 		}
 	}

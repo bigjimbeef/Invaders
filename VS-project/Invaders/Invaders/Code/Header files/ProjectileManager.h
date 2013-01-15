@@ -33,6 +33,10 @@ class ProjectileManager
 		// the projectile will be detailed in the Projectile itself.
 		void SpawnProjectile(IProjectile* proj);
 
+		//---------------------------------------------------------------------
+		// Accessors
+		inline std::list<IProjectile*>& GetProjectileList() { return m_projectiles; }
+
 	private:
 
 		// A list of all projectiles in the game world.

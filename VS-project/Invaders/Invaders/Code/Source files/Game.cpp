@@ -51,10 +51,6 @@ void Game::Init()
 	// Spawn a wave of enemies.
 	EnemyManager::GetInstance().SpawnWave();
 
-	// Initialise the ProjectileManager, allowing access to projectiles.
-
-
-
 	// We have no initialised the game.
 	m_initialised = true;
 }
@@ -71,8 +67,6 @@ void Game::Run()
 
 	// Update the game world, which displays all changes that were made in the
 	// previous iteration of this function loop.
-
-	// TODO: We need to exit if this update function returns false!
 	if ( !mp_system->update() )
 	{
 		m_gameRunning = false;
@@ -83,14 +77,22 @@ void Game::Run()
 	float newTime = mp_system->getElapsedTime();
 	float frameTime = newTime - m_lastTime;
 
-	// Handle input from the player.
-	HandleInput(frameTime);
+	// Update the game world
+	if ( !GameState::GetInstance().IsGameOver() )
+	{
+		// Handle input from the player.
+		HandleInput(frameTime);
 
-	// Update all objects in the game world.
-	Update(frameTime);
+		// Update all objects in the game world.
+		Update(frameTime);
 
-	// Render the game world.
-	Render();
+		// Render the game world.
+		Render();
+	}
+
+	// Render the (rudimentary) UI for the game. Note that this persists
+	// even after the game is finished.
+	GameState::GetInstance().RenderUI(frameTime);
 
 	// Cache the elapsed frame time.
 	m_lastTime = newTime;
@@ -113,8 +115,6 @@ void Game::Update(float frameTime)
 
 	// Update the ProjectileManager, which will in turn update the projectiles.
 	ProjectileManager::GetInstance().Update(frameTime);
-
-	// Update the GameStateManager, which holds score, current wave, etc.
 }
 
 void Game::Render()
@@ -127,9 +127,6 @@ void Game::Render()
 
 	// Render the ProjectileManager, which will in turn render the projectiles.
 	ProjectileManager::GetInstance().Render();
-
-	// Render the (rudimentary) UI for the game.
-	GameState::GetInstance().RenderUI();
 
 #ifdef _DEBUG
 	// Render the debug text, but only in Debug mode.

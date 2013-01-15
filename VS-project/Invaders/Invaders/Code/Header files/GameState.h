@@ -22,7 +22,7 @@ class GameState
 		virtual ~GameState();		
 
 		// This function renders the Score and Lives UI.
-		void RenderUI();
+		void RenderUI(float frameTime);
 
 		// This function draws a line above the UI, much like
 		// the original game.
@@ -34,13 +34,25 @@ class GameState
 		// Increase the wave number, capping at MAX_WAVES
 		void IncrementWaveNumber();
 
+		// The game is over, so indicate that in text form.
+		void GameOverMessage(float frameTime);
+
 		//---------------------------------------------------------------------
 		// Accessors
 		inline int GetWaveNumber() { return m_waveNumber; }
 		inline void IncrementScore(int amount) { m_playerScore += amount; }
+		
+		inline bool IsGameOver() { return m_gameOver; }
+		inline void SetGameOver() { m_gameOver = true; }
 
 	private:
 		int m_playerScore;
+
+		// Is the game finished?
+		bool m_gameOver;
+		const char* m_gameOverMessage;
+		int m_gameOverMsgXPos;
+		int m_gameOverMsgYPos;
 
 		// Tracks what enemy wave we are on. This is used as the enemies
 		// begin further down the screen in later waves.
@@ -49,15 +61,21 @@ class GameState
 		
 		// Have we drawn the line at the bottom of the screen?
 		bool m_lineDrawn;
-		static const int LINE_OFFSET = 60;
-		// This was measured through trial and error. 
+
+		//---------------------------------------------------------------------
+		// UI positioning constants.
+		// Note that these are all just trial and error measurements for
+		// aesthetic purposes.
+		static const int UI_OFFSET = 35;
+		static const int LINE_OFFSET = 45;
+		static const int SCORE_OFFSET = 10;
+
 		static const int LINE_LENGTH = 160;
 
-		static const int SCORE_XPOS = 500;
-		static const int UI_OFFSET = 45;
-		static const int LINE_HEIGHT = 20;
-
 		static const int LIVES_XPOS = 50;
+		static const int SCORE_XPOS = 500;
+		
+		static const int NUM_PADDING_ZEROES = 6;		
 
 		// The lives UI is an array of three PlayerUI objects.
 		PlayerUI* mp_playerUI[3];

@@ -76,6 +76,7 @@ class Game
 		
 		inline int GetScreenWidth() { return SCREEN_WIDTH; }
 		inline int GetScreenHeight() { return SCREEN_HEIGHT; }
+		inline int GetSpriteSize() { return SPRITE_SIZE; }
 
 	private:
 		// Is the game initialised?
@@ -95,6 +96,7 @@ class Game
 		// Game world dimensions
 		static const int SCREEN_WIDTH = 640;
 		static const int SCREEN_HEIGHT = 480;
+		static const int SPRITE_SIZE = 32;
 
 		// The player object.
 		Player* mp_player;
@@ -103,7 +105,7 @@ class Game
 		static const int PLAYER_START_X = ( SCREEN_WIDTH / 2 ) - 16;
 
 		// Sprite height plus a bit more for aesthetic padding.
-		static const int PLAYER_Y_OFFSET = 100; 
+		static const int PLAYER_Y_OFFSET = 70; 
 		static const int PLAYER_START_Y = SCREEN_HEIGHT - PLAYER_Y_OFFSET;
 
 		// Private default ctor to facilitate Singleton pattern.

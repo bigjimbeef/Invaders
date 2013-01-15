@@ -3,6 +3,7 @@
 
 // Needed for abs
 #include <cmath>
+#include <list>
 
 // Include our base class.
 #include "Renderable.h"
@@ -32,6 +33,9 @@ class Player : public IRenderable
 		// indicating the cardinality of the X move:
 		//     1 is right, -1 is left.
 		void Move(int direction, float elapsedTime);
+
+		// This function ensures we don't go outside the game world.
+		void BoundMovement();
 
 		// Controls the player firing a rocket.
 		void Fire();

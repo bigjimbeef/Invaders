@@ -7,11 +7,10 @@ Bomb::Bomb(Enemy& bombOwner) :
 	m_bombOwner(bombOwner),
 	m_alive(true)
 {
-    // TODO: Update
-	m_spriteClipWidth = 6;
-	m_spriteClipHeight = 19;
-	m_spriteClipXOffset = 13;
-	m_spriteClipYOffset = 7;
+	m_spriteClipWidth = 8;
+	m_spriteClipHeight = 16;
+	m_spriteClipXOffset = 12;
+	m_spriteClipYOffset = 8;
 }
 Bomb::~Bomb()
 {

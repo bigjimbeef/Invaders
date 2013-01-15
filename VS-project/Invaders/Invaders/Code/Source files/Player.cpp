@@ -82,7 +82,7 @@ bool Player::CheckCollision(IRenderable* objectOne, IRenderable* objectTwo)
 	Position twoPos = objectTwo->GetPosition();
 	
 	// This is constant for all sprites currently.
-	int bounds = objectOne->GetSpriteBounds();
+	int bounds = Game::GetInstance().GetSpriteSize();
 
 	// Check if the two objects are within the same 32x32 grid.
 	if ( BroadPhase(onePos, twoPos, bounds) )
@@ -100,33 +100,56 @@ bool Player::CheckCollision(IRenderable* objectOne, IRenderable* objectTwo)
 
 void Player::Update(float frameTime)
 {
-	// Manage collisions between the player and enemies, and between the player
+	// Manage collisions between the player and bombs, and between the player
 	// rocket and enemies.
 
 	// Get a local enemy list.
-	std::list<Enemy*> enemyList = EnemyManager::GetInstance().GetEnemyList();
+	std::list<Enemy*>& enemyList = EnemyManager::GetInstance().GetEnemyList();
 
 	std::list<Enemy*>::iterator it = enemyList.begin();
 	for ( it; it != enemyList.end(); ++it )
 	{
+		Enemy* enemy = static_cast<Enemy*>(*it);
+
 		// Check for collisions against each individual enemy.
 		// Note that we don't need to check if a rocket exists, as
 		// this is handled in the collision function.
-		if ( CheckCollision(mp_rocket, *it) )
+		if ( CheckCollision(mp_rocket, enemy) )
 		{
 			mp_rocket->Kill();
-			
-			Enemy* enemy = static_cast<Enemy*>(*it);
 			enemy->Kill();
 		}
-		// We don't need to check if the player collides if the rocket did.
-		else if ( CheckCollision(this, *it) )
+	}
+
+	// Get a local projectile list.
+	std::list<IProjectile*>& projectileList 
+		= ProjectileManager::GetInstance().GetProjectileList();
+
+	std::list<IProjectile*>::iterator projIt = projectileList.begin();
+	for ( projIt; projIt != projectileList.end(); ++projIt )
+	{
+		// We only want to examine bombs.
+		if ( (*projIt)->IsBomb() )
 		{
-			// TODO: Player collision!
-		} 
+			Bomb* p_bomb = static_cast<Bomb*>(*projIt);
+
+			if ( CheckCollision(this, p_bomb) )
+			{
+				// We've been hit!
+				m_health--;
+
+				// Destroy the offending bomb.
+				p_bomb->Kill();
+			}
+		}
 	}
 	
-	// TODO: Update player's health.
+	// Check to see if the player has died.
+	if ( m_health <= 0 )
+	{
+		// GAME OVER MAN.. GAME OVER!
+		GameState::GetInstance().SetGameOver();
+	}
 }
 
 void Player::Move(int direction, float elapsedTime)
@@ -141,6 +164,21 @@ void Player::Move(int direction, float elapsedTime)
 
 	// Update the player's position
 	m_position.x += offset;
+
+	// Ensure we don't go out of bounds
+	BoundMovement();
+}
+
+void Player::BoundMovement()
+{
+	m_position.x = max(0.0f, m_position.x);
+	float rightBounds =
+		static_cast<float>(
+			Game::GetInstance().GetScreenWidth() - 
+			Game::GetInstance().GetSpriteSize()
+		);
+
+	m_position.x = min(m_position.x, rightBounds);
 }
 
 void Player::Fire()

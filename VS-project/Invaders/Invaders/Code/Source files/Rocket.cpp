@@ -38,7 +38,7 @@ void Rocket::Update(float frameTime)
 		m_position.y -= offset;
 
 		// This represents the projectile going off-screen on the top.
-		if ( m_position.y < ( 0 - SPRITE_WIDTH ) )
+		if ( m_position.y < ( 0 - Game::GetInstance().GetSpriteSize() ) )
 		{
 			m_alive = false;
 		}

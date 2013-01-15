@@ -53,6 +53,8 @@ class Enemy : public IRenderable
 		// Check if we have any bombs currently alive.
 		inline bool HasLiveBomb() { return (m_bombs.size() > 0); }
 
+		inline std::list<Bomb*>& GetBombList() { return m_bombs; }
+
 	private:
 		// Is this enemy alive?
 		bool m_alive;

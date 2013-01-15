@@ -44,7 +44,7 @@ class Bomb : public IProjectile
 	    // The enemy that fired this bomb.
 	    Enemy& m_bombOwner;
 
-		static const int BOMB_VELOCITY = 200;
+		static const int BOMB_VELOCITY = 225;
 		static const int BOMB_OFFSET = 20;
 
 	protected:
