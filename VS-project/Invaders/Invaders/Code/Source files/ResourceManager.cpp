@@ -15,13 +15,20 @@ ISprite* ResourceManager::s_bombSprite = NULL;
 
 void ResourceManager::Init()
 {
-	s_playerSprite = Game::GetInstance().GetSystem().createSprite("data/player.bmp");
-	s_enemyOneSprite = Game::GetInstance().GetSystem().createSprite("data/enemy1.bmp");
-	s_enemyOneAltSprite = Game::GetInstance().GetSystem().createSprite("data/enemy1_alt.bmp");
-	s_enemyTwoSprite = Game::GetInstance().GetSystem().createSprite("data/enemy2.bmp");
-	s_enemyTwoAltSprite = Game::GetInstance().GetSystem().createSprite("data/enemy2_alt.bmp");
-	s_rocketSprite = Game::GetInstance().GetSystem().createSprite("data/rocket.bmp");
-	s_bombSprite = Game::GetInstance().GetSystem().createSprite("data/bomb.bmp");
+	s_playerSprite =
+	    Game::GetInstance().GetSystem().createSprite("data/player.bmp");
+	s_enemyOneSprite =
+	    Game::GetInstance().GetSystem().createSprite("data/enemy1.bmp");
+	s_enemyOneAltSprite =
+	    Game::GetInstance().GetSystem().createSprite("data/enemy1_alt.bmp");
+	s_enemyTwoSprite =
+	    Game::GetInstance().GetSystem().createSprite("data/enemy2.bmp");
+	s_enemyTwoAltSprite =
+	    Game::GetInstance().GetSystem().createSprite("data/enemy2_alt.bmp");
+	s_rocketSprite =
+	    Game::GetInstance().GetSystem().createSprite("data/rocket.bmp");
+	s_bombSprite =
+	    Game::GetInstance().GetSystem().createSprite("data/bomb.bmp");
 }
 
 void ResourceManager::Destroy()

@@ -35,7 +35,8 @@ GameState::GameState() :
 
 	int pressStartXLength = 160;
 	m_pressStartXPos = ( Game::GetScreenWidth() - pressStartXLength ) / 2;
-	m_pressStartYPos = m_gameOverMsgYPos + messageYLength; // Offset by height of string.
+	// Offset by height of string.
+	m_pressStartYPos = m_gameOverMsgYPos + messageYLength; 
 }
 GameState::~GameState()
 {
@@ -126,6 +127,8 @@ void GameState::IncrementWaveNumber()
 void GameState::GameOverMessage(float frameTime)
 {
 	// Draw the game over messages.
-	Game::GetInstance().GetSystem().drawText(m_gameOverMsgXPos, m_gameOverMsgYPos, m_gameOverMessage);
-	Game::GetInstance().GetSystem().drawText(m_pressStartXPos, m_pressStartYPos, "Please press Fire to exit");
+	Game::GetInstance().GetSystem().drawText(
+	    m_gameOverMsgXPos, m_gameOverMsgYPos, m_gameOverMessage);
+	Game::GetInstance().GetSystem().drawText(
+	    m_pressStartXPos, m_pressStartYPos, "Please press Fire to exit");
 }

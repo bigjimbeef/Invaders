@@ -45,8 +45,10 @@ Position Player::GetCollisionMidpoint(IRenderable& object)
 {
 	Position currentPos = object.GetPosition();
 
-	float midX = currentPos.x + ( object.GetXOffset() + ( object.GetWidth() / 2.0f ) );
-	float midY = currentPos.y + ( object.GetYOffset() + ( object.GetHeight() / 2.0f ) );
+	float midX =
+	    currentPos.x + (object.GetXOffset() + (object.GetWidth() / 2.0f));
+	float midY =
+	    currentPos.y + (object.GetYOffset() + (object.GetHeight() / 2.0f));
 
 	return Position(midX, midY);
 }

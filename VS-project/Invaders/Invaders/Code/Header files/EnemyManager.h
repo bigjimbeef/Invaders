@@ -43,14 +43,16 @@ class EnemyManager
 
 		//---------------------------------------------------------------------
 		// Accessors
-		inline const std::list<Enemy*>& GetEnemyList() const { return m_enemies; }
+        inline const std::list<Enemy*>& GetEnemyList() const
+            { return m_enemies; }
 		inline int GetMaxCol() const { return m_maxCol; }
 		inline int GetMinCol() const { return m_minCol; }
 
-		inline int GetMoveDelta() const { return ( m_directionOfTravel * MOVE_DISTANCE ); }
-	
+		inline int GetMoveDelta() const
+		    { return ( m_directionOfTravel * MOVE_DISTANCE ); }
 		inline int GetRemainingEnemies() const { return m_remainingEnemies; }
-		inline int GetMaxRow(unsigned int col) const { return m_maximumRows[col]; }
+		inline int GetMaxRow(unsigned int col) const
+		    { return m_maximumRows[col]; }
 
 		inline void SetProgress(float progress) { m_enemyProgress = progress; }
 
@@ -76,7 +78,7 @@ class EnemyManager
 
 		// A list of all enemies in the game world.
 		std::list<Enemy*> m_enemies;
-		// A list of the enemies that are currently awaiting deletion. This 
+		// A list of the enemies that are currently awaiting deletion. This
 		// situation arises when the enemies are killed but have one or more of
 		// their bombs remaining in the game world.
 		std::list<Enemy*> m_deadEnemies;
