@@ -39,10 +39,6 @@
 #include <vld.h>
 #endif
 
-#ifdef _DEBUG
-#include "Debug.h"
-#endif
-
 class Game
 {
 	public:
@@ -69,6 +65,7 @@ class Game
 		// Accessors
 
 		inline bool IsRunning() { return m_gameRunning; }
+		inline void SetRunning(bool running) { m_gameRunning = running; }
 
 		inline Player& GetPlayer() { return *mp_player; }
 
@@ -103,7 +100,6 @@ class Game
 		// The player object.
 		Player* mp_player;
 
-		// TODO: Refactor into a constants class?
 		static const int PLAYER_START_X = ( SCREEN_WIDTH / 2 ) - 16;
 
 		// Sprite height plus a bit more for aesthetic padding.

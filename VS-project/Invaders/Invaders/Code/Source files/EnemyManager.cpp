@@ -12,7 +12,7 @@ EnemyManager::EnemyManager() :
 	m_enemyProgress(0.0f),
 	m_remainingEnemies(0),
 	m_pauseDuration(0.0f),
-	m_basePauseDuration(0.01f),
+	m_basePauseDuration(0.60f),
 	m_currentPause(0.0f),
 	m_respawnTime(1.0f),
 	m_minStep(0.01f),
@@ -198,18 +198,12 @@ void EnemyManager::Update(float frameTime)
 
 	Game::GetInstance().GetSystem().drawText(0, 40, enemies.c_str());
 #endif
-
-#ifdef _DEBUG
-	std::stringstream ss2;
-	ss2 << "LOWEST:" << m_lowestPoint;
-	std::string low = ss2.str();
-
-	Game::GetInstance().GetSystem().drawText(0, 100, low.c_str());
-#endif
 }
 
 void EnemyManager::UpdateLowestPoint()
 {
+	// Loop through all the maximum rows, and find the lowest point in any
+	// of them.
 	for ( int i = 0; i < ( sizeof(m_maximumRows) / sizeof(int) ); ++i )
 	{
 		float lowest = 

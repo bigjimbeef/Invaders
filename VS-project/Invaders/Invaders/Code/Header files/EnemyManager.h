@@ -120,7 +120,6 @@ class EnemyManager
 		static const int MOVE_DISTANCE = 4;
 		static const int DROP_DISTANCE = 20;
 
-		// TODO: Revisit these scores!
 		static const int FRONT_ENEMY_SCORE = 10;
 		static const int BACK_ENEMY_SCORE = 30;
 

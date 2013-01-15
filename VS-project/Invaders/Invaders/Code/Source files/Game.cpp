@@ -77,12 +77,12 @@ void Game::Run()
 	float newTime = mp_system->getElapsedTime();
 	float frameTime = newTime - m_lastTime;
 
-	// Update the game world
+	// Handle input from the player.
+	HandleInput(frameTime);
+
+	// We only update and render the game before Game Over.
 	if ( !GameState::GetInstance().IsGameOver() )
 	{
-		// Handle input from the player.
-		HandleInput(frameTime);
-
 		// Update all objects in the game world.
 		Update(frameTime);
 
@@ -127,11 +127,5 @@ void Game::Render()
 
 	// Render the ProjectileManager, which will in turn render the projectiles.
 	ProjectileManager::GetInstance().Render();
-
-#ifdef _DEBUG
-	// Render the debug text, but only in Debug mode.
-	// TODO: Maybe reenable Debug.
-	// Debug::GetInstance().Render();
-#endif
 }
 

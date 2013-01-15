@@ -53,6 +53,8 @@ class GameState
 		const char* m_gameOverMessage;
 		int m_gameOverMsgXPos;
 		int m_gameOverMsgYPos;
+		int m_pressStartXPos;
+		int m_pressStartYPos;
 
 		// Tracks what enemy wave we are on. This is used as the enemies
 		// begin further down the screen in later waves.

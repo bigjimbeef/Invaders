@@ -8,7 +8,9 @@
 
 // Forward declare Game to allow access to Game singleton.
 class Game;
-class Debug;
+
+// Need access to the IDiceInvaders::KeyStatus enum.
+#include "DiceInvadersLib.h"
 
 class InputController
 {
@@ -23,6 +25,12 @@ class InputController
 		// The only function of note, this deals with the player input
 		// processing, through use of the DiceInvadersLib functions.
 		void HandleInput(float frameTime);
+
+		// Controls for whilst the game is running.
+		void GameControls(IDiceInvaders::KeyStatus keystate, float frameTime);
+
+		// Controls for the game over "screen".
+		void GameOverControls(IDiceInvaders::KeyStatus keystate);
 
 	private:
 		// Holds the state of the player keys at any given time.
