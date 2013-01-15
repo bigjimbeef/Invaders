@@ -16,31 +16,17 @@ void InputController::HandleInput(float frameTime)
 	IDiceInvaders::KeyStatus keystate;
 	Game::GetInstance().GetSystem().getKeyStatus(keystate);
 
-	// Get the player X position for calculating if we can move.
-	float playerX = Game::GetInstance().GetPlayer().GetPosition().x;
-	float rightBounds =
-		static_cast<float>(
-			Game::GetInstance().GetScreenWidth() - 
-			Game::GetInstance().GetSpriteSize()
-		);
-
 	// Process the key state.
 	if ( keystate.left )
 	{
-		if ( playerX > 0.0f )
-		{
-			// Move the player in negative X.
-			Game::GetInstance().GetPlayer().Move(-1, frameTime);
-		}
+		// Move the player in negative X.
+		Game::GetInstance().GetPlayer().Move(-1, frameTime);
 	}
 	
 	if ( keystate.right )
 	{
-		if ( playerX < rightBounds )
-		{
-			// Move the player in position X.
-			Game::GetInstance().GetPlayer().Move(1, frameTime);
-		}
+		// Move the player in position X.
+		Game::GetInstance().GetPlayer().Move(1, frameTime);
 	}
 	
 	if ( keystate.fire )
