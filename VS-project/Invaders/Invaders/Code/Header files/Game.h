@@ -21,24 +21,6 @@
 #include "EnemyManager.h"
 #include "ResourceManager.h"
 
-//#define MEMLEAK_DEBUGGING
-#ifdef MEMLEAK_DEBUGGING
-	#define _CRTDBG_MAP_ALLOC
-	#include <stdlib.h>
-	#include <crtdbg.h>
-
-	#ifdef _DEBUG
-	   #ifndef DBG_NEW
-		  #define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
-		  #define new DBG_NEW
-	   #endif
-	#endif  // _DEBUG
-#endif
-
-#ifdef _DEBUG
-#include <vld.h>
-#endif
-
 class Game
 {
 	public:

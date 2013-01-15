@@ -20,9 +20,5 @@ int APIENTRY WinMain(
 		Game::GetInstance().Run();
 	}
 
-#ifdef MEMLEAK_DEBUGGING
-	_CrtDumpMemoryLeaks();
-#endif
-
 	return 0;
 }

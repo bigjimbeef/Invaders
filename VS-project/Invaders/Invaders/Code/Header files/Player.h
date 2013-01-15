@@ -1,9 +1,12 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-// Needed for abs
-#include <cmath>
-#include <list>
+//-----------------------------------------------------------------------------
+// Player.h
+// The player is represented in game as the little laser platform at the
+// bottom of the screen. This class stores the number of lives the player has,
+// as well as handling collision between all objects.
+//-----------------------------------------------------------------------------
 
 // Include our base class.
 #include "Renderable.h"

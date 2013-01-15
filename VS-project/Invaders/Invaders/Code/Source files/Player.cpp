@@ -1,5 +1,9 @@
 #include "Player.h"
 
+// Needed for abs
+#include <cmath>
+#include <list>
+
 // Include within .cpp file to match forward declare in .h
 #include "Game.h"
 

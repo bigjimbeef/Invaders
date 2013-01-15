@@ -1,6 +1,12 @@
 #ifndef ENEMY_H
 #define ENEMY_H
 
+//-----------------------------------------------------------------------------
+// Enemy.h
+// Represents one the enemies that are part of the Invaders' armada. They come
+// in two forms based on their position in the group of Invaders.
+//-----------------------------------------------------------------------------
+
 // Uses STL list for managing projectiles.
 #include <list>
 
