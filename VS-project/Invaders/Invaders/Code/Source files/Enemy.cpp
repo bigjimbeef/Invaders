@@ -10,6 +10,7 @@ Enemy::Enemy(float xPos, float yPos, int row, int col, int score) :
 	m_bombFireTarget(0.0f),
 	m_row(row),
 	m_col(col),
+	m_dropDistance(0.0f),
 	m_score(score),
 	m_altSprite(0)
 {
@@ -103,7 +104,13 @@ void Enemy::Move(bool dropDown)
 	}
 	else
 	{
-		m_position.y += EnemyManager::GetInstance().GetDropDistance();
+		int drop = EnemyManager::GetInstance().GetDropDistance();
+		m_dropDistance += drop;
+		m_position.y += drop;
+		
+		// Just set this for every enemy. Faster than checking if it's
+		// the same with an if statement.
+		EnemyManager::GetInstance().SetProgress(m_dropDistance);
 	}
 
 	m_altSprite = !m_altSprite;

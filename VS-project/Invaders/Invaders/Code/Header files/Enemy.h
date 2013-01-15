@@ -73,6 +73,8 @@ class Enemy : public IRenderable
 		int m_row;
 		// The starting col for the enemy. This is used to calculate movement.
 		int m_col;
+		// How far has the enemy dropped.
+		float m_dropDistance;
 
 		// The score that the player will be awarded for killing this enemy.
 		int m_score;

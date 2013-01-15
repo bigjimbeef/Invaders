@@ -53,6 +53,8 @@ class EnemyManager
 		inline int GetRemainingEnemies() { return m_remainingEnemies; }
 		inline int GetMaxRow(int col) { return m_maximumRows[col]; }
 
+		inline void SetProgress(float progress) { m_enemyProgress = progress; }
+
 	private:
 		// Manages when the enemies need to drop down to the next line.
 		bool CheckForDrop();
@@ -60,6 +62,9 @@ class EnemyManager
 		// This function will update the apparent movement speed of the enemies
 		// by reducing the duration between jumps as fewer enemies remain.
 		void UpdateMovementSpeed();
+
+		// This function manages the lowest point the invaders have reached.
+		void UpdateLowestPoint();
 
 		// Deletes the items from the enemy list, and clears the list.
 		void ClearEnemyList();
@@ -84,6 +89,9 @@ class EnemyManager
 		int m_directionOfTravel;
 		// This is the current X position of the far left of the field.
 		float m_currentX;
+		// This is the lowest point where there is an invader.
+		float m_lowestPoint;
+		float m_enemyProgress;
 			
 		// Track how many enemies remain.
 		int m_remainingEnemies;

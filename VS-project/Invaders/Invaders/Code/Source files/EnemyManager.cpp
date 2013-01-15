@@ -8,9 +8,11 @@ EnemyManager::EnemyManager() :
 	m_minCol(0),
 	m_directionOfTravel(1),
 	m_currentX(0.0f),
+	m_lowestPoint(0.0f),
+	m_enemyProgress(0.0f),
 	m_remainingEnemies(0),
 	m_pauseDuration(0.0f),
-	m_basePauseDuration(0.75f),
+	m_basePauseDuration(0.01f),
 	m_currentPause(0.0f),
 	m_respawnTime(1.0f),
 	m_minStep(0.01f),
@@ -180,6 +182,9 @@ void EnemyManager::Update(float frameTime)
 		// Update the X position.
 		m_currentX += ( m_directionOfTravel * MOVE_DISTANCE );
 
+		// Update the lowest point.
+		UpdateLowestPoint();
+
 		// Reset the timer.
 		m_currentPause = 0.0f;
 	}
@@ -193,6 +198,38 @@ void EnemyManager::Update(float frameTime)
 
 	Game::GetInstance().GetSystem().drawText(0, 40, enemies.c_str());
 #endif
+
+#ifdef _DEBUG
+	std::stringstream ss2;
+	ss2 << "LOWEST:" << m_lowestPoint;
+	std::string low = ss2.str();
+
+	Game::GetInstance().GetSystem().drawText(0, 100, low.c_str());
+#endif
+}
+
+void EnemyManager::UpdateLowestPoint()
+{
+	for ( int i = 0; i < ( sizeof(m_maximumRows) / sizeof(int) ); ++i )
+	{
+		float lowest = 
+			m_enemyProgress +
+			static_cast<float>( m_maximumRows[i] * COL_OFFSET );
+
+		if ( lowest > m_lowestPoint )
+		{
+			m_lowestPoint = lowest;
+		}
+	}
+
+	// If they're about to hit the player ...
+	float playerY = Game::GetInstance().GetPlayer().GetPosition().y;
+	if ( ( playerY - m_lowestPoint ) < DROP_DISTANCE )
+	{
+		// ... the game is over - INVASION!
+		GameState::GetInstance().SetGameOver();
+		return;
+	}
 }
 
 void EnemyManager::HandleEnemyDeletion()
@@ -242,6 +279,7 @@ void EnemyManager::SpawnWave()
 
 	int baseYPosition = 
 		0 + ( GameState::GetInstance().GetWaveNumber() * ROW_OFFSET );
+	m_enemyProgress = 0.0f;
 
 	// We need to find out how many enemies are in the back two rows, as these
 	// are worth more points.
@@ -277,6 +315,9 @@ void EnemyManager::SpawnWave()
 			p_baddie->EnableWeapon();
 			// Initialise the maximum rows array.
 			m_maximumRows[currentCol] = currentRow;
+
+			// The lowest point is the bottom of the front row sprites.
+			m_lowestPoint = yPos;
 		}
 		
 		m_enemies.push_back(p_baddie);

@@ -78,6 +78,8 @@ class Game
 		inline int GetScreenHeight() { return SCREEN_HEIGHT; }
 		inline int GetSpriteSize() { return SPRITE_SIZE; }
 
+		inline int GetPlayerStartY() { return PLAYER_START_Y; }
+
 	private:
 		// Is the game initialised?
 		bool m_initialised;
