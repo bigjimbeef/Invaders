@@ -21,5 +21,6 @@ void PlayerUI::Init()
 
 void PlayerUI::Render()
 {
-	mp_sprite->draw(int(m_position.x), int(m_position.y));
+	mp_sprite->draw(static_cast<int>(m_position.x),
+					static_cast<int>(m_position.y));
 }

@@ -8,5 +8,4 @@ Position::Position(float xPos, float yPos) :
 
 Position::~Position()
 {
-	int test = 3;
 }

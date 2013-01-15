@@ -11,7 +11,7 @@
 
 Player::Player(float xPos, float yPos) :
 	m_health(STARTING_HEALTH),
-	mp_rocket(0)
+	mp_rocket(NULL)
 {
 	// Initialise the player's position.
 	m_position = Position(xPos, yPos);
@@ -191,7 +191,7 @@ void Player::BoundMovement()
 void Player::Fire()
 {
 	// We only fire if we don't already have a rocket in motion.
-	if ( mp_rocket == 0 )
+	if ( mp_rocket == NULL )
 	{
 		// Create a new rocket ...
 		mp_rocket = new Rocket();
@@ -203,5 +203,6 @@ void Player::Fire()
 void Player::Render()
 {
 	// Draw the sprite for this renderable item.
-	mp_sprite->draw(int(m_position.x), int(m_position.y));
+	mp_sprite->draw(static_cast<int>(m_position.x),
+					static_cast<int>(m_position.y));
 }

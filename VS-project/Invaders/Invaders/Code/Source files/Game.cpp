@@ -4,9 +4,9 @@ Game::Game() :
 	m_initialised(0),
 	m_gameRunning(1),
 	m_lastTime(0.0f),
-	mp_library(0),
-	mp_system(0),
-	mp_player(0)
+	mp_library(NULL),
+	mp_system(NULL),
+	mp_player(NULL)
 {
 	// Initialising these variables outside of the initialisation list,
 	// as re-ordering the header file could cause problems with initialisation
@@ -21,17 +21,16 @@ Game::Game() :
 Game::~Game()
 {
 	delete mp_player;
-	mp_player = 0;
+	mp_player = NULL;
 
 	ResourceManager::Destroy();
 
 	// Destroy the game system.
 	mp_system->destroy();
-	mp_system = 0;
+	mp_system = NULL;
 
-	// Tidy up.
 	delete mp_library;
-	mp_library = 0;
+	mp_library = NULL;
 }
 
 void Game::Init()

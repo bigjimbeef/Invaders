@@ -47,5 +47,6 @@ void Bomb::Update(const float frameTime)
 
 void Bomb::Render()
 {
-	mp_sprite->draw(int(m_position.x), int(m_position.y));
+	mp_sprite->draw(static_cast<int>(m_position.x),
+					static_cast<int>(m_position.y));
 }
