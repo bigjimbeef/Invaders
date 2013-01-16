@@ -26,12 +26,12 @@ void InputController::HandleInput(const float frameTime)
 	// ... otherwise we listen for space bar to exit the game.
 	else
 	{
-		GameOverControls(keystate);
+		GameOverScreen(keystate);
 	}
 }
 
-void InputController::GameControls(const IDiceInvaders::KeyStatus keystate,
-								   const float frameTime)
+void InputController::GameControls(const IDiceInvaders::KeyStatus& keystate,
+								   float frameTime)
 {
 	// Process the key state.
 	if ( keystate.left )
@@ -72,7 +72,7 @@ void InputController::GameControls(const IDiceInvaders::KeyStatus keystate,
 #endif
 }
 
-void InputController::GameOverControls(const IDiceInvaders::KeyStatus keystate)
+void InputController::GameOverScreen(const IDiceInvaders::KeyStatus& keystate)
 {
 	if ( keystate.fire )
 	{

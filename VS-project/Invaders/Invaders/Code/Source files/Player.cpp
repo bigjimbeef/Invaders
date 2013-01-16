@@ -32,7 +32,7 @@ void Player::Init()
 	mp_sprite = ResourceManager::GetPlayerSprite();
 }
 
-bool Player::BroadPhase(Position& one, Position& two, const int bounds)
+bool Player::BroadPhase(const Position& one,const Position& two, int bounds)
 {
 	if ( abs(one.x - two.x) < bounds )
 	{
@@ -45,7 +45,7 @@ bool Player::BroadPhase(Position& one, Position& two, const int bounds)
 	return false;
 }
 
-Position Player::GetCollisionMidpoint(IRenderable& object)
+Position Player::GetCollisionMidpoint(const IRenderable& object)
 {
 	Position currentPos = object.GetPosition();
 
@@ -57,7 +57,8 @@ Position Player::GetCollisionMidpoint(IRenderable& object)
 	return Position(midX, midY);
 }
 
-bool Player::NarrowPhase(IRenderable& objectOne, IRenderable& objectTwo)
+bool Player::NarrowPhase(const IRenderable& objectOne,
+						 const IRenderable& objectTwo)
 {
 	// Get the centers of each object.
 	Position midOne = GetCollisionMidpoint(objectOne);
@@ -77,7 +78,8 @@ bool Player::NarrowPhase(IRenderable& objectOne, IRenderable& objectTwo)
 	return false;
 }
 
-bool Player::CheckCollision(IRenderable& objectOne, IRenderable& objectTwo)
+bool Player::CheckCollision(const IRenderable& objectOne,
+							const IRenderable& objectTwo)
 {
 	if ( &objectOne == NULL || &objectTwo == NULL )
 	{
@@ -104,7 +106,7 @@ bool Player::CheckCollision(IRenderable& objectOne, IRenderable& objectTwo)
 	return false;
 }
 
-void Player::Update(const float frameTime)
+void Player::Update(float frameTime)
 {
 	// Manage collisions between the player and bombs, and between the player
 	// rocket and enemies.
@@ -159,7 +161,7 @@ void Player::Update(const float frameTime)
 	}
 }
 
-void Player::Move(const int direction, const float elapsedTime)
+void Player::Move(int direction, float elapsedTime)
 {
 	float offset = elapsedTime * PLAYER_VELOCITY;
 

@@ -21,7 +21,7 @@ class IRenderable
 		// class.
 		virtual void IsAbstract() = 0;
 
-		virtual void Update(const float frameTime) { }
+		virtual void Update(float frameTime) { }
 		virtual void Render() { }
 
 		//---------------------------------------------------------------------

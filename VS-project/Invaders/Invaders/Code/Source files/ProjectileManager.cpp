@@ -67,8 +67,7 @@ void ProjectileManager::Render()
 	for ( it; it != m_projectiles.end(); ++it )
 	{
 		// Render the projectile.
-		IProjectile* proj = static_cast<IProjectile*>(*it);
-		proj->Render();
+		(*it)->Render();
 	}
 }
 

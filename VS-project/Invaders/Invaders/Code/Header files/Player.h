@@ -29,13 +29,13 @@ class Player : public IRenderable
 		// Initialises the player.
 		void Init();
 
-		virtual void Update(const float frameTime);
+		virtual void Update(float frameTime);
 		virtual void Render();
 
 		// Used to the move the player around the screen, with the direction
 		// indicating the cardinality of the X move:
 		//     1 is right, -1 is left.
-		void Move(const int direction, const float elapsedTime);
+		void Move(int direction, float elapsedTime);
 
 		// This function ensures we don't go outside the game world.
 		void BoundMovement();
@@ -47,10 +47,10 @@ class Player : public IRenderable
 		inline void KillRocket() { mp_rocket = 0; }
 
 		// Check collision between two Renderable objects.
-		bool CheckCollision(IRenderable& objectOne, IRenderable& objectTwo);
-		Position GetCollisionMidpoint(IRenderable& object);
-		bool BroadPhase(Position& one, Position& two, const int bounds);
-		bool NarrowPhase(IRenderable& objectOne, IRenderable& objectTwo);
+		bool CheckCollision(const IRenderable& objectOne, const IRenderable& objectTwo);
+		Position GetCollisionMidpoint(const IRenderable& object);
+		bool BroadPhase(const Position& one, const Position& two, int bounds);
+		bool NarrowPhase(const IRenderable& objectOne, const IRenderable& objectTwo);
 
 		//---------------------------------------------------------------------
 		// Accessors

@@ -30,7 +30,7 @@ void Bomb::Init()
 	m_position.y += BOMB_OFFSET;
 }
 
-void Bomb::Update(const float frameTime)
+void Bomb::Update(float frameTime)
 {
 	if ( m_alive )
 	{

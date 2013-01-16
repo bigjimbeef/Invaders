@@ -18,7 +18,7 @@ class IProjectile : public IRenderable
 
 		virtual void Init() { }
 
-		virtual void Update(const float frameTime) { }
+		virtual void Update(float frameTime) { }
 		virtual void Render() { }
 
 		// This is an abstract base class. Mark it as such with pure virtual.

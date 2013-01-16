@@ -25,7 +25,7 @@ class EnemyManager
 		}
 		virtual ~EnemyManager();
 
-		void Update(const float frameTime);
+		void Update(float frameTime);
 
 		void Render();
 
@@ -39,7 +39,7 @@ class EnemyManager
 		// This function is used when the nearest enemy is a column is killed,
 		// and works out the next nearest enemy in the row. This is used for
 		// determining which enemies can shoot.
-		void CalculateNewMaxRow(const int col);
+		void CalculateNewMaxRow(int col);
 
 		//---------------------------------------------------------------------
 		// Accessors

@@ -31,17 +31,17 @@ class Enemy : public IRenderable
 		// Initialises the enemy.
 		void Init();
 
-		virtual void Update(const float frameTime);
+		virtual void Update(float frameTime);
 		virtual void Render();
 
 		// Moves the enemy around the screen.
-		void Move(const bool dropDown);
+		void Move(bool dropDown);
 
 		// Controls the enemy firing a bomb.
 		void Fire();
 
 		// Removes one of the enemy's bombs.
-		void KillBomb(Bomb& dyingBomb);
+		void KillBomb(const Bomb& dyingBomb);
 
 		// Kill the enemy. This needs to update more than the bool below, so it
 		// is declared in the cpp.

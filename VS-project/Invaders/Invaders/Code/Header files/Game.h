@@ -39,8 +39,8 @@ class Game
 
 		// These three functions handle the three separate logical stages
 		// of player interaction with the game: Input, updating, rendering.
-		void HandleInput(const float frameTime);
-		void Update(const float frameTime);
+		void HandleInput(float frameTime);
+		void Update(float frameTime);
 		void Render();
 
 		//---------------------------------------------------------------------

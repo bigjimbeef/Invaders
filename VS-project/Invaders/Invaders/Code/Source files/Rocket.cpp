@@ -30,7 +30,7 @@ void Rocket::Init()
 	m_position.y += ROCKET_OFFSET;
 }
 
-void Rocket::Update(const float frameTime)
+void Rocket::Update(float frameTime)
 {
 	if ( m_alive )
 	{

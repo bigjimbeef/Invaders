@@ -96,7 +96,7 @@ void Enemy::Render()
 					static_cast<int>(m_position.y));
 }
 
-void Enemy::Move(const bool dropDown)
+void Enemy::Move(bool dropDown)
 {
 	// If we're not dropping down, we move across the screen.
 	if ( !dropDown )
@@ -144,7 +144,7 @@ void Enemy::Kill()
 	}
 }
 
-void Enemy::KillBomb(Bomb& dyingBomb)
+void Enemy::KillBomb(const Bomb& dyingBomb)
 {
 	std::list<Bomb*>::iterator bombIt = m_bombs.begin();
 	for ( bombIt; bombIt != m_bombs.end(); ++bombIt )

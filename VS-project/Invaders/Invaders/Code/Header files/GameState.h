@@ -22,7 +22,7 @@ class GameState
 		virtual ~GameState();		
 
 		// This function renders the Score and Lives UI.
-		void RenderUI(const float frameTime);
+		void RenderUI(float frameTime);
 
 		// This function draws a line above the UI, much like
 		// the original game.
@@ -35,7 +35,7 @@ class GameState
 		void IncrementWaveNumber();
 
 		// The game is over, so indicate that in text form.
-		void GameOverMessage(const float frameTime);
+		void GameOverMessage(float frameTime);
 
 		//---------------------------------------------------------------------
 		// Accessors
