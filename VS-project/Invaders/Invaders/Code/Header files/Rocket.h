@@ -21,8 +21,6 @@ class Rocket : public IProjectile
 		Rocket();
 		virtual ~Rocket();
 
-		virtual void Init();
-
 		virtual void Update(float frameTime);
 		virtual void Render();
 

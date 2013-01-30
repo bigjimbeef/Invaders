@@ -74,6 +74,5 @@ void ProjectileManager::Render()
 void ProjectileManager::SpawnProjectile(IProjectile& proj)
 {
 	// Initialise and add the passed projectile to the list of projectiles.
-	proj.Init();
 	m_projectiles.push_back(&proj);
 }

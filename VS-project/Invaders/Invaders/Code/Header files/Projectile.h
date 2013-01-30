@@ -16,8 +16,6 @@ class IProjectile : public IRenderable
 		IProjectile();
 		virtual ~IProjectile();
 
-		virtual void Init() { }
-
 		virtual void Update(float frameTime) { }
 		virtual void Render() { }
 

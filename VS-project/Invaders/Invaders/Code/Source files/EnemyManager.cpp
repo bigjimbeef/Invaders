@@ -22,6 +22,7 @@ EnemyManager::EnemyManager() :
 
 	// Create a new vector for holding enemies.
 	m_enemies = std::list<Enemy*>();
+	m_deadEnemies = std::list<Enemy*>();
 
 	// Calculate the step reduction per kill.
 	m_stepReductionPerKill = 
@@ -299,7 +300,6 @@ void EnemyManager::SpawnWave()
 
 		// Create a new enemy, then spawn it.
 		Enemy* p_baddie = new Enemy(xPos, yPos, currentRow, currentCol, score);
-		p_baddie->Init();
 
 		// We can fire if we're in the front row.
 		if ( currentRow == NUM_ROWS - 1 )

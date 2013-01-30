@@ -10,6 +10,14 @@ Rocket::Rocket() :
 	m_spriteClipHeight = 19;
 	m_spriteClipXOffset = 13;
 	m_spriteClipYOffset = 7;
+
+	// Create the sprite for the rocket.
+	mp_sprite = ResourceManager::GetRocketSprite();
+
+	// Initialise the position of the rocket based on the
+	// Player's position.
+	m_position = Game::GetInstance().GetPlayer().GetPosition();
+	m_position.y += ROCKET_OFFSET;
 }
 Rocket::~Rocket()
 {
@@ -17,17 +25,6 @@ Rocket::~Rocket()
 
 	// The player now has no rocket.
 	Game::GetInstance().GetPlayer().KillRocket();
-}
-
-void Rocket::Init()
-{
-	// Create the sprite for the player.
-	mp_sprite = ResourceManager::GetRocketSprite();
-
-	// Initialise the position of the rocket based on the
-	// Player's position.
-	m_position = Game::GetInstance().GetPlayer().GetPosition();
-	m_position.y += ROCKET_OFFSET;
 }
 
 void Rocket::Update(float frameTime)

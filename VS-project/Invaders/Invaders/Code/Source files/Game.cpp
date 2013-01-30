@@ -5,25 +5,36 @@ Game::Game() :
 	m_gameRunning(1),
 	m_lastTime(0.0f),
 	mp_library(NULL),
+	mp_libPath("DiceInvaders.dll"),
 	mp_system(NULL),
 	mp_player(NULL)
 {
-	// Initialising these variables outside of the initialisation list,
+	// Initialising this variables outside of the initialisation list,
 	// as re-ordering the header file could cause problems with initialisation
 	// order.
-	mp_libPath = "DiceInvaders.dll";
 	mp_library = new DiceInvadersLib(mp_libPath);
+
+	// Initialise the game system from the DiceInvaders library.
+	mp_system = mp_library->get();
+	mp_system->init(SCREEN_WIDTH, SCREEN_HEIGHT);
+
+	// Initialise the ResourceManager, which sets the static pointers to
+	// the sprites, for use in drawing all IRenderables.
+	ResourceManager::GetInstance();
 
 	// Create the player object.
 	mp_player = new Player(static_cast<float>(PLAYER_START_X),
 						   static_cast<float>(PLAYER_START_Y));
+
+	// Spawn a wave of enemies.
+	EnemyManager::GetInstance().SpawnWave();
 }
 Game::~Game()
 {
 	delete mp_player;
 	mp_player = NULL;
 
-	ResourceManager::Destroy();
+	ResourceManager::GetInstance().Destroy();
 
 	// Destroy the game system.
 	mp_system->destroy();
@@ -33,36 +44,8 @@ Game::~Game()
 	mp_library = NULL;
 }
 
-void Game::Init()
-{
-	// Initialise the game system from the DiceInvaders library.
-	mp_system = mp_library->get();
-	mp_system->init(SCREEN_WIDTH, SCREEN_HEIGHT);
-
-	// Initialise the ResourceManager, which sets the static pointers to
-	// the sprites, for use in drawing all IRenderables.
-	ResourceManager::Init();
-
-	// Initialise the player.
-	mp_player->Init();
-
-	// Spawn a wave of enemies.
-	EnemyManager::GetInstance().SpawnWave();
-
-	// We have no initialised the game.
-	m_initialised = true;
-}
-
-
 void Game::Run()
 {
-	// If we haven't yet initialised the game ...
-	if ( !m_initialised )
-	{
-		// ... then do so.
-		Init();
-	}
-
 	// Update the game world, which displays all changes that were made in the
 	// previous iteration of this function loop.
 	if ( !mp_system->update() )

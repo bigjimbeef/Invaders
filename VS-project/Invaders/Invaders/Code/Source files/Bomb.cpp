@@ -11,16 +11,7 @@ Bomb::Bomb(Enemy& bombOwner) :
 	m_spriteClipHeight = 16;
 	m_spriteClipXOffset = 12;
 	m_spriteClipYOffset = 8;
-}
-Bomb::~Bomb()
-{
-	mp_sprite = NULL;
 
-	// Deletion of the Bomb* in m_bombs is handled by ProjectileManager.
-}
-
-void Bomb::Init()
-{
 	// Get the bomb sprite from the ResourceManager.
 	mp_sprite = ResourceManager::GetBombSprite();
 
@@ -28,6 +19,12 @@ void Bomb::Init()
 	// position.
 	m_position = m_bombOwner.GetPosition();
 	m_position.y += BOMB_OFFSET;
+}
+Bomb::~Bomb()
+{
+	mp_sprite = NULL;
+
+	// Deletion of the Bomb* in m_bombs is handled by ProjectileManager.
 }
 
 void Bomb::Update(float frameTime)

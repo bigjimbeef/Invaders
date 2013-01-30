@@ -28,9 +28,6 @@ class Enemy : public IRenderable
 		// Implement this function to show that this class is not abstract.
 		inline void IsAbstract() { /* Do nothing */ }
 
-		// Initialises the enemy.
-		void Init();
-
 		virtual void Update(float frameTime);
 		virtual void Render();
 

@@ -22,7 +22,6 @@ GameState::GameState() :
 
 		// Create and initialise the player UI elements.
 		mp_playerUI[i] = new PlayerUI(xPos, yPos);
-		mp_playerUI[i]->Init();
 	}
 
 	// Initialise the position for the Game Over UI.

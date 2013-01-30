@@ -22,8 +22,6 @@ class Bomb : public IProjectile
 		Bomb(Enemy& bombOwner);
 		virtual ~Bomb();
 
-		virtual void Init();
-
 		virtual void Update(float frameTime);
 		virtual void Render();
 

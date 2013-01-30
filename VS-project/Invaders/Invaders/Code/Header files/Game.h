@@ -31,9 +31,6 @@ class Game
 		}
 		~Game();
 
-		// Initialises the game, setting up all necessary data structures.
-		void Init();
-
 		// This is the main function for processing the game logic.
 		void Run();
 

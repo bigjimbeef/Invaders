@@ -13,7 +13,7 @@ ISprite* ResourceManager::s_playerSprite = NULL;
 ISprite* ResourceManager::s_rocketSprite = NULL;
 ISprite* ResourceManager::s_bombSprite = NULL;
 
-void ResourceManager::Init()
+ResourceManager::ResourceManager()
 {
 	s_playerSprite =
 	    Game::GetInstance().GetSystem().createSprite("data/player.bmp");

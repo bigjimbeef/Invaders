@@ -20,16 +20,13 @@ Player::Player(float xPos, float yPos) :
 	m_spriteClipHeight = 20;
 	m_spriteClipXOffset = 2;
 	m_spriteClipYOffset = 7;
+
+	// Create the sprite for the player.
+	mp_sprite = ResourceManager::GetPlayerSprite();
 }
 Player::~Player()
 {
 	mp_sprite = NULL;
-}
-
-void Player::Init()
-{
-	// Create the sprite for the player.
-	mp_sprite = ResourceManager::GetPlayerSprite();
 }
 
 bool Player::BroadPhase(const Position& one,const Position& two, int bounds)
@@ -81,11 +78,6 @@ bool Player::NarrowPhase(const IRenderable& objectOne,
 bool Player::CheckCollision(const IRenderable& objectOne,
 							const IRenderable& objectTwo)
 {
-	if ( &objectOne == NULL || &objectTwo == NULL )
-	{
-		return false;
-	}
-
 	Position onePos = objectOne.GetPosition();
 	Position twoPos = objectTwo.GetPosition();
 	
@@ -115,18 +107,21 @@ void Player::Update(float frameTime)
 	const std::list<Enemy*>& enemyList = 
 		EnemyManager::GetInstance().GetEnemyList();
 
-	std::list<Enemy*>::const_iterator it = enemyList.begin();
-	for ( it; it != enemyList.end(); ++it )
+	if ( mp_rocket != NULL )
 	{
-		Enemy* enemy = static_cast<Enemy*>(*it);
-
-		// Check for collisions against each individual enemy.
-		// Note that we don't need to check if a rocket exists, as
-		// this is handled in the collision function.
-		if ( CheckCollision(*mp_rocket, *enemy) )
+		std::list<Enemy*>::const_iterator it = enemyList.begin();
+		for ( it; it != enemyList.end(); ++it )
 		{
-			mp_rocket->Kill();
-			enemy->Kill();
+			Enemy* enemy = static_cast<Enemy*>(*it);
+
+			// Check for collisions against each individual enemy.
+			// Note that we don't need to check if a rocket exists, as
+			// this is handled in the collision function.
+			if ( CheckCollision(*mp_rocket, *enemy) )
+			{
+				mp_rocket->Kill();
+				enemy->Kill();
+			}
 		}
 	}
 

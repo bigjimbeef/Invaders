@@ -14,6 +14,12 @@ struct ISprite;
 class ResourceManager
 {
 	public:
+		static ResourceManager& GetInstance()
+		{
+			static ResourceManager instance;
+			return instance;
+		}
+
 		static inline ISprite* GetEnemyOneSprite() { return s_enemyOneSprite; }
 		static inline ISprite* GetEnemyOneAltSprite() { return s_enemyOneAltSprite; }
 		static inline ISprite* GetEnemyTwoSprite() { return s_enemyTwoSprite; }
@@ -22,8 +28,9 @@ class ResourceManager
 		static inline ISprite* GetRocketSprite() { return s_rocketSprite; }
 		static inline ISprite* GetBombSprite() { return s_bombSprite; }
 
-		static void Init();
-		static void Destroy();
+		// Used to safely delete the static pointers to the sprites in the
+		// correct order.
+		void Destroy();
 
 	private:
 		static ISprite* s_enemyOneSprite;
@@ -34,7 +41,12 @@ class ResourceManager
 		static ISprite* s_rocketSprite;
 		static ISprite* s_bombSprite;
 
-		ResourceManager() { }
+		// Private default ctor to facilitate Singleton pattern.
+		ResourceManager();
+
+		// DO NOT IMPLEMENT
+		ResourceManager(ResourceManager const&);
+		void operator=(ResourceManager const&);
 };
 
 #endif // RESOURCEMANAGER_H

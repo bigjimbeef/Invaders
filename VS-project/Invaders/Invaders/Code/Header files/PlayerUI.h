@@ -18,7 +18,6 @@ class PlayerUI : public IRenderable
 		PlayerUI(float xPos = 0.0f, float yPos = 0.0f);
 		virtual ~PlayerUI();
 
-		virtual void Init();
 		virtual void Render();
 
 		// Implement this function to show that this class is not abstract.

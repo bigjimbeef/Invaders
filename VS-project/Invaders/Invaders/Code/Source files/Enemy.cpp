@@ -24,17 +24,14 @@ Enemy::Enemy(float xPos, float yPos, int row, int col, int score) :
 	m_spriteClipHeight = ( row < 2 ) ? 24 : 22;
 	m_spriteClipXOffset = ( row < 2 ) ? 4 : 1;
 	m_spriteClipYOffset = ( row < 2 ) ? 4 : 5;
+
+	mp_sprite = ( m_row < 2 ) ? 
+		ResourceManager::GetEnemyOneSprite() :
+		ResourceManager::GetEnemyTwoSprite();
 }
 Enemy::~Enemy()
 {
 	mp_sprite = NULL;
-}
-
-void Enemy::Init()
-{
-	mp_sprite = ( m_row < 2 ) ? 
-		ResourceManager::GetEnemyOneSprite() :
-		ResourceManager::GetEnemyTwoSprite();
 }
 
 void Enemy::Update(const float frameTime)

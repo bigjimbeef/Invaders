@@ -3,7 +3,8 @@
 // Include within .cpp file to match forward declare in .h
 #include "Game.h"
 
-InputController::InputController()
+InputController::InputController() :
+	m_wasFiring(0)
 {
 }
 InputController::~InputController()
