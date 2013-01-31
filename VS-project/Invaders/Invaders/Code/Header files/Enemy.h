@@ -32,7 +32,10 @@ class Enemy : public IRenderable
 		virtual void Render();
 
 		// Moves the enemy around the screen.
-		void Move(bool dropDown);
+		void Move(float distance, bool dropDown);
+
+		// Causes the enemy to jitter in place when they're ready to fire.
+		void Jitter(float frameTime);
 
 		// Controls the enemy firing a bomb.
 		void Fire();
@@ -63,12 +66,14 @@ class Enemy : public IRenderable
 		// Can this enemy fire?
 		bool m_canFire;
 
-		// These variables are used to control the randomly-timed firing.
-		// See the Fire function for more details.
-		float m_bombTimer;
-		float m_bombFireTarget;
-		static const int MIN_FIRE_TIME = 1;
-		static const int MAX_FIRE_TIME = 20;
+		bool m_gettingAngry;
+		int m_anger;
+		Vector2 m_currentJitter;
+		float m_jitterTimer;
+		float m_baseJitterWait;
+		static const int MAX_JITTER_OFFSET = 5;
+		static const int ANGER_THRESHOLD = 1;
+		static const int MAX_ANGER = 100;
 
 		// The starting row for the enemy. This controls their look.
 		int m_row;

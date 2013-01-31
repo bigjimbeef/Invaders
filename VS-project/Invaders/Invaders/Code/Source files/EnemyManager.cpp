@@ -45,7 +45,7 @@ void EnemyManager::ClearEnemyList()
 	m_enemies.clear();
 }
 
-bool EnemyManager::CheckForDrop()
+bool EnemyManager::CheckForDrop(float moveDistance)
 {
 	if ( m_directionOfTravel > 0 )
 	{
@@ -70,7 +70,7 @@ bool EnemyManager::CheckForDrop()
 	{
 		// When going left, we check when the edge of the pack is off the left
 		// side of the screen.
-		if ( ( m_currentX - MOVE_DISTANCE ) <= 0.0f )
+		if ( ( m_currentX - moveDistance ) <= 0.0f )
 		{
 			m_directionOfTravel *= -1;
 			return true;
@@ -154,39 +154,36 @@ void EnemyManager::Update(const float frameTime)
 		}
 	}
 
-	// We time the enemy movement so that they move to a rhythm.
-	if ( m_currentPause > m_pauseDuration )
+	// Calculate the distance we should move this frame.
+	float moveDistance = 
+		static_cast<float>(m_directionOfTravel * ENEMY_VELOCITY * frameTime);
+
+	// We need to calculate some information to pass to each Enemy before
+	// we update them.
+	// i.e. We need to know which way to travel, and whether to drop down
+	bool shouldDrop = CheckForDrop(moveDistance);
+
+	std::list<Enemy*>::iterator iter = m_enemies.begin();
+	for ( iter = m_enemies.begin(); iter != m_enemies.end(); ++iter )
 	{
-		// We need to calculate some information to pass to each Enemy before
-		// we update them.
-		// i.e. We need to know which way to travel, and whether to drop down
-		bool shouldDrop = CheckForDrop();
-
-		std::list<Enemy*>::iterator it = m_enemies.begin();
-		for ( it = m_enemies.begin(); it != m_enemies.end(); ++it )
+		// Move this individual enemy ...
+		Enemy* enemy = static_cast<Enemy*>(*iter);
+		// ... if it's alive.
+		if ( enemy->IsAlive() )
 		{
-			// Move this individual enemy ...
-			Enemy* enemy = static_cast<Enemy*>(*it);
-			// ... if it's alive.
-			if ( enemy->IsAlive() )
-			{
-				enemy->Move(shouldDrop);
-			}
+			enemy->Move(moveDistance, shouldDrop);
 		}
-
-		// Modulate the movement speed of remaining enemies based on the number
-		// of enemies that are remaining.
-		UpdateMovementSpeed();
-
-		// Update the X position.
-		m_currentX += ( m_directionOfTravel * MOVE_DISTANCE );
-
-		// Update the lowest point.
-		UpdateLowestPoint();
-
-		// Reset the timer.
-		m_currentPause = 0.0f;
 	}
+
+	// Modulate the movement speed of remaining enemies based on the number
+	// of enemies that are remaining.
+	UpdateMovementSpeed();
+
+	// Update the X position with the distance moved this frame.
+	m_currentX += ( moveDistance * Game::GetInstance().GetSpeedFactor() );
+
+	// Update the lowest point.
+	UpdateLowestPoint();
 
 #ifdef _DEBUG
 	int numEnemies = m_enemies.size();

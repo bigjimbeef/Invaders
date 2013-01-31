@@ -48,8 +48,8 @@ class Player : public IRenderable
 
 		// Check collision between two Renderable objects.
 		bool CheckCollision(const IRenderable& objectOne, const IRenderable& objectTwo);
-		Position GetCollisionMidpoint(const IRenderable& object);
-		bool BroadPhase(const Position& one, const Position& two, int bounds);
+		Vector2 GetCollisionMidpoint(const IRenderable& object);
+		bool BroadPhase(const Vector2& one, const Vector2& two, int bounds);
 		bool NarrowPhase(const IRenderable& objectOne, const IRenderable& objectTwo);
 
 		//---------------------------------------------------------------------
@@ -66,6 +66,11 @@ class Player : public IRenderable
 		// The player is only allowed one rocket at once. This is a pointer
 		// to that rocket.
 		Rocket* mp_rocket;
+
+
+
+
+		bool m_slowingDown;
 };
 
 #endif // PLAYER_H

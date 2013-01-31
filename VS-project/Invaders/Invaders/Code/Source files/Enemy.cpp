@@ -6,8 +6,11 @@
 Enemy::Enemy(float xPos, float yPos, int row, int col, int score) :
 	m_alive(1),
 	m_canFire(0),
-	m_bombTimer(0.0f),
-	m_bombFireTarget(0.0f),
+	m_gettingAngry(0),
+	m_anger(0),
+	m_currentJitter(0.0f, 0.0f),
+	m_jitterTimer(0.0f),
+	m_baseJitterWait(0.5f),
 	m_row(row),
 	m_col(col),
 	m_dropDistance(0.0f),
@@ -18,7 +21,7 @@ Enemy::Enemy(float xPos, float yPos, int row, int col, int score) :
     m_bombs = std::list<Bomb*>();
 
 	// Initialise the enemy's position.
-	m_position = Position(xPos, yPos);
+	m_position = Vector2(xPos, yPos);
 
 	m_spriteClipWidth = ( row < 2 ) ? 24 : 30;
 	m_spriteClipHeight = ( row < 2 ) ? 24 : 22;
@@ -45,32 +48,36 @@ void Enemy::Update(const float frameTime)
 	// Ensure we can't fire too many bombs.
     if ( m_bombs.size() < MAX_BOMBS )
     {
-		if ( m_bombFireTarget == 0.0f )
-		{
-			m_bombFireTarget = static_cast<float>(MIN_FIRE_TIME);
-			
-			// Random no. from 0-100
-			int random = ( rand() % 101 );
-			float randomPercentOffset =
-				static_cast<float>(MAX_FIRE_TIME) * ( random / 100.0f );
+		// We randomly pick a number in 100.
+		// If the number exceeds our anger threshold (that is, the number which
+		// defines the percentage chance we'll start getting angry), we begin
+		// getting ANGRY. And thus jittering.
 
-			// Ensure we can't go below the minimum fire time.
-			m_bombFireTarget = max(m_bombFireTarget, randomPercentOffset);
+		// TODO: Probably a better way of choosing whether or not to fire?
+		int random = ( rand() % 100001 );
+		if ( random <= ANGER_THRESHOLD )
+		{
+			// Shake it, baby.
+			m_gettingAngry = true;
+			m_anger = 1;
 		}
 
-		// Increment the timer.
-		m_bombTimer += frameTime;
+		if ( m_gettingAngry )
+		{
+			// Handle the jittering of the enemy as it gets ready to fire.
+			Jitter(frameTime);
 
-		// If we've reached the timer duration.
-        if ( m_bombTimer > m_bombFireTarget )
-        {
-			// Attempt to fire a bomb after a random timer has elapsed.
-			Fire();
+			// If we're at full anger ...
+			if ( m_anger >= MAX_ANGER )
+			{
+				// ... then fire!
+				Fire();
 
-			// Reset the timer variables.
-			m_bombFireTarget = 0.0f;
-			m_bombTimer = 0.0f;
-        }
+				m_gettingAngry = false;
+				m_anger = 0;
+				m_currentJitter = Vector2();
+			}
+		}
     }
 }
 
@@ -89,16 +96,19 @@ void Enemy::Render()
 			: ResourceManager::GetEnemyTwoAltSprite();
 	}
 
-	mp_sprite->draw(static_cast<int>(m_position.x),
-					static_cast<int>(m_position.y));
+	int xPos = static_cast<int>(m_position.x + m_currentJitter.x);
+	int yPos = static_cast<int>(m_position.y + m_currentJitter.y);
+
+	mp_sprite->draw(xPos, yPos);
 }
 
-void Enemy::Move(bool dropDown)
+void Enemy::Move(float distance, bool dropDown)
 {
 	// If we're not dropping down, we move across the screen.
 	if ( !dropDown )
 	{
-		m_position.x += EnemyManager::GetInstance().GetMoveDelta();
+		// Scale our movement by the game speed factor.
+		m_position.x += ( distance * Game::GetInstance().GetSpeedFactor() );
 	}
 	else
 	{
@@ -110,8 +120,31 @@ void Enemy::Move(bool dropDown)
 		// the same with an if statement.
 		EnemyManager::GetInstance().SetProgress(m_dropDistance);
 	}
+}
 
-	m_altSprite = !m_altSprite;
+void Enemy::Jitter(float frameTime)
+{
+	float currentJitterDur = static_cast<float>(m_baseJitterWait / m_anger);
+
+	if ( m_jitterTimer > currentJitterDur )
+	{
+		// Get a little angrier every time we fidget.
+		m_anger++;
+
+		int halfOffset = MAX_JITTER_OFFSET / 2;
+
+		float randomX =
+			static_cast<float>(( rand() % MAX_JITTER_OFFSET ) - halfOffset);
+		float randomY =
+			static_cast<float>(( rand() % MAX_JITTER_OFFSET ) - halfOffset);
+
+		// Scale jitter speed by current anger of this enemy.
+		m_currentJitter = Vector2(randomX, randomY);
+
+		m_jitterTimer = 0.0f;
+	}
+
+	m_jitterTimer += ( frameTime * Game::GetInstance().GetSpeedFactor() );
 }
 
 void Enemy::Kill()

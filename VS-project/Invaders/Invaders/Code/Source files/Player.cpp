@@ -11,10 +11,11 @@
 
 Player::Player(float xPos, float yPos) :
 	m_health(STARTING_HEALTH),
-	mp_rocket(NULL)
+	mp_rocket(NULL),
+	m_slowingDown(0)
 {
 	// Initialise the player's position.
-	m_position = Position(xPos, yPos);
+	m_position = Vector2(xPos, yPos);
 
 	m_spriteClipWidth = 28;
 	m_spriteClipHeight = 20;
@@ -29,7 +30,7 @@ Player::~Player()
 	mp_sprite = NULL;
 }
 
-bool Player::BroadPhase(const Position& one,const Position& two, int bounds)
+bool Player::BroadPhase(const Vector2& one,const Vector2& two, int bounds)
 {
 	if ( abs(one.x - two.x) < bounds )
 	{
@@ -42,24 +43,24 @@ bool Player::BroadPhase(const Position& one,const Position& two, int bounds)
 	return false;
 }
 
-Position Player::GetCollisionMidpoint(const IRenderable& object)
+Vector2 Player::GetCollisionMidpoint(const IRenderable& object)
 {
-	Position currentPos = object.GetPosition();
+	Vector2 currentPos = object.GetPosition();
 
 	float midX =
 	    currentPos.x + (object.GetXOffset() + (object.GetWidth() / 2.0f));
 	float midY =
 	    currentPos.y + (object.GetYOffset() + (object.GetHeight() / 2.0f));
 
-	return Position(midX, midY);
+	return Vector2(midX, midY);
 }
 
 bool Player::NarrowPhase(const IRenderable& objectOne,
 						 const IRenderable& objectTwo)
 {
 	// Get the centers of each object.
-	Position midOne = GetCollisionMidpoint(objectOne);
-	Position midTwo = GetCollisionMidpoint(objectTwo);
+	Vector2 midOne = GetCollisionMidpoint(objectOne);
+	Vector2 midTwo = GetCollisionMidpoint(objectTwo);
 
 	int totalWidth = ( objectOne.GetWidth() + objectTwo.GetWidth() ) / 2;
 	int totalHeight = ( objectOne.GetHeight() + objectTwo.GetHeight() ) / 2;
@@ -78,8 +79,8 @@ bool Player::NarrowPhase(const IRenderable& objectOne,
 bool Player::CheckCollision(const IRenderable& objectOne,
 							const IRenderable& objectTwo)
 {
-	Position onePos = objectOne.GetPosition();
-	Position twoPos = objectTwo.GetPosition();
+	Vector2 onePos = objectOne.GetPosition();
+	Vector2 twoPos = objectTwo.GetPosition();
 	
 	// This is constant for all sprites currently.
 	int bounds = Game::GetSpriteSize();
@@ -100,6 +101,13 @@ bool Player::CheckCollision(const IRenderable& objectOne,
 
 void Player::Update(float frameTime)
 {
+	if ( m_slowingDown )
+	{
+		float speed = Game::GetInstance().GetSpeedFactor();
+		MathsHelper::Lerp(speed, 0.1f, 0.0025f);
+		Game::GetInstance().SetSpeedFactor(speed);
+	}
+
 	// Manage collisions between the player and bombs, and between the player
 	// rocket and enemies.
 
@@ -119,6 +127,8 @@ void Player::Update(float frameTime)
 			// this is handled in the collision function.
 			if ( CheckCollision(*mp_rocket, *enemy) )
 			{
+				m_slowingDown = true;
+
 				mp_rocket->Kill();
 				enemy->Kill();
 			}

@@ -60,7 +60,7 @@ class EnemyManager
 
 	private:
 		// Manages when the enemies need to drop down to the next line.
-		bool CheckForDrop();
+		bool CheckForDrop(float moveDistance);
 
 		// This function will update the apparent movement speed of the enemies
 		// by reducing the duration between jumps as fewer enemies remain.
@@ -125,6 +125,8 @@ class EnemyManager
 
 		static const int FRONT_ENEMY_SCORE = 10;
 		static const int BACK_ENEMY_SCORE = 30;
+
+		static const int ENEMY_VELOCITY = 30;
 
 		// Private default ctor to facilitate Singleton pattern
 		EnemyManager();

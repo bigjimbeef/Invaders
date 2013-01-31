@@ -1,20 +1,20 @@
-#ifndef POSITION_H
-#define POSITION_H
+#ifndef VECTOR2_H
+#define VECTOR2_H
 
 //-----------------------------------------------------------------------------
-// Position.h
+// Vector2.h
 // Represents a point in space within the game world where 0,0 is the top left 
 // of the screen.
 //-----------------------------------------------------------------------------
 
-struct Position
+struct Vector2
 {
 	// Defaults to being positioned at 0,0.
-	Position(float xPos = 0, float yPos = 0);
-	~Position();
+	Vector2(float xPos = 0, float yPos = 0);
+	~Vector2();
 
 	float x;
 	float y;
 };
 
-#endif // POSITION_H
+#endif // VECTOR2_H

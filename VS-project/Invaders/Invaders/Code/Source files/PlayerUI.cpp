@@ -6,7 +6,7 @@
 PlayerUI::PlayerUI(float xPos, float yPos)
 {
 	// Initialise the player's position.
-	m_position = Position(xPos, yPos);
+	m_position = Vector2(xPos, yPos);
 
 	// Get a pointer to the player sprite from the Resource manager.
 	mp_sprite = ResourceManager::GetPlayerSprite();

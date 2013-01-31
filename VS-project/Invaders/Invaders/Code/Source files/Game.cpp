@@ -7,7 +7,8 @@ Game::Game() :
 	mp_library(NULL),
 	mp_libPath("DiceInvaders.dll"),
 	mp_system(NULL),
-	mp_player(NULL)
+	mp_player(NULL),
+	m_gameSpeedFactor(1.0f)
 {
 	// Initialising this variables outside of the initialisation list,
 	// as re-ordering the header file could cause problems with initialisation
@@ -26,6 +27,9 @@ Game::Game() :
 	mp_player = new Player(static_cast<float>(PLAYER_START_X),
 						   static_cast<float>(PLAYER_START_Y));
 
+	// Create the audio manager.
+	mp_audioManager = new AudioManager();
+
 	// Spawn a wave of enemies.
 	EnemyManager::GetInstance().SpawnWave();
 }
@@ -33,6 +37,9 @@ Game::~Game()
 {
 	delete mp_player;
 	mp_player = NULL;
+
+	delete mp_audioManager;
+	mp_audioManager = NULL;
 
 	ResourceManager::GetInstance().Destroy();
 

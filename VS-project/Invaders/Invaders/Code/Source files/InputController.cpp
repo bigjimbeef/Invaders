@@ -63,7 +63,7 @@ void InputController::GameControls(const IDiceInvaders::KeyStatus& keystate,
 	m_wasFiring = keystate.fire;
 
 #ifdef _DEBUG
-	Position playerPos = Game::GetInstance().GetPlayer().GetPosition();
+	Vector2 playerPos = Game::GetInstance().GetPlayer().GetPosition();
 	
 	std::stringstream ss;
 	ss << "Player is at: [" << playerPos.x << ", " << playerPos.y << "]";

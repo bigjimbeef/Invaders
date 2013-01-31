@@ -31,7 +31,7 @@ void Bomb::Update(float frameTime)
 {
 	if ( m_alive )
 	{
-		float offset = frameTime * BOMB_VELOCITY;
+		float offset = frameTime * BOMB_VELOCITY * Game::GetInstance().GetSpeedFactor();
 		m_position.y += offset;
 
 		// This represents the projectile going off-screen at the bottom.

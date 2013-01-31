@@ -7,7 +7,7 @@
 // renderable elements of the game.
 //-----------------------------------------------------------------------------
 
-#include "Position.h"
+#include "Vector2.h"
 
 struct ISprite;
 
@@ -26,8 +26,8 @@ class IRenderable
 
 		//---------------------------------------------------------------------
 		// Accessors
-		inline Position GetPosition() const { return m_position; }
-		inline void SetPosition(Position newPos) { m_position = newPos; }
+		inline Vector2 GetPosition() const { return m_position; }
+		inline void SetPosition(Vector2 newPos) { m_position = newPos; }
 
 		inline int GetXOffset() const { return m_spriteClipXOffset; }
 		inline int GetYOffset() const { return m_spriteClipYOffset; }
@@ -36,7 +36,7 @@ class IRenderable
 
 	protected:
 		// The position that the renderable object is currently at.
-		Position m_position;
+		Vector2 m_position;
 
 		// These variables are used for collision testing. It would look
 		// very peculiar if projectiles collided with things they hadn't hit.

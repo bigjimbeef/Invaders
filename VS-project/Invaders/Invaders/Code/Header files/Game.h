@@ -20,6 +20,8 @@
 #include "GameState.h"
 #include "EnemyManager.h"
 #include "ResourceManager.h"
+#include "MathsHelper.h"
+#include "AudioManager.h"
 
 class Game
 {
@@ -49,6 +51,9 @@ class Game
 		inline Player& GetPlayer() const { return *mp_player; }
 
 		inline IDiceInvaders& GetSystem() const { return *mp_system; }
+
+		inline float GetSpeedFactor() const { return m_gameSpeedFactor; }
+		inline void SetSpeedFactor(float value) { m_gameSpeedFactor = value; }
 		
 		static int GetScreenWidth() { return SCREEN_WIDTH; }
 		static int GetScreenHeight() { return SCREEN_HEIGHT; }
@@ -76,6 +81,12 @@ class Game
 
 		// The player object.
 		Player* mp_player;
+
+		// The Audio Manager
+		AudioManager* mp_audioManager;
+
+		// How fast is the game currently going?
+		float m_gameSpeedFactor;
 
 		static const int PLAYER_START_X = ( SCREEN_WIDTH / 2 ) - 16;
 
