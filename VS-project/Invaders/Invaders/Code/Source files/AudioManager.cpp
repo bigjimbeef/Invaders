@@ -4,20 +4,22 @@
 #include "Game.h"
 
 AudioManager::AudioManager() :
-	m_musicPath("Audio/bgmusic.mp3"),
+	m_musicPath("Code/Resource files/Audio/bgmusic.mp3"),
 	mp_musicStream(NULL),
 	m_musicVolume(1.0f),
 	m_soundVolume(1.0f),
 	m_musicChannel(0),
 	m_musicFrequency(FORTY_FOUR_K),
 	m_playbackSpeed(1.0f),
-	m_lastPlaybackSpeed(1.0f)
+	m_lastPlaybackSpeed(1.0f),
+	m_sounds()
 {
 
 }
 AudioManager::~AudioManager()
 {
-	// TODO: Free all sounds.
+	// TODO: Free all sound effects.
+	StopMusic();
 }
 
 void AudioManager::Update(float frameTime)
@@ -26,23 +28,29 @@ void AudioManager::Update(float frameTime)
 	if ( m_playbackSpeed != m_lastPlaybackSpeed )
 	{
 		// Calculate the new frequency to play the music at.
-		float newFreq = m_musicFrequency * m_playbackSpeed;
+		int newFreq = static_cast<int>(m_musicFrequency * m_playbackSpeed);
 
 		// Now set the frequency.
-		// FSOUND_SetFrequency(m_musicChannel, newFreq);
+		FSOUND_SetFrequency(m_musicChannel, newFreq);
+
+		// TODO: Set all frequency-modulated sound effect frequencies.
 
 		m_lastPlaybackSpeed = m_playbackSpeed;
 	}
 }
 
-void AudioManager::PlayMusic()
+void AudioManager::PlayMusic(bool stopCurrent)
 {
-	if (mp_musicStream)
+	if ( stopCurrent && mp_musicStream )
 	{
-		StopMusic();	
+		StopMusic();
+	}
+	else if ( mp_musicStream )
+	{
+		return;
 	}
 
-	mp_musicStream = FSOUND_Stream_Open(m_musicPath, FSOUND_LOOP_NORMAL, 0, 0);
+	mp_musicStream = FSOUND_Stream_Open(m_musicPath.c_str(), FSOUND_LOOP_NORMAL, 0, 0);
 	m_musicChannel = FSOUND_Stream_Play(FSOUND_FREE, mp_musicStream);
 
 	int volume = static_cast<int>(m_musicVolume * 255);
@@ -60,6 +68,55 @@ void AudioManager::StopMusic()
 	}
 }
 
+void AudioManager::LoadSoundEffect(std::string effectPath, bool looping)
+{
+	int flags = 0;
+	if ( looping ) 
+	{
+		flags |= FSOUND_LOOP_NORMAL;
+	}
+
+	// Load the sound, using the path provided.
+	FSOUND_SAMPLE* soundEffect = 
+		FSOUND_Sample_Load(FSOUND_FREE, effectPath.c_str(), flags, 0, 0);
+
+	// Now add the fully loaded sound to the sound effect map. 
+	m_sounds[effectPath] = soundEffect;
+}
+
+int AudioManager::PlaySoundEffect(std::string name)
+{
+	// Locate the sound in the sound effect map using its name.
+	FSOUND_SAMPLE* soundEffect = NULL;
+	
+	std::map<std::string, FSOUND_SAMPLE*>::const_iterator cIt;
+	cIt = m_sounds.find(name);
+	if ( cIt != m_sounds.end() )
+	{
+		soundEffect = cIt->second;
+	}
+
+	if ( !soundEffect )
+	{
+		return -1;
+	}
+
+	int channel = FSOUND_PlaySound(FSOUND_FREE, soundEffect);
+
+	int volume = static_cast<int>(m_soundVolume * 255);
+	FSOUND_SetVolume(channel, volume);
+
+	return channel;
+}
+
+void AudioManager::StopSoundEffect(int channel)
+{
+	if ( channel <= 0 )
+	{
+		return;
+	}
+	FSOUND_StopSound(channel);
+}
 
 void AudioManager::SetPlaybackSpeed(float value)
 {

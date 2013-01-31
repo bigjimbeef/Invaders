@@ -12,7 +12,10 @@
 Player::Player(float xPos, float yPos) :
 	m_health(STARTING_HEALTH),
 	mp_rocket(NULL),
-	m_slowingDown(0)
+
+	// TODO: REMOVE THIS SILLY HACK
+	m_slowingDown(0),
+	m_speedingUp(0)
 {
 	// Initialise the player's position.
 	m_position = Vector2(xPos, yPos);
@@ -101,10 +104,31 @@ bool Player::CheckCollision(const IRenderable& objectOne,
 
 void Player::Update(float frameTime)
 {
+	// TODO: REMOVE THIS SILLY HACK
 	if ( m_slowingDown )
 	{
 		float speed = Game::GetInstance().GetSpeedFactor();
+
+		float diff = speed - 0.1f;
+		if ( MathsHelper::Abs(diff) < 0.1f ) {
+			m_slowingDown = false;
+		}
+
 		MathsHelper::Lerp(speed, 0.1f, 0.0025f);
+		Game::GetInstance().SetSpeedFactor(speed);
+
+		m_speedingUp = false;
+	}
+	else if ( m_speedingUp )
+	{
+		float speed = Game::GetInstance().GetSpeedFactor();
+
+		float diff = speed - 0.1f;
+		if ( MathsHelper::Abs(diff) < 0.1f ) {
+			m_speedingUp = false;
+		}
+
+		MathsHelper::Lerp(speed, 1.0f, 0.0025f);
 		Game::GetInstance().SetSpeedFactor(speed);
 	}
 

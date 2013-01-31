@@ -27,7 +27,8 @@ Game::Game() :
 	mp_player = new Player(static_cast<float>(PLAYER_START_X),
 						   static_cast<float>(PLAYER_START_Y));
 
-	// Create the audio manager.
+	// Initialise FMOD, and create the audio manager.
+	FSOUND_Init(44100, 42, 0);
 	mp_audioManager = new AudioManager();
 
 	// Spawn a wave of enemies.
@@ -71,6 +72,8 @@ void Game::Run()
 	// We only update and render the game before Game Over.
 	if ( !GameState::GetInstance().IsGameOver() )
 	{
+		mp_audioManager->PlayMusic();
+
 		// Update all objects in the game world.
 		Update(frameTime);
 
@@ -103,6 +106,9 @@ void Game::Update(const float frameTime)
 
 	// Update the ProjectileManager, which will in turn update the projectiles.
 	ProjectileManager::GetInstance().Update(frameTime);
+
+	// Update the audio manager, which will update the play speed of all audio.
+	mp_audioManager->Update(frameTime);
 }
 
 void Game::Render()
@@ -117,3 +123,10 @@ void Game::Render()
 	ProjectileManager::GetInstance().Render();
 }
 
+void Game::SetSpeedFactor(float value)
+{
+	m_gameSpeedFactor = value;
+
+	// Also set the audio speed factor.
+	mp_audioManager->SetPlaybackSpeed(value);
+}

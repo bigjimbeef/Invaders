@@ -9,6 +9,9 @@
 // External library include for drawing/updating game.
 #include "DiceInvadersLib.h"
 
+// FMOD header include, for audio engine initialisation.
+#include "fmod.h"
+
 #include <string>
 // Stringstream include, used for converting ints to strings.
 #include <sstream>
@@ -53,7 +56,7 @@ class Game
 		inline IDiceInvaders& GetSystem() const { return *mp_system; }
 
 		inline float GetSpeedFactor() const { return m_gameSpeedFactor; }
-		inline void SetSpeedFactor(float value) { m_gameSpeedFactor = value; }
+		void SetSpeedFactor(float value);
 		
 		static int GetScreenWidth() { return SCREEN_WIDTH; }
 		static int GetScreenHeight() { return SCREEN_HEIGHT; }

@@ -13,6 +13,7 @@
 // Forward declare Game to allow access to Game singleton.
 class Game;
 struct FSOUND_STREAM;
+struct FSOUND_SAMPLE;
 
 class AudioManager
 {
@@ -23,17 +24,18 @@ class AudioManager
 		void Update(float frameTime);
 
 		// Start playing the music.
-		void PlayMusic();
+		void PlayMusic(bool stopCurrent = false);
 		void StopMusic();
 
-		void LoadSoundEffect(std::string effectPath);
-		void PlaySoundEffect(std::string name);
-		void StopSoundEffect(std::string name);
+		void LoadSoundEffect(std::string effectPath, bool looping);
+		// Returns the channel the sound is playing in.
+		int PlaySoundEffect(std::string name);
+		void StopSoundEffect(int channel);
 
 		//---------------------------------------------------------------------
 		// Accessors.
 		inline int GetMusicChannel() const { return m_musicChannel; }
-		inline float GetMusicFrequency() const { return m_musicFrequency; }
+		inline int GetMusicFrequency() const { return m_musicFrequency; }
 		inline float GetPlaybackSpeed() const { return m_playbackSpeed; }
 		void SetPlaybackSpeed(float value);
 
@@ -50,7 +52,7 @@ class AudioManager
 		// This will hold the channel that that sound is playing in.
 		int m_musicChannel;
 		// The frequency that the music is playing at, determined at run-time.
-		float m_musicFrequency;
+		int m_musicFrequency;
 		static const int FORTY_FOUR_K = 44100;
 		// This is the externally-visible notion of music speed.
 		float m_playbackSpeed;
@@ -58,7 +60,7 @@ class AudioManager
 		float m_lastPlaybackSpeed;
 
 		// This container is a map of file path to FSOUND_SAMPLE objects.
-		// std::map<std::string, FSOUND_SAMPLE*> m_sounds;
+		std::map<std::string, FSOUND_SAMPLE*> m_sounds;
 
 };
 

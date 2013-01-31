@@ -57,6 +57,9 @@ class Player : public IRenderable
 		inline int GetCurrentHealth() const { return m_health; }
 		static int GetTotalHealth() { return STARTING_HEALTH; }
 
+
+		inline void SetSpeedingUp() { m_speedingUp = true; }
+
 	private:
 		// The current health of the player.
 		int m_health;
@@ -69,8 +72,10 @@ class Player : public IRenderable
 
 
 
-
+		// TODO: REMOVE THIS SILLY HACK
 		bool m_slowingDown;
+		bool m_speedingUp;
+		
 };
 
 #endif // PLAYER_H

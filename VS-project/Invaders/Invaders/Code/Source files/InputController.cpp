@@ -39,12 +39,16 @@ void InputController::GameControls(const IDiceInvaders::KeyStatus& keystate,
 	{
 		// Move the player in negative X.
 		Game::GetInstance().GetPlayer().Move(-1, frameTime);
+
+		Game::GetInstance().GetPlayer().SetSpeedingUp();
 	}
 	
 	if ( keystate.right )
 	{
 		// Move the player in position X.
 		Game::GetInstance().GetPlayer().Move(1, frameTime);
+
+		Game::GetInstance().GetPlayer().SetSpeedingUp();
 	}
 
 	if ( keystate.fire )
