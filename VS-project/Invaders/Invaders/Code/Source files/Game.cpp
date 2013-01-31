@@ -7,9 +7,11 @@ Game::Game() :
 	mp_library(NULL),
 	mp_libPath("DiceInvaders.dll"),
 	mp_system(NULL),
+	mp_renderer(NULL),
 	mp_player(NULL),
 	m_gameSpeedFactor(1.0f)
 {
+	/*
 	// Initialising this variables outside of the initialisation list,
 	// as re-ordering the header file could cause problems with initialisation
 	// order.
@@ -22,13 +24,17 @@ Game::Game() :
 	// Initialise the ResourceManager, which sets the static pointers to
 	// the sprites, for use in drawing all IRenderables.
 	ResourceManager::GetInstance();
+	*/
+
+	// Create the Renderer.
+	mp_renderer = new Renderer();
+
+	return;
 
 	// Create the player object.
 	mp_player = new Player(static_cast<float>(PLAYER_START_X),
 						   static_cast<float>(PLAYER_START_Y));
 
-	// Initialise FMOD, and create the audio manager.
-	FSOUND_Init(44100, 42, 0);
 	mp_audioManager = new AudioManager();
 
 	// Spawn a wave of enemies.
@@ -42,6 +48,10 @@ Game::~Game()
 	delete mp_audioManager;
 	mp_audioManager = NULL;
 
+	delete mp_renderer;
+	mp_renderer = NULL;
+
+	/*
 	ResourceManager::GetInstance().Destroy();
 
 	// Destroy the game system.
@@ -50,10 +60,31 @@ Game::~Game()
 
 	delete mp_library;
 	mp_library = NULL;
+	*/
 }
+
+// TODO: Use this to clamp to 60fps
+/*
+int	Game::CalculateFrameTime() // ...since start of program
+{
+	QueryPerformanceCounter(&m_outStartTime);
+	QueryPerformanceFrequency(&m_outFreq);
+
+	LARGE_INTEGER outPerfCount;
+	QueryPerformanceCounter(&outPerfCount);
+	return ((outPerfCount.QuadPart-starttime.QuadPart)*1000) / m_outFreq.QuadPart;
+}
+*/
 
 void Game::Run()
 {
+	mp_renderer->PreRender();
+
+	mp_renderer->PostRender();
+
+
+	return;
+
 	// Update the game world, which displays all changes that were made in the
 	// previous iteration of this function loop.
 	if ( !mp_system->update() )

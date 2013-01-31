@@ -25,6 +25,7 @@
 #include "ResourceManager.h"
 #include "MathsHelper.h"
 #include "AudioManager.h"
+#include "Renderer.h"
 
 class Game
 {
@@ -51,6 +52,7 @@ class Game
 		inline bool IsRunning() const { return m_gameRunning; }
 		inline void SetRunning(bool running) { m_gameRunning = running; }
 
+		inline Renderer& GetRenderer() const { return *mp_renderer; }
 		inline Player& GetPlayer() const { return *mp_player; }
 
 		inline IDiceInvaders& GetSystem() const { return *mp_system; }
@@ -76,11 +78,15 @@ class Game
 		DiceInvadersLib* mp_library;
 		const char* mp_libPath;
 		IDiceInvaders* mp_system;
+		
 
 		// Game world dimensions
 		static const int SCREEN_WIDTH = 640;
 		static const int SCREEN_HEIGHT = 480;
 		static const int SPRITE_SIZE = 32;
+
+		// The game renderer.
+		Renderer* mp_renderer;
 
 		// The player object.
 		Player* mp_player;

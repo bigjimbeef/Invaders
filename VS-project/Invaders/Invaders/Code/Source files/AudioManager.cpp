@@ -14,7 +14,8 @@ AudioManager::AudioManager() :
 	m_lastPlaybackSpeed(1.0f),
 	m_sounds()
 {
-
+	// Initialise FMOD.
+	FSOUND_Init(44100, 42, 0);
 }
 AudioManager::~AudioManager()
 {
