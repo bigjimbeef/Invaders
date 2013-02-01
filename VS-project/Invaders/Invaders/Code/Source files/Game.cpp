@@ -3,12 +3,19 @@
 Game::Game() :
 	m_initialised(0),
 	m_gameRunning(1),
-	m_lastTime(0.0f),
+	// m_frequency initialised below.
+	m_startTime(0.0f),
+	m_totalTime(0.0f),
+	m_lastFrameTime(0.0f),
+	m_frameRateCapped(true),
+	m_frameRateCap(60),
 	mp_library(NULL),
 	mp_libPath("DiceInvaders.dll"),
 	mp_system(NULL),
 	mp_renderer(NULL),
 	mp_player(NULL),
+	mp_audioManager(),
+	mp_inputController(NULL),
 	m_gameSpeedFactor(1.0f)
 {
 	/*
@@ -26,8 +33,18 @@ Game::Game() :
 	ResourceManager::GetInstance();
 	*/
 
+	// Initialise game frequency ...
+	QueryPerformanceFrequency (&m_frequency );
+	// ... and game time.
+	m_startTime = GetGameTime();
+	m_lastFrameTime = m_startTime;
+
+
 	// Create the Renderer.
 	mp_renderer = new Renderer();
+
+	// Create a new Input Controller.
+	mp_inputController = new InputController();
 
 	return;
 
@@ -48,6 +65,9 @@ Game::~Game()
 	delete mp_audioManager;
 	mp_audioManager = NULL;
 
+	delete mp_inputController;
+	mp_inputController = NULL;
+
 	delete mp_renderer;
 	mp_renderer = NULL;
 
@@ -63,25 +83,52 @@ Game::~Game()
 	*/
 }
 
-// TODO: Use this to clamp to 60fps
-/*
-int	Game::CalculateFrameTime() // ...since start of program
+// Gets the current time, in milliseconds
+float Game::GetGameTime()
 {
-	QueryPerformanceCounter(&m_outStartTime);
-	QueryPerformanceFrequency(&m_outFreq);
+	LARGE_INTEGER ticks;
+	QueryPerformanceCounter( &ticks );
 
-	LARGE_INTEGER outPerfCount;
-	QueryPerformanceCounter(&outPerfCount);
-	return ((outPerfCount.QuadPart-starttime.QuadPart)*1000) / m_outFreq.QuadPart;
+	float gameTime = 
+		static_cast<float>((ticks.QuadPart * 1000.0f) / m_frequency.QuadPart);
+
+	return gameTime;
 }
-*/
 
 void Game::Run()
 {
+	float currentTime = GetGameTime();
+	float frameTime = currentTime - m_lastFrameTime;
+
+	// Update the time since the game started.
+	m_totalTime = currentTime - m_startTime;
+
+	// Render the FPS in the window title.
+	float fps = 1000.0f / frameTime;
+	std::stringstream ss;
+	ss << "FPS: " << fps;
+	std::string title = ss.str();
+	SetWindowText(mp_renderer->GetWindow(), title.c_str());
+
+	if( m_frameRateCapped )
+	{
+		float dt = 1000.0f / static_cast<float>(m_frameRateCap);
+
+		if (frameTime < dt)
+		{
+			//Sleep the remaining frame time 
+			Sleep( static_cast<DWORD>(dt - frameTime) );
+			frameTime = dt;
+		}
+	}
+
+	HandleInput(frameTime);
 	mp_renderer->PreRender();
 
 	mp_renderer->PostRender();
 
+	// Cache the elapsed frame time.
+	m_lastFrameTime = currentTime;
 
 	return;
 
@@ -92,10 +139,6 @@ void Game::Run()
 		m_gameRunning = false;
 		return;
 	}
-
-	// Use the DiceInvaders library to get the elapsed frame time.
-	float newTime = mp_system->getElapsedTime();
-	float frameTime = newTime - m_lastTime;
 
 	// Handle input from the player.
 	HandleInput(frameTime);
@@ -116,15 +159,14 @@ void Game::Run()
 	// even after the game is finished.
 	GameState::GetInstance().RenderUI(frameTime);
 
-	// Cache the elapsed frame time.
-	m_lastTime = newTime;
+
 }
 
 
 void Game::HandleInput(const float frameTime)
 {
 	// Farm the input handling out to the input controller.
-	InputController::GetInstance().HandleInput(frameTime);
+	mp_inputController->HandleInput(frameTime);
 }
 
 void Game::Update(const float frameTime)

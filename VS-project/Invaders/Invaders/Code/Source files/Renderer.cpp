@@ -8,7 +8,7 @@ LRESULT WINAPI MsgProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 {
 	// Pass the actual message handling to our Renderer's 
 	// message handler function.
-	Game::GetInstance().GetRenderer().MessageHandler(hWnd, msg, 
+	Game::GetInstance().GetInputController().MessageHandler(hWnd, msg, 
 													 wParam, lParam);
 
 	return DefWindowProc( hWnd, msg, wParam, lParam );
@@ -132,95 +132,8 @@ HRESULT Renderer::InitVB()
 	return S_OK;
 }
 
-LRESULT Renderer::MessageHandler(HWND hWnd, UINT msg, 
-								 WPARAM wParam, LPARAM lParam)
-{
-	switch( msg )
-	{
-		case WM_LBUTTONDOWN:
-			SetCapture(hWnd);
-			m_mb|=1;
-			m_keyDown[VK_LBUTTON]=true;
-			m_keyHit[VK_LBUTTON]++;
-			break;
-		case WM_RBUTTONDOWN:
-			SetCapture(hWnd);
-			m_keyDown[VK_RBUTTON]=true;
-			m_keyHit[VK_RBUTTON]++;
-			m_mb|=2;
-			break;
-		case WM_MBUTTONDOWN:
-			SetCapture(hWnd);
-			m_mb|=4;
-			m_keyDown[VK_MBUTTON]=true;
-			m_keyHit[VK_MBUTTON]++;
-			break;
-		case WM_LBUTTONUP:
-			ReleaseCapture();
-			m_mb&=~1;
-			m_keyDown[VK_LBUTTON]=false;
-			break;
-		case WM_RBUTTONUP:
-			ReleaseCapture();
-			m_mb&=~2;
-			m_keyDown[VK_RBUTTON]=false;
-			break;
-		case WM_MBUTTONUP:
-			ReleaseCapture();
-			m_mb&=~4;
-			m_keyDown[VK_MBUTTON]=false;
-			break;
-
-		case WM_KEYDOWN:
-		case WM_SYSKEYDOWN:
-			m_keyDown[wParam&255]=true;
-			m_keyHit[wParam&255]++;
-			return 0;
-		case WM_KEYUP:
-		case WM_SYSKEYUP:
-			m_keyDown[wParam&127]=false;
-			break;
-
-		case WM_DESTROY:
-			// Tidying up of resources handled in the Renderer destructor.
-			PostQuitMessage( 0 );
-			return 0;
-		case WM_ACTIVATEAPP:
-			if (!wParam)
-			{
-				memset(m_keyDown,0,sizeof(m_keyDown));
-			}
-			break;
-
-		case WM_ACTIVATE:
-			if( WA_INACTIVE != wParam )
-			{
-				// Make sure the device is acquired, if we are gaining focus.
-
-			}
-			break;
-	}
-	
-	return DefWindowProc( hWnd, msg, wParam, lParam );
-}
-
 void Renderer::PreRender()
 {
-	// TODO: MOVE THIS TO THE INPUT CONTROLLER
-	// Message handling loop.
-	MSG msg;
-	ZeroMemory( &msg, sizeof(msg) );
-	while ( PeekMessage( &msg, NULL, 0U, 0U, PM_REMOVE ) )
-	{
-		TranslateMessage( &msg );
-		DispatchMessage( &msg );
-		
-		if (msg.message==WM_QUIT) {
-			Game::GetInstance().SetRunning(false);
-			return;
-		}
-	}
-
 	mp_d3dDevice->Clear( 0, NULL, D3DCLEAR_TARGET, m_bgColour, 1.0f, 0 );
 	mp_d3dDevice->SetRenderState(D3DRS_ALPHABLENDENABLE,true);
 	mp_d3dDevice->SetRenderState(D3DRS_ZENABLE,false);
@@ -256,7 +169,7 @@ void Renderer::PostRender()
 	mp_d3dDevice->Present( NULL, NULL, NULL, NULL );
 
 	// TODO: Move this to the InputController.
-	memset(m_keyHit,0,sizeof(m_keyHit));
+	//memset(m_keyHit,0,sizeof(m_keyHit));
 
 	SetCursor(LoadCursor(NULL,IDC_ARROW));
 }

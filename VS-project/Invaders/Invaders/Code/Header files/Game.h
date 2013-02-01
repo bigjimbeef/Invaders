@@ -54,6 +54,8 @@ class Game
 
 		inline Renderer& GetRenderer() const { return *mp_renderer; }
 		inline Player& GetPlayer() const { return *mp_player; }
+		inline InputController& GetInputController() const { 
+			return *mp_inputController; }
 
 		inline IDiceInvaders& GetSystem() const { return *mp_system; }
 
@@ -65,14 +67,28 @@ class Game
 		static int GetSpriteSize() { return SPRITE_SIZE; }
 
 	private:
+
+		// Gets the current game time, in ms.
+		float GetGameTime();
+
 		// Is the game initialised?
 		bool m_initialised;
 
 		// Controls whether the game is still running or not.
 		bool m_gameRunning;
 
-		// The elapsed time of the game.
-		float m_lastTime;
+		// The frequency the game is running at.
+		LARGE_INTEGER m_frequency;
+		// The time that the game was started.
+		float m_startTime;
+		// The total elapsed time of the game.
+		float m_totalTime;
+		// The time elapsed this frame.
+		float m_lastFrameTime;
+
+		// Do we want to run to a capped fps? If so, how much?
+		bool m_frameRateCapped;
+		int m_frameRateCap;
 
 		// Instance of the external library for world drawing and updating.
 		DiceInvadersLib* mp_library;
@@ -93,6 +109,9 @@ class Game
 
 		// The Audio Manager
 		AudioManager* mp_audioManager;
+
+		// Handles player input via DirectX messages.
+		InputController* mp_inputController;
 
 		// How fast is the game currently going?
 		float m_gameSpeedFactor;

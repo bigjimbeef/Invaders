@@ -42,6 +42,10 @@ class Renderer
 		// Presents the backbuffer contents to the display.
 		void PostRender();
 
+		//---------------------------------------------------------------------
+		// Accessors
+		inline HWND GetWindow() const { return mp_HWND; }
+
 	private:
 		// A pointer to our window class.
 		WNDCLASSEX* mp_wc;
@@ -60,12 +64,14 @@ class Renderer
 		// Our vertex buffer. Probably won't hold any tea2.
 		LPDIRECT3DVERTEXBUFFER9 mp_VB;
 
+		/*
 		// Which keys are down?
 		bool m_keyDown[256];
 		// How many times have we hit each key?
 		int m_keyHit[256];
 		// Is the mouse button pressed?
 		int m_mb;
+		*/
 
 		bool m_fullScreen;
 
