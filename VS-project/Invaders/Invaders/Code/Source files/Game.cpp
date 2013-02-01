@@ -41,7 +41,7 @@ Game::Game() :
 	mp_audioManager = new AudioManager();
 
 	// Spawn a wave of enemies.
-	// EnemyManager::GetInstance().SpawnWave();
+	EnemyManager::GetInstance().SpawnWave();
 }
 Game::~Game()
 {
@@ -154,10 +154,11 @@ void Game::Render()
 
 	// Render the player.
 	mp_player->Render();
-	/*
+	
 	// Render the EnemyManager, which will in turn render the Enemies.
 	EnemyManager::GetInstance().Render();
-
+	
+	/*
 	// Render the ProjectileManager, which will in turn render the projectiles.
 	ProjectileManager::GetInstance().Render();
 	*/

@@ -236,7 +236,7 @@ void Player::Render()
 	Game::GetInstance().GetRenderer().DrawSprite(mp_sprite, 
 												 m_position.x, 
 												 m_position.y, 
-												 32, 32);
+												 16,16);
 
 	/*
 	// Draw the sprite for this renderable item.

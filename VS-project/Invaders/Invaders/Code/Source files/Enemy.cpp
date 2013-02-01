@@ -29,8 +29,8 @@ Enemy::Enemy(float xPos, float yPos, int row, int col, int score) :
 	m_spriteClipYOffset = ( row < 2 ) ? 4 : 5;
 
 	mp_sprite = ( m_row < 2 ) ? 
-		ResourceManager::GetEnemyOneSprite() :
-		ResourceManager::GetEnemyTwoSprite();
+		Game::GetInstance().GetResourceManager().GetEnemyOneSprite() :
+		Game::GetInstance().GetResourceManager().GetEnemyTwoSprite();
 }
 Enemy::~Enemy()
 {
@@ -83,6 +83,7 @@ void Enemy::Update(const float frameTime)
 
 void Enemy::Render()
 {
+	/*
 	if ( m_row < 2 )
 	{
 		mp_sprite = m_altSprite 
@@ -94,10 +95,12 @@ void Enemy::Render()
 		mp_sprite = m_altSprite 
 			? ResourceManager::GetEnemyTwoSprite() 
 			: ResourceManager::GetEnemyTwoAltSprite();
-	}
+	}*/
 
-	int xPos = static_cast<int>(m_position.x + m_currentJitter.x);
-	int yPos = static_cast<int>(m_position.y + m_currentJitter.y);
+	float xPos = m_position.x + m_currentJitter.x;
+	float yPos = m_position.y + m_currentJitter.y;
+
+	Game::GetInstance().GetRenderer().DrawSprite(mp_sprite, xPos, yPos, 16, 16);
 
 	/*
 	mp_sprite->draw(xPos, yPos);
