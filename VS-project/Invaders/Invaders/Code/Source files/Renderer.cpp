@@ -11,6 +11,7 @@ LRESULT WINAPI MsgProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 	Game::GetInstance().GetInputController().MessageHandler(hWnd, msg, 
 													 wParam, lParam);
 
+
 	return DefWindowProc( hWnd, msg, wParam, lParam );
 }
 
@@ -36,8 +37,8 @@ Renderer::Renderer() :
 	RegisterClassEx( mp_wc );
 
 	RECT r = {0, 0, BACKBUFFER_WIDTH, BACKBUFFER_HEIGHT};
-
-	// Determine whether or not to run in fullscreen.
+	
+	// Set the window style based on whether or not we're running in fullscreen.
 	int style = m_fullScreen ? WS_POPUP : WS_OVERLAPPEDWINDOW;
 	style |= WS_VISIBLE;
 	AdjustWindowRect(&r,style,false);
@@ -102,8 +103,8 @@ HRESULT Renderer::InitD3D( HWND hWnd )
 	d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_ONE ;
 	d3dpp.BackBufferFormat = m_fullScreen ? D3DFMT_A8R8G8B8 : D3DFMT_UNKNOWN;
 
-	d3dpp.BackBufferWidth = BACKBUFFER_HEIGHT;
-	d3dpp.BackBufferHeight = BACKBUFFER_WIDTH;
+	d3dpp.BackBufferWidth = BACKBUFFER_WIDTH;
+	d3dpp.BackBufferHeight = BACKBUFFER_HEIGHT;
 
 	d3dpp.FullScreen_RefreshRateInHz = m_fullScreen ? SIXTY_HERTZ : 0;
 
@@ -114,8 +115,6 @@ HRESULT Renderer::InitD3D( HWND hWnd )
 	{
 		return E_FAIL;
 	}
-
-	// Device state would normally be set here
 
 	return S_OK;
 }
@@ -168,8 +167,38 @@ void Renderer::PostRender()
 	// Present the backbuffer to the display, rendering the frame's updates.
 	mp_d3dDevice->Present( NULL, NULL, NULL, NULL );
 
-	// TODO: Move this to the InputController.
-	//memset(m_keyHit,0,sizeof(m_keyHit));
-
 	SetCursor(LoadCursor(NULL,IDC_ARROW));
+}
+
+IDirect3DTexture9* Renderer::LoadSprite(const char *fname)
+{
+	IDirect3DTexture9* tex = NULL;
+	D3DXCreateTextureFromFile(mp_d3dDevice,fname,&tex);
+	return tex;
+}
+
+void Renderer::SetCurrentTexture(IDirect3DTexture9* tex)
+{
+	mp_d3dDevice->SetTexture(0, tex);
+}
+
+void Renderer::DrawSprite(IDirect3DTexture9* sprite, float xcentre, 
+						  float ycentre, float xsize, float ysize, 
+						  float angle, DWORD colour )
+{
+	SetCurrentTexture(sprite);
+	float c = cosf(angle);
+	float s = sinf(angle);
+
+#define ROTATE(xx,yy) xcentre+(xx)*c+(yy)*s,ycentre+(yy)*c-(xx)*s 
+	
+	CUSTOMVERTEX spriteVertexBuf[] =
+	{
+		{ ROTATE(-xsize,-ysize), 0.5f, 1.0f, colour, 0,0, }, // x, y, z, rhw, colour
+		{ ROTATE( xsize,-ysize), 0.5f, 1.0f, colour, 1,0, },
+		{ ROTATE(-xsize, ysize), 0.5f, 1.0f, colour, 0,1, },
+		{ ROTATE( xsize, ysize), 0.5f, 1.0f, colour, 1,1, },
+	};
+
+	mp_d3dDevice->DrawPrimitiveUP(D3DPT_TRIANGLESTRIP, 2, spriteVertexBuf, sizeof(CUSTOMVERTEX));
 }

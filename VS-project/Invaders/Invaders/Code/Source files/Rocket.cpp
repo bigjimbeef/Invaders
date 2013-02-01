@@ -44,6 +44,8 @@ void Rocket::Update(float frameTime)
 
 void Rocket::Render()
 {
+	/*
 	mp_sprite->draw(static_cast<int>(m_position.x),
 					static_cast<int>(m_position.y));
+	*/
 }

@@ -3,18 +3,20 @@
 // Include within .cpp file to match forward declare in .h
 #include "Game.h"
 
-#define SAFE_DESTROY(x) if (x) { x->destroy(); x = NULL; }
-
-ISprite* ResourceManager::s_enemyOneSprite = NULL;
-ISprite* ResourceManager::s_enemyOneAltSprite = NULL;
-ISprite* ResourceManager::s_enemyTwoSprite = NULL;
-ISprite* ResourceManager::s_enemyTwoAltSprite = NULL;
-ISprite* ResourceManager::s_playerSprite = NULL;
-ISprite* ResourceManager::s_rocketSprite = NULL;
-ISprite* ResourceManager::s_bombSprite = NULL;
+IDirect3DTexture9* ResourceManager::s_enemyOneSprite = NULL;
+IDirect3DTexture9* ResourceManager::s_enemyOneAltSprite = NULL;
+IDirect3DTexture9* ResourceManager::s_enemyTwoSprite = NULL;
+IDirect3DTexture9* ResourceManager::s_enemyTwoAltSprite = NULL;
+IDirect3DTexture9* ResourceManager::s_playerSprite = NULL;
+IDirect3DTexture9* ResourceManager::s_rocketSprite = NULL;
+IDirect3DTexture9* ResourceManager::s_bombSprite = NULL;
 
 ResourceManager::ResourceManager()
 {
+	s_playerSprite = 
+		Game::GetInstance().GetRenderer().LoadSprite("Code/Resource files/Images/test.png");
+
+	/*
 	s_playerSprite =
 	    Game::GetInstance().GetSystem().createSprite("data/player.bmp");
 	s_enemyOneSprite =
@@ -29,10 +31,13 @@ ResourceManager::ResourceManager()
 	    Game::GetInstance().GetSystem().createSprite("data/rocket.bmp");
 	s_bombSprite =
 	    Game::GetInstance().GetSystem().createSprite("data/bomb.bmp");
+	*/
 }
 
 void ResourceManager::Destroy()
 {
+
+	/*
 	SAFE_DESTROY(s_playerSprite);
 	SAFE_DESTROY(s_enemyOneSprite);
 	SAFE_DESTROY(s_enemyOneAltSprite);
@@ -40,4 +45,5 @@ void ResourceManager::Destroy()
 	SAFE_DESTROY(s_enemyTwoAltSprite);
 	SAFE_DESTROY(s_rocketSprite);
 	SAFE_DESTROY(s_bombSprite);
+	*/
 }

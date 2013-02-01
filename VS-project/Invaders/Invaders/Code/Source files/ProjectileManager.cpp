@@ -50,6 +50,7 @@ void ProjectileManager::Update(float frameTime)
 		}
 	}
 
+	/*
 #ifdef _DEBUG
 	int numProjectiles = m_projectiles.size();
 	
@@ -59,6 +60,7 @@ void ProjectileManager::Update(float frameTime)
 
 	Game::GetInstance().GetSystem().drawText(0, 20, pos.c_str());
 #endif
+	*/
 }
 
 void ProjectileManager::Render()

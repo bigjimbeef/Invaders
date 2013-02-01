@@ -18,6 +18,8 @@ PlayerUI::~PlayerUI()
 
 void PlayerUI::Render()
 {
+	/*
 	mp_sprite->draw(static_cast<int>(m_position.x),
 					static_cast<int>(m_position.y));
+	*/
 }

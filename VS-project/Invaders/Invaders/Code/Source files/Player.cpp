@@ -25,8 +25,8 @@ Player::Player(float xPos, float yPos) :
 	m_spriteClipXOffset = 2;
 	m_spriteClipYOffset = 7;
 
-	// Create the sprite for the player.
-	mp_sprite = ResourceManager::GetPlayerSprite();
+	// Get the sprite for the player.
+	mp_sprite = Game::GetInstance().GetResourceManager().GetPlayerSprite();
 }
 Player::~Player()
 {
@@ -233,7 +233,14 @@ void Player::Fire()
 
 void Player::Render()
 {
+	Game::GetInstance().GetRenderer().DrawSprite(mp_sprite, 
+												 m_position.x, 
+												 m_position.y, 
+												 32, 32);
+
+	/*
 	// Draw the sprite for this renderable item.
 	mp_sprite->draw(static_cast<int>(m_position.x),
 					static_cast<int>(m_position.y));
+	*/
 }

@@ -185,6 +185,7 @@ void EnemyManager::Update(const float frameTime)
 	// Update the lowest point.
 	UpdateLowestPoint();
 
+	/*
 #ifdef _DEBUG
 	int numEnemies = m_enemies.size();
 	
@@ -194,6 +195,7 @@ void EnemyManager::Update(const float frameTime)
 
 	Game::GetInstance().GetSystem().drawText(0, 40, enemies.c_str());
 #endif
+	*/
 }
 
 void EnemyManager::UpdateLowestPoint()

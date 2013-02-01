@@ -99,7 +99,9 @@ void Enemy::Render()
 	int xPos = static_cast<int>(m_position.x + m_currentJitter.x);
 	int yPos = static_cast<int>(m_position.y + m_currentJitter.y);
 
+	/*
 	mp_sprite->draw(xPos, yPos);
+	*/
 }
 
 void Enemy::Move(float distance, bool dropDown)

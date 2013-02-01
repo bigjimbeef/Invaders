@@ -9,7 +9,7 @@
 
 #include "Vector2.h"
 
-struct ISprite;
+struct IDirect3DTexture9;
 
 class IRenderable
 {
@@ -46,7 +46,7 @@ class IRenderable
 		int m_spriteClipYOffset;
 
 		// Pointer to the sprite object as defined in the DiceInvaders lib.
-		ISprite* mp_sprite;
+		IDirect3DTexture9* mp_sprite;
 };
 
 #endif // RENDERABLE_H

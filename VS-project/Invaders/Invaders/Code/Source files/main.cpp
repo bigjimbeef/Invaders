@@ -9,14 +9,6 @@
 
 #include "Game.h"
 
-/*
-int APIENTRY WinMain(
-	HINSTANCE instance,
-	HINSTANCE previousInstance,
-	LPSTR commandLine,
-	int commandShow)
-{
-*/
 INT WINAPI WinMain( HINSTANCE hInst, HINSTANCE, LPSTR cmd, INT )
 {
 	while ( Game::GetInstance().IsRunning() )

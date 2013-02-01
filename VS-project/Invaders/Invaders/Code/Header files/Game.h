@@ -6,9 +6,6 @@
 // The main game class for handling the updating and management of the game.
 //-----------------------------------------------------------------------------
 
-// External library include for drawing/updating game.
-#include "DiceInvadersLib.h"
-
 // FMOD header include, for audio engine initialisation.
 #include "fmod.h"
 
@@ -56,8 +53,11 @@ class Game
 		inline Player& GetPlayer() const { return *mp_player; }
 		inline InputController& GetInputController() const { 
 			return *mp_inputController; }
+		inline ResourceManager& GetResourceManager() const {
+			return *mp_resourceManager; }
 
-		inline IDiceInvaders& GetSystem() const { return *mp_system; }
+		// REMOVE
+		//inline IDiceInvaders& GetSystem() const { return *mp_system; }
 
 		inline float GetSpeedFactor() const { return m_gameSpeedFactor; }
 		void SetSpeedFactor(float value);
@@ -91,10 +91,11 @@ class Game
 		int m_frameRateCap;
 
 		// Instance of the external library for world drawing and updating.
+		/*
 		DiceInvadersLib* mp_library;
 		const char* mp_libPath;
 		IDiceInvaders* mp_system;
-		
+		*/
 
 		// Game world dimensions
 		static const int SCREEN_WIDTH = 640;
@@ -103,6 +104,9 @@ class Game
 
 		// The game renderer.
 		Renderer* mp_renderer;
+
+		// The resource manager.
+		ResourceManager* mp_resourceManager;
 
 		// The player object.
 		Player* mp_player;

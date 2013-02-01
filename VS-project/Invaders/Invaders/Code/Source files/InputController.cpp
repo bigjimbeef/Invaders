@@ -4,6 +4,7 @@
 #include "Game.h"
 
 InputController::InputController() :
+	m_frameTime(0.0f),	
 	m_mb(0)
 {
 	for( int i = 0; i < KEY_ARRAY_SIZE; ++i )
@@ -22,74 +23,77 @@ LRESULT InputController::MessageHandler(HWND hWnd, UINT msg,
 {
 	switch( msg )
 	{
-	case WM_LBUTTONDOWN:
-		SetCapture(hWnd);
-		m_mb|=1;
-		m_isKeyDown[VK_LBUTTON]=true;
-		m_keyHit[VK_LBUTTON]++;
-		break;
-	case WM_RBUTTONDOWN:
-		SetCapture(hWnd);
-		m_isKeyDown[VK_RBUTTON]=true;
-		m_keyHit[VK_RBUTTON]++;
-		m_mb|=2;
-		break;
-	case WM_MBUTTONDOWN:
-		SetCapture(hWnd);
-		m_mb|=4;
-		m_isKeyDown[VK_MBUTTON]=true;
-		m_keyHit[VK_MBUTTON]++;
-		break;
-	case WM_LBUTTONUP:
-		ReleaseCapture();
-		m_mb&=~1;
-		m_isKeyDown[VK_LBUTTON]=false;
-		break;
-	case WM_RBUTTONUP:
-		ReleaseCapture();
-		m_mb&=~2;
-		m_isKeyDown[VK_RBUTTON]=false;
-		break;
-	case WM_MBUTTONUP:
-		ReleaseCapture();
-		m_mb&=~4;
-		m_isKeyDown[VK_MBUTTON]=false;
-		break;
+		case WM_LBUTTONDOWN:
+			SetCapture(hWnd);
+			m_mb|=1;
+			m_isKeyDown[VK_LBUTTON]=true;
+			m_keyHit[VK_LBUTTON]++;
+			break;
+		case WM_RBUTTONDOWN:
+			SetCapture(hWnd);
+			m_isKeyDown[VK_RBUTTON]=true;
+			m_keyHit[VK_RBUTTON]++;
+			m_mb|=2;
+			break;
+		case WM_MBUTTONDOWN:
+			SetCapture(hWnd);
+			m_mb|=4;
+			m_isKeyDown[VK_MBUTTON]=true;
+			m_keyHit[VK_MBUTTON]++;
+			break;
+		case WM_LBUTTONUP:
+			ReleaseCapture();
+			m_mb&=~1;
+			m_isKeyDown[VK_LBUTTON]=false;
+			break;
+		case WM_RBUTTONUP:
+			ReleaseCapture();
+			m_mb&=~2;
+			m_isKeyDown[VK_RBUTTON]=false;
+			break;
+		case WM_MBUTTONUP:
+			ReleaseCapture();
+			m_mb&=~4;
+			m_isKeyDown[VK_MBUTTON]=false;
+			break;
 
-	case WM_KEYDOWN:
-	case WM_SYSKEYDOWN:
-		m_isKeyDown[wParam&255]=true;
-		m_keyHit[wParam&255]++;
-		return 0;
-	case WM_KEYUP:
-	case WM_SYSKEYUP:
-		m_isKeyDown[wParam&127]=false;
-		break;
+		case WM_KEYDOWN:
+		case WM_SYSKEYDOWN:
+			m_isKeyDown[wParam&255]=true;
+			m_keyHit[wParam&255]++;
+			return 0;
+		case WM_KEYUP:
+		case WM_SYSKEYUP:
+			m_isKeyDown[wParam&127]=false;
+			break;
 
-	case WM_DESTROY:
-		// Tidying up of resources handled in the Renderer destructor.
-		PostQuitMessage( 0 );
-		return 0;
-	case WM_ACTIVATEAPP:
-		if (!wParam)
-		{
-			memset(m_isKeyDown,0,sizeof(m_isKeyDown));
-		}
-		break;
+		case WM_DESTROY:
+			// Tidying up of resources handled in the Renderer destructor.
+			PostQuitMessage( 0 );
+			return 0;
+		case WM_ACTIVATEAPP:
+			if (!wParam)
+			{
+				memset(m_isKeyDown,0,sizeof(m_isKeyDown));
+			}
+			break;
 
-	case WM_ACTIVATE:
-		if( WA_INACTIVE != wParam )
-		{
-			// Make sure the device is acquired, if we are gaining focus.
-		}
-		break;
+		case WM_ACTIVATE:
+			if( WA_INACTIVE != wParam )
+			{
+				// Make sure the device is acquired, if we are gaining focus.
+			}
+			break;
 	}
 
-	return DefWindowProc( hWnd, msg, wParam, lParam );
+	return NULL;
 }
 
 void InputController::HandleInput(float frameTime)
 {
+	// Set the frame time, for use in message handler above.
+	m_frameTime = frameTime;
+
 	MSG msg;
 	ZeroMemory( &msg, sizeof(msg) );
 	while ( PeekMessage( &msg, NULL, 0U, 0U, PM_REMOVE ) )
@@ -97,7 +101,7 @@ void InputController::HandleInput(float frameTime)
 		TranslateMessage( &msg );
 		DispatchMessage( &msg );
 
-		if (msg.message==WM_QUIT) {
+		if (msg.message == WM_QUIT) {
 			Game::GetInstance().SetRunning(false);
 			return;
 		}

@@ -6,11 +6,10 @@
 // Manages the player input through a single class.
 //-----------------------------------------------------------------------------
 
+#include "Renderer.h"
+
 // Forward declare Game to allow access to Game singleton.
 class Game;
-
-// Need access to the IDiceInvaders::KeyStatus enum.
-#include "DiceInvadersLib.h"
 
 class InputController
 {
@@ -35,7 +34,12 @@ class InputController
 		*/
 
 	private:
+
+		// How long was this frame.
+		float m_frameTime;
+
 		static const int KEY_ARRAY_SIZE = 256;
+
 		// Which keys are down?
 		bool m_isKeyDown[KEY_ARRAY_SIZE];
 		bool m_wasKeyDown[KEY_ARRAY_SIZE];

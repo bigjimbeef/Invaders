@@ -6,8 +6,13 @@
 // A simple renderer using DirectX to manage and draw sprites.
 //-----------------------------------------------------------------------------
 
+#include "Windows.h"
 #include <d3d9.h>
 #include <d3dx9.h>
+
+// TODO: Are these ok?
+#pragma comment(lib,"d3d9.lib")
+#pragma comment(lib,"d3dx9.lib")
 
 // Our custom FVF, which describes our custom vertex structure
 #define D3DFVF_CUSTOMVERTEX (D3DFVF_XYZRHW|D3DFVF_DIFFUSE|D3DFVF_TEX1)
@@ -42,6 +47,16 @@ class Renderer
 		// Presents the backbuffer contents to the display.
 		void PostRender();
 
+		// Loads a sprite into memory.
+		IDirect3DTexture9* LoadSprite(const char *fname);
+		// Set the current texture we're drawing with.
+		void SetCurrentTexture(IDirect3DTexture9* tex );
+
+		// Draw a specific sprite.
+		void DrawSprite(IDirect3DTexture9* sprite, float xcentre, 
+						float ycentre, float xsize, float ysize,
+						float angle = 0.0f, DWORD colour = 0xFFFFFFFF);
+
 		//---------------------------------------------------------------------
 		// Accessors
 		inline HWND GetWindow() const { return mp_HWND; }
@@ -60,26 +75,17 @@ class Renderer
 		// Used to create the D3DDevice
 		LPDIRECT3D9 mp_D3D;
 		// Our rendering device
-		LPDIRECT3DDEVICE9 mp_d3dDevice ;
+		LPDIRECT3DDEVICE9 mp_d3dDevice;
 		// Our vertex buffer. Probably won't hold any tea2.
 		LPDIRECT3DVERTEXBUFFER9 mp_VB;
-
-		/*
-		// Which keys are down?
-		bool m_keyDown[256];
-		// How many times have we hit each key?
-		int m_keyHit[256];
-		// Is the mouse button pressed?
-		int m_mb;
-		*/
 
 		bool m_fullScreen;
 
 		// The background colour we clear to.
 		DWORD m_bgColour;
 
-		static const int BACKBUFFER_WIDTH = 800;
-		static const int BACKBUFFER_HEIGHT = 600;
+		static const int BACKBUFFER_WIDTH = 640;
+		static const int BACKBUFFER_HEIGHT = 480;
 		static const int SIXTY_HERTZ = 60;
 };
 

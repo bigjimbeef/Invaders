@@ -9,44 +9,34 @@
 
 // Forward declare Game to allow access to Game singleton.
 class Game;
-struct ISprite;
+struct IDirect3DTexture9;
 
 class ResourceManager
 {
 	public:
-		static ResourceManager& GetInstance()
-		{
-			static ResourceManager instance;
-			return instance;
-		}
+		ResourceManager();
+		~ResourceManager();
 
-		static inline ISprite* GetEnemyOneSprite() { return s_enemyOneSprite; }
-		static inline ISprite* GetEnemyOneAltSprite() { return s_enemyOneAltSprite; }
-		static inline ISprite* GetEnemyTwoSprite() { return s_enemyTwoSprite; }
-		static inline ISprite* GetEnemyTwoAltSprite() { return s_enemyTwoAltSprite; }
-		static inline ISprite* GetPlayerSprite() { return s_playerSprite; }
-		static inline ISprite* GetRocketSprite() { return s_rocketSprite; }
-		static inline ISprite* GetBombSprite() { return s_bombSprite; }
+		static inline IDirect3DTexture9* GetEnemyOneSprite() { return s_enemyOneSprite; }
+		static inline IDirect3DTexture9* GetEnemyOneAltSprite() { return s_enemyOneAltSprite; }
+		static inline IDirect3DTexture9* GetEnemyTwoSprite() { return s_enemyTwoSprite; }
+		static inline IDirect3DTexture9* GetEnemyTwoAltSprite() { return s_enemyTwoAltSprite; }
+		static inline IDirect3DTexture9* GetPlayerSprite() { return s_playerSprite; }
+		static inline IDirect3DTexture9* GetRocketSprite() { return s_rocketSprite; }
+		static inline IDirect3DTexture9* GetBombSprite() { return s_bombSprite; }
 
 		// Used to safely delete the static pointers to the sprites in the
 		// correct order.
 		void Destroy();
 
 	private:
-		static ISprite* s_enemyOneSprite;
-		static ISprite* s_enemyOneAltSprite;
-		static ISprite* s_enemyTwoSprite;
-		static ISprite* s_enemyTwoAltSprite;
-		static ISprite* s_playerSprite;
-		static ISprite* s_rocketSprite;
-		static ISprite* s_bombSprite;
-
-		// Private default ctor to facilitate Singleton pattern.
-		ResourceManager();
-
-		// DO NOT IMPLEMENT
-		ResourceManager(ResourceManager const&);
-		void operator=(ResourceManager const&);
+		static IDirect3DTexture9* s_enemyOneSprite;
+		static IDirect3DTexture9* s_enemyOneAltSprite;
+		static IDirect3DTexture9* s_enemyTwoSprite;
+		static IDirect3DTexture9* s_enemyTwoAltSprite;
+		static IDirect3DTexture9* s_playerSprite;
+		static IDirect3DTexture9* s_rocketSprite;
+		static IDirect3DTexture9* s_bombSprite;
 };
 
 #endif // RESOURCEMANAGER_H

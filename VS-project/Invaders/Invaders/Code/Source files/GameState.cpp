@@ -46,6 +46,7 @@ GameState::~GameState()
 	}
 }
 
+/*
 void GameState::RenderLine()
 {
 	// Draw the line which contains the player health/score UI.
@@ -112,6 +113,7 @@ void GameState::RenderUI(float frameTime)
 		GameOverMessage(frameTime);
 	}
 }
+*/
 
 void GameState::IncrementWaveNumber()
 { 
@@ -123,6 +125,7 @@ void GameState::IncrementWaveNumber()
 	} 
 }
 
+/*
 void GameState::GameOverMessage(float frameTime)
 {
 	// Draw the game over messages.
@@ -131,3 +134,4 @@ void GameState::GameOverMessage(float frameTime)
 	Game::GetInstance().GetSystem().drawText(
 	    m_pressStartXPos, m_pressStartYPos, "Please press Fire to exit");
 }
+*/
