@@ -9,10 +9,12 @@ IRenderable::IRenderable() :
 	m_spriteHeight(0),
 	m_spriteClipWidth(0),
 	m_spriteClipHeight(0),
-	m_spriteClipXOffset(0),
-	m_spriteClipYOffset(0),
 	mp_sprite(NULL)
 {
+
+#ifdef _DEBUG
+	m_DEBUG_Colliding = false;
+#endif
 }
 
 IRenderable::~IRenderable()

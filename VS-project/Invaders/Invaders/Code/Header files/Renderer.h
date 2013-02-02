@@ -62,8 +62,8 @@ class Renderer
 		static inline DWORD GetColour(int r, int g, int b) 
 			{ return D3DCOLOR_XRGB(r,g,b); }
 
-		// Debug rendering.
 #ifdef _DEBUG
+		// Debug rendering.
 		void DEBUG_DrawBox(
 			float xPos, float yPos, int width, int height, DWORD col );
 

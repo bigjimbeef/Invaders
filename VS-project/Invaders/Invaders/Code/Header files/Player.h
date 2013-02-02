@@ -54,7 +54,7 @@ class Player : public IRenderable
 		// Check collision between two Renderable objects.
 		bool CheckCollision(const IRenderable& objectOne, const IRenderable& objectTwo);
 		Vector2 GetCollisionMidpoint(const IRenderable& object);
-		bool BroadPhase(const Vector2& one, const Vector2& two, int bounds);
+		bool BroadPhase(const IRenderable& objectOne, const IRenderable& objectTwo);
 		bool NarrowPhase(const IRenderable& objectOne, const IRenderable& objectTwo);
 
 		//---------------------------------------------------------------------
@@ -79,14 +79,9 @@ class Player : public IRenderable
 		// to that rocket.
 		Rocket* mp_rocket;
 
-
 		// TODO: REMOVE THIS SILLY HACK
 		bool m_slowingDown;
 		bool m_speedingUp;
-		
-	protected:
-		int m_spriteWidth;
-		int m_spriteHeight;
 };
 
 #endif // PLAYER_H

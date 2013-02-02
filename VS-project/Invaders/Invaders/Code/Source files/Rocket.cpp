@@ -4,14 +4,12 @@
 #include "Game.h"
 
 Rocket::Rocket() :
-	m_alive(true),
-	m_spriteWidth(8),
-	m_spriteHeight(16)
+	m_alive(true)
 {
-	m_spriteClipWidth = 6;
-	m_spriteClipHeight = 19;
-	m_spriteClipXOffset = 13;
-	m_spriteClipYOffset = 7;
+	m_spriteWidth = 8;
+	m_spriteHeight = 16;
+	m_spriteClipWidth =8;
+	m_spriteClipHeight =16;
 
 	// Create the sprite for the rocket.
 	mp_sprite = Game::GetInstance().GetResourceManager().GetRocketSprite();
@@ -53,4 +51,15 @@ void Rocket::Render()
 	Game::GetInstance().GetRenderer().DrawSprite(
 		mp_sprite, m_position.x, m_position.y, m_spriteWidth, m_spriteHeight
 	);
+
+#ifdef _DEBUG
+	Vector2 boundPos = m_position;
+	boundPos.x -= (32 - (m_spriteWidth/2));
+	boundPos.y -= (32 - (m_spriteHeight/2));
+
+	Game::GetInstance().GetRenderer().DEBUG_DrawBox(
+		boundPos.x, boundPos.y, 64, 64, 
+		Renderer::GetColour(0, 0, 255)
+		);
+#endif
 }

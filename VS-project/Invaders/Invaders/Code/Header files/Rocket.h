@@ -34,14 +34,11 @@ class Rocket : public IProjectile
 
 	private:
 		static const int ROCKET_VELOCITY = 350;
+	
 		static const int ROCKET_OFFSET = -20;
 
 	protected:
 		bool m_alive;
-
-		int m_spriteWidth;
-		int m_spriteHeight;
-
 };
 
 #endif // ROCKET_H

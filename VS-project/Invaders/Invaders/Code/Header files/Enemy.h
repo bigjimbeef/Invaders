@@ -93,10 +93,6 @@ class Enemy : public IRenderable
 		// holds the bombs.
 		std::list<Bomb*> m_bombs;
         static const int MAX_BOMBS = 3;
-
-	protected:
-		int m_spriteWidth;
-		int m_spriteHeight;
 };
 
 #endif // ENEMY_H

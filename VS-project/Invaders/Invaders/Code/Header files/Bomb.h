@@ -50,6 +50,8 @@ class Bomb : public IProjectile
 
 		int m_spriteWidth;
 		int m_spriteHeight;
+		int m_spriteClipWidth;
+		int m_spriteClipHeight;
 };
 
 #endif // BOMB_H

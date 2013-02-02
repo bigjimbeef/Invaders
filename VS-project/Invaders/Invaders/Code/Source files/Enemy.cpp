@@ -16,20 +16,18 @@ Enemy::Enemy(float xPos, float yPos, int width, int height,
 	m_col(col),
 	m_dropDistance(0.0f),
 	m_score(score),
-	m_altSprite(0),
-	m_spriteWidth(width),
-	m_spriteHeight(height)
+	m_altSprite(0)
 {
+	m_spriteWidth= width;
+	m_spriteHeight = height;
+	m_spriteClipWidth = ( row < 2 ) ? 32 : 44;
+	m_spriteClipHeight = ( row < 2 ) ? 32 : 32;
+
     // Create a std::list for holding the bombs.
     m_bombs = std::list<Bomb*>();
 
 	// Initialise the enemy's position.
 	m_position = Vector2(xPos, yPos);
-
-	m_spriteClipWidth = ( row < 2 ) ? 24 : 30;
-	m_spriteClipHeight = ( row < 2 ) ? 24 : 22;
-	m_spriteClipXOffset = ( row < 2 ) ? 4 : 1;
-	m_spriteClipYOffset = ( row < 2 ) ? 4 : 5;
 
 	mp_sprite = ( m_row < 2 ) ? 
 		Game::GetInstance().GetResourceManager().GetEnemyOneSprite() :
@@ -107,9 +105,12 @@ void Enemy::Render()
 	);
 
 #ifdef _DEBUG
+	DWORD col = m_DEBUG_Colliding 
+		? Renderer::GetColour(0, 255, 0)
+		: Renderer::GetColour(255, 0, 0);
+
 	Game::GetInstance().GetRenderer().DEBUG_DrawBox(
-		xPos, yPos, m_spriteWidth, m_spriteHeight, 
-		Renderer::GetColour(255, 0, 0)
+		xPos, yPos, m_spriteWidth, m_spriteHeight, col
 	);
 #endif
 }

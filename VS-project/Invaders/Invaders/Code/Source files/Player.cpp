@@ -12,24 +12,22 @@
 Player::Player() :
 	m_health(STARTING_HEALTH),
 	mp_rocket(NULL),
-	m_spriteWidth(32),
-	m_spriteHeight(32),
 
 	// TODO: REMOVE THIS SILLY HACK
 	m_slowingDown(0),
 	m_speedingUp(0)
 {
+	m_spriteWidth = 32;
+	m_spriteHeight = 32;
+	m_spriteClipWidth = 32;
+	m_spriteClipHeight = 32;
+
 	// Initialise the player's position.
 	float xPos = static_cast<float>(Renderer::GetScreenWidth()
 		- m_spriteWidth) / 2.f;
 	float yPos = static_cast<float>(Renderer::GetScreenHeight()
 		- PLAYER_Y_OFFSET);
 	m_position = Vector2(xPos, yPos);
-
-	m_spriteClipWidth = 28;
-	m_spriteClipHeight = 20;
-	m_spriteClipXOffset = 2;
-	m_spriteClipYOffset = 7;
 
 	// Get the sprite for the player.
 	mp_sprite = Game::GetInstance().GetResourceManager().GetPlayerSprite();
@@ -39,15 +37,31 @@ Player::~Player()
 	mp_sprite = NULL;
 }
 
-bool Player::BroadPhase(const Vector2& one,const Vector2& two, int bounds)
+bool Player::BroadPhase(const IRenderable& objectOne, 
+						const IRenderable& objectTwo)
 {
-	if ( abs(one.x - two.x) < bounds )
+	Vector2 onePos = objectOne.GetPosition();
+	Vector2 twoPos = objectTwo.GetPosition();
+	
+	int sixtyFour = 64;
+
+	if ( abs(onePos.x - twoPos.x) < sixtyFour )
 	{
-		if ( abs(one.y - two.y) < bounds )
+		if ( abs(onePos.y - twoPos.y) < sixtyFour )
 		{
+#ifdef _DEBUG
+			const_cast<IRenderable&>(objectOne).DEBUG_SetColliding(true);
+			const_cast<IRenderable&>(objectTwo).DEBUG_SetColliding(true);
+#endif
+
 			return true;
 		}
 	}
+
+#ifdef _DEBUG
+	const_cast<IRenderable&>(objectOne).DEBUG_SetColliding(false);
+	const_cast<IRenderable&>(objectTwo).DEBUG_SetColliding(false);
+#endif
 
 	return false;
 }
@@ -57,9 +71,9 @@ Vector2 Player::GetCollisionMidpoint(const IRenderable& object)
 	Vector2 currentPos = object.GetPosition();
 
 	float midX =
-	    currentPos.x + (object.GetXOffset() + (object.GetWidth() / 2.0f));
+	    currentPos.x + (object.GetSpriteWidth() / 2.0f);
 	float midY =
-	    currentPos.y + (object.GetYOffset() + (object.GetHeight() / 2.0f));
+	    currentPos.y + (object.GetSpriteHeight() / 2.0f);
 
 	return Vector2(midX, midY);
 }
@@ -71,8 +85,8 @@ bool Player::NarrowPhase(const IRenderable& objectOne,
 	Vector2 midOne = GetCollisionMidpoint(objectOne);
 	Vector2 midTwo = GetCollisionMidpoint(objectTwo);
 
-	int totalWidth = ( objectOne.GetWidth() + objectTwo.GetWidth() ) / 2;
-	int totalHeight = ( objectOne.GetHeight() + objectTwo.GetHeight() ) / 2;
+	int totalWidth = ( objectOne.GetClipWidth() + objectTwo.GetClipWidth() ) / 2;
+	int totalHeight = ( objectOne.GetClipHeight() + objectTwo.GetClipHeight() ) / 2;
 
 	if ( abs(midOne.x - midTwo.x) < totalWidth )
 	{
@@ -88,15 +102,8 @@ bool Player::NarrowPhase(const IRenderable& objectOne,
 bool Player::CheckCollision(const IRenderable& objectOne,
 							const IRenderable& objectTwo)
 {
-	/*
-	Vector2 onePos = objectOne.GetPosition();
-	Vector2 twoPos = objectTwo.GetPosition();
-	
-	// This is constant for all sprites currently.
-	int bounds = Game::GetSpriteSize();
-
 	// Check if the two objects are within the same 32x32 grid.
-	if ( BroadPhase(onePos, twoPos, bounds) )
+	if ( BroadPhase(objectOne, objectTwo) )
 	{
 		// If they are, check if the actual clip rectangles (that is,
 		// the non-black part of the sprite) are intersecting.
@@ -105,7 +112,7 @@ bool Player::CheckCollision(const IRenderable& objectOne,
 			return true;
 		}
 	}
-	*/
+
 	return false;
 }
 
@@ -158,7 +165,9 @@ void Player::Update(float frameTime)
 			// this is handled in the collision function.
 			if ( CheckCollision(*mp_rocket, *enemy) )
 			{
-				m_slowingDown = true;
+
+				// TODO: Here is why we can slot in the code for the text input stuff.
+
 
 				mp_rocket->Kill();
 				enemy->Kill();

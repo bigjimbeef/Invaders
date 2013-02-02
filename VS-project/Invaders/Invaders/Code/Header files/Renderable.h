@@ -29,10 +29,15 @@ class IRenderable
 		inline Vector2 GetPosition() const { return m_position; }
 		inline void SetPosition(Vector2 newPos) { m_position = newPos; }
 
-		inline int GetXOffset() const { return m_spriteClipXOffset; }
-		inline int GetYOffset() const { return m_spriteClipYOffset; }
-		inline int GetWidth() const { return m_spriteClipWidth; }
-		inline int GetHeight() const { return m_spriteClipHeight; }
+		inline int GetSpriteWidth() const { return m_spriteWidth; }
+		inline int GetSpriteHeight() const { return m_spriteHeight; }
+
+		inline int GetClipWidth() const { return m_spriteClipWidth; }
+		inline int GetClipHeight() const { return m_spriteClipHeight; }
+
+#ifdef _DEBUG
+		inline void DEBUG_SetColliding(bool value){m_DEBUG_Colliding = value;}
+#endif
 
 	protected:
 		// The position that the renderable object is currently at.
@@ -45,11 +50,14 @@ class IRenderable
 		// very peculiar if projectiles collided with things they hadn't hit.
 		int m_spriteClipWidth;
 		int m_spriteClipHeight;
-		int m_spriteClipXOffset;
-		int m_spriteClipYOffset;
 
 		// Pointer to the sprite object as defined in the DiceInvaders lib.
 		IDirect3DTexture9* mp_sprite;
+
+#ifdef _DEBUG
+		// DEBUG variables.
+		bool m_DEBUG_Colliding;
+#endif
 };
 
 #endif // RENDERABLE_H

@@ -5,14 +5,12 @@
 
 Bomb::Bomb(Enemy& bombOwner) :
 	m_bombOwner(bombOwner),
-	m_alive(true),
-	m_spriteWidth(8),
-	m_spriteHeight(16)
+	m_alive(true)
 {
-	m_spriteClipWidth = 8;
-	m_spriteClipHeight = 16;
-	m_spriteClipXOffset = 12;
-	m_spriteClipYOffset = 8;
+	m_spriteWidth =8;
+	m_spriteHeight =16;
+	m_spriteClipHeight = 8;
+	m_spriteClipWidth = 16;
 
 	// Get the bomb sprite from the ResourceManager.
 	mp_sprite = Game::GetInstance().GetResourceManager().GetBombSprite();
