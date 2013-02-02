@@ -11,7 +11,9 @@ Game::Game() :
 	m_frameRateCap(60),
 	mp_renderer(NULL),
 	mp_player(NULL),
-	mp_audioManager(),
+	mp_audioManager(NULL),
+	mp_enemyManager(NULL),
+	mp_projectileManager(NULL),
 	mp_inputController(NULL),
 	m_gameSpeedFactor(1.0f)
 {
@@ -35,16 +37,19 @@ Game::Game() :
 	mp_inputController = new InputController();
 
 	// Create the player object.
-	mp_player = new Player(0,0);/*static_cast<float>(PLAYER_START_X),
-						   static_cast<float>(PLAYER_START_Y));*/
+	mp_player = new Player();
 
 	mp_audioManager = new AudioManager();
+
+	mp_enemyManager = new EnemyManager();
+
+	mp_projectileManager = new ProjectileManager();
 
 	// Seed the random number generator.
 	srand( static_cast<unsigned int>(time(NULL)) );
 
 	// Spawn a wave of enemies.
-	EnemyManager::GetInstance().SpawnWave();
+	mp_enemyManager->SpawnWave();
 }
 Game::~Game()
 {
@@ -56,6 +61,12 @@ Game::~Game()
 
 	delete mp_inputController;
 	mp_inputController = NULL;
+
+	delete mp_enemyManager;
+	mp_enemyManager = NULL;
+
+	delete mp_projectileManager;
+	mp_projectileManager = NULL;
 
 	delete mp_resourceManager;
 	mp_resourceManager = NULL;
@@ -140,12 +151,10 @@ void Game::Update(const float frameTime)
 	mp_player->Update(frameTime);
 
 	// Update the EnemyManager, which will in turn update the Enemies.
-	//EnemyManager::GetInstance().Update(frameTime);
+	mp_enemyManager->Update(frameTime);
 
-	/*
 	// Update the ProjectileManager, which will in turn update the projectiles.
-	ProjectileManager::GetInstance().Update(frameTime);
-	*/
+	mp_projectileManager->Update(frameTime);
 
 	// Update the audio manager, which will update the play speed of all audio.
 	mp_audioManager->Update(frameTime);	
@@ -159,12 +168,10 @@ void Game::Render()
 	mp_player->Render();
 	
 	// Render the EnemyManager, which will in turn render the Enemies.
-	// EnemyManager::GetInstance().Render();
+	mp_enemyManager->Render();
 	
-	/*
 	// Render the ProjectileManager, which will in turn render the projectiles.
-	ProjectileManager::GetInstance().Render();
-	*/
+	mp_projectileManager->Render();
 
 	mp_renderer->PostRender();
 }

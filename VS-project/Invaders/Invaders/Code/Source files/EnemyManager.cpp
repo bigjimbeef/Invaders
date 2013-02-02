@@ -6,7 +6,7 @@
 EnemyManager::EnemyManager() :
 	m_maxCol(NUM_COLS - 1), // Used in zero-indexed array
 	m_minCol(0),
-	m_directionOfTravel(1),
+	m_directionOfTravel(MOVE_RIGHT),
 	m_currentX(0.0f),
 	m_lowestPoint(0.0f),
 	m_enemyProgress(0.0f),
@@ -47,18 +47,18 @@ void EnemyManager::ClearEnemyList()
 
 bool EnemyManager::CheckForDrop(float moveDistance)
 {
-	if ( m_directionOfTravel > 0 )
+	if ( m_directionOfTravel == MOVE_RIGHT )
 	{
 		// If we're moving to the right, we want to know when the right of the
 		// pack has touched the right hand edge.
 		// To calculate the right of the pack, we use the col width for each
 		// but the last column, where we use the sprite width.
 		int packWidth = 
-			(COL_OFFSET * ( m_maxCol - m_minCol )) + Game::GetSpriteSize();
+			(COL_OFFSET * ( m_maxCol - m_minCol )) + ENEMY_SPRITE_WIDTH;
 
 		float packRight = m_currentX + static_cast<float>(packWidth);
 
-		float screenRight = static_cast<float>( Game::GetScreenWidth() );
+		float screenRight = static_cast<float>( Renderer::GetScreenWidth() );
 
 		if ( packRight >= screenRight )
 		{
@@ -299,7 +299,9 @@ void EnemyManager::SpawnWave()
 			static_cast<float>(baseYPosition + ( ROW_OFFSET * currentRow ));
 
 		// Create a new enemy, then spawn it.
-		Enemy* p_baddie = new Enemy(xPos, yPos, currentRow, currentCol, score);
+		Enemy* p_baddie = 
+			new Enemy(xPos, yPos, ENEMY_SPRITE_WIDTH, ENEMY_SPRITE_HEIGHT,
+					  currentRow, currentCol, score);
 
 		// We can fire if we're in the front row.
 		if ( currentRow == NUM_ROWS - 1 )
@@ -322,7 +324,7 @@ void EnemyManager::SpawnWave()
 	m_remainingEnemies = totalNumEnemies;
 	
 	// Start moving to the right.
-	m_directionOfTravel = 1;
+	m_directionOfTravel = MOVE_RIGHT;
 }
 
 void EnemyManager::CalculateNewColWidth()

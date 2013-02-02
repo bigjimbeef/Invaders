@@ -18,12 +18,8 @@ class Game;
 class ProjectileManager
 {
 	public:
-		static ProjectileManager& GetInstance()
-		{
-			static ProjectileManager instance;
-			return instance;
-		}
-		virtual ~ProjectileManager();
+		ProjectileManager();
+		~ProjectileManager();
 
 		void Update(float frameTime);
 
@@ -42,13 +38,6 @@ class ProjectileManager
 
 		// A list of all projectiles in the game world.
 		std::list<IProjectile*> m_projectiles;
-
-		// Private default ctor to facilitate Singleton pattern.
-		ProjectileManager();
-
-		// DO NOT IMPLEMENT
-		ProjectileManager(ProjectileManager const&);
-		void operator=(ProjectileManager const&);
 };
 
 #endif // PROJECTILEMANAGER_H

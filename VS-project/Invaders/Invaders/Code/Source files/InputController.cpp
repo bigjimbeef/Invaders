@@ -185,7 +185,7 @@ void InputController::GameControls(float frameTime)
 		if ( !WasKeyDown(SPACEBAR) )
 		{
 			// Make the player fire a rocket.
-			// Game::GetInstance().GetPlayer().Fire();
+			Game::GetInstance().GetPlayer().Fire();
 		}
 	}
 }

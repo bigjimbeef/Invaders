@@ -10,6 +10,8 @@
 #include <d3d9.h>
 #include <d3dx9.h>
 
+#include "Vector2.h"
+
 // TODO: Are these ok?
 #pragma comment(lib,"d3d9.lib")
 #pragma comment(lib,"d3dx9.lib")
@@ -60,20 +62,31 @@ class Renderer
 		static inline DWORD GetColour(int r, int g, int b) 
 			{ return D3DCOLOR_XRGB(r,g,b); }
 
+		// Debug rendering.
+#ifdef _DEBUG
+		void DEBUG_DrawBox(
+			float xPos, float yPos, int width, int height, DWORD col );
+
+		void DEBUG_DrawLine(const Vector2& p1, const Vector2& p2, DWORD col);
+#endif
+
 		//---------------------------------------------------------------------
 		// Accessors
 		inline HWND GetWindow() const { return mp_HWND; }
 
+		inline static int GetScreenWidth() { return BACKBUFFER_WIDTH; }
+		inline static int GetScreenHeight() { return BACKBUFFER_HEIGHT; }
+
 	private:
 		// Used to determine X,Y coords with rotation. The factor of two exists
-		// in order to more easily allow use of screen space coordinates.
+		// in order to scale the sprite.
 		inline float GetXPos(float xMid, int xSize, 
 							 int ySize, float cosine, float sine)
-			{ return (xMid + (xSize * cosine) + (ySize * sine)) / 2.f; }
+		{ return (xMid + (xSize/2 * cosine) + (ySize/2 * sine)); }
 
 		inline float GetYPos(float yMid, int xSize, 
 							 int ySize, float cosine, float sine) 
-			{ return (yMid + (ySize * cosine) - (xSize * sine)) / 2.f; }
+		{ return (yMid + (ySize/2 * cosine) - (xSize/2 * sine)); }
 
 
 		// A pointer to our window class.
@@ -98,8 +111,8 @@ class Renderer
 		// The background colour we clear to.
 		DWORD m_bgColour;
 
-		static const int BACKBUFFER_WIDTH = 640;
-		static const int BACKBUFFER_HEIGHT = 480;
+		static const int BACKBUFFER_WIDTH = 800;
+		static const int BACKBUFFER_HEIGHT = 600;
 		static const int SIXTY_HERTZ = 60;
 };
 

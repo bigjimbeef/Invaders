@@ -3,7 +3,8 @@
 // Include within .cpp file to match forward declare in .h
 #include "Game.h"
 
-Enemy::Enemy(float xPos, float yPos, int row, int col, int score) :
+Enemy::Enemy(float xPos, float yPos, int width, int height, 
+			 int row, int col, int score) :
 	m_alive(1),
 	m_canFire(0),
 	m_gettingAngry(0),
@@ -15,7 +16,9 @@ Enemy::Enemy(float xPos, float yPos, int row, int col, int score) :
 	m_col(col),
 	m_dropDistance(0.0f),
 	m_score(score),
-	m_altSprite(0)
+	m_altSprite(0),
+	m_spriteWidth(width),
+	m_spriteHeight(height)
 {
     // Create a std::list for holding the bombs.
     m_bombs = std::list<Bomb*>();
@@ -97,11 +100,18 @@ void Enemy::Render()
 
 	// Use the Renderer to draw the sprite in place.
 	Game::GetInstance().GetRenderer().DrawSprite(
-		mp_sprite, xPos, yPos, 32, 32
+		mp_sprite, xPos, yPos, m_spriteWidth, m_spriteHeight
 		
 		// TODO
 		//, 0.0f, targetCol
 	);
+
+#ifdef _DEBUG
+	Game::GetInstance().GetRenderer().DEBUG_DrawBox(
+		xPos, yPos, m_spriteWidth, m_spriteHeight, 
+		Renderer::GetColour(255, 0, 0)
+	);
+#endif
 }
 
 void Enemy::Move(float distance, bool dropDown)
@@ -120,7 +130,7 @@ void Enemy::Move(float distance, bool dropDown)
 		
 		// Just set this for every enemy. Faster than checking if it's
 		// the same with an if statement.
-		EnemyManager::GetInstance().SetProgress(m_dropDistance);
+		Game::GetInstance().GetEnemyManager().SetProgress(m_dropDistance);
 	}
 }
 
@@ -161,18 +171,18 @@ void Enemy::Kill()
 	// outside column. If it is, we need to check if there are any more
 	// in the column. If not, we update the EnemyManager's column width
 	// so that it can correctly find the window boundaries for movement.
-	if ( m_col == EnemyManager::GetInstance().GetMaxCol()
-	  || m_col == EnemyManager::GetInstance().GetMinCol() )
+	if ( m_col == Game::GetInstance().GetEnemyManager().GetMaxCol()
+	  || m_col == Game::GetInstance().GetEnemyManager().GetMinCol() )
 	{
 		// Pass the column width calculations back to the EnemyManager.
- 		EnemyManager::GetInstance().CalculateNewColWidth();
+ 		Game::GetInstance().GetEnemyManager().CalculateNewColWidth();
 	}
 
 	// Get the maximum row for this column. If this enemy is the maximum,
 	// we need to make the EnemyManager calculate the new maximum.
-	if ( m_row == EnemyManager::GetInstance().GetMaxRow(m_col) )
+	if ( m_row == Game::GetInstance().GetEnemyManager().GetMaxRow(m_col) )
 	{
-		EnemyManager::GetInstance().CalculateNewMaxRow(m_col);
+		Game::GetInstance().GetEnemyManager().CalculateNewMaxRow(m_col);
 	}
 }
 
@@ -199,7 +209,7 @@ void Enemy::Fire()
 {
 	// Create a new bomb, then spawn it with the projectile manager.
     Bomb* p_bomb = new Bomb(*this);
-    ProjectileManager::GetInstance().SpawnProjectile(*p_bomb);
+    Game::GetInstance().GetProjectileManager().SpawnProjectile(*p_bomb);
             
 	// We also manage the list internally too, though the memory
 	// management is handled in the ProjectileManager.

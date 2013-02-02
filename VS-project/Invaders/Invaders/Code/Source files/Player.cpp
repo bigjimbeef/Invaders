@@ -9,7 +9,7 @@
 
 #define SAFE_DELETE(x) if (x) { delete x; x = NULL; }
 
-Player::Player(float xPos, float yPos) :
+Player::Player() :
 	m_health(STARTING_HEALTH),
 	mp_rocket(NULL),
 	m_spriteWidth(32),
@@ -20,6 +20,10 @@ Player::Player(float xPos, float yPos) :
 	m_speedingUp(0)
 {
 	// Initialise the player's position.
+	float xPos = static_cast<float>(Renderer::GetScreenWidth()
+		- m_spriteWidth) / 2.f;
+	float yPos = static_cast<float>(Renderer::GetScreenHeight()
+		- PLAYER_Y_OFFSET);
 	m_position = Vector2(xPos, yPos);
 
 	m_spriteClipWidth = 28;
@@ -84,6 +88,7 @@ bool Player::NarrowPhase(const IRenderable& objectOne,
 bool Player::CheckCollision(const IRenderable& objectOne,
 							const IRenderable& objectTwo)
 {
+	/*
 	Vector2 onePos = objectOne.GetPosition();
 	Vector2 twoPos = objectTwo.GetPosition();
 	
@@ -100,7 +105,7 @@ bool Player::CheckCollision(const IRenderable& objectOne,
 			return true;
 		}
 	}
-
+	*/
 	return false;
 }
 
@@ -139,7 +144,7 @@ void Player::Update(float frameTime)
 
 	// Get a local enemy list.
 	const std::list<Enemy*>& enemyList = 
-		EnemyManager::GetInstance().GetEnemyList();
+		Game::GetInstance().GetEnemyManager().GetEnemyList();
 
 	if ( mp_rocket != NULL )
 	{
@@ -163,7 +168,7 @@ void Player::Update(float frameTime)
 
 	// Get a local projectile list.
 	const std::list<IProjectile*>& projectileList 
-		= ProjectileManager::GetInstance().GetProjectileList();
+		= Game::GetInstance().GetProjectileManager().GetProjectileList();
 
 	std::list<IProjectile*>::const_iterator projIt = projectileList.begin();
 	for ( projIt; projIt != projectileList.end(); ++projIt )
@@ -209,14 +214,12 @@ void Player::Move(MoveDirection direction, float elapsedTime)
 
 void Player::BoundMovement()
 {
-	m_position.x = max(0.0f, m_position.x);
 	float rightBounds =
 		static_cast<float>(
-			Game::GetScreenWidth() - 
-			Game::GetSpriteSize()
+			Renderer::GetScreenWidth() - 
+			m_spriteWidth
 		);
-
-	m_position.x = min(m_position.x, rightBounds);
+	MathsHelper::Clamp(m_position.x, 0.0f, rightBounds);
 }
 
 void Player::Fire()
@@ -227,7 +230,7 @@ void Player::Fire()
 		// Create a new rocket ...
 		mp_rocket = new Rocket();
 		// ... and spawn it with the ProjectileManager.
-		ProjectileManager::GetInstance().SpawnProjectile(*mp_rocket);
+		Game::GetInstance().GetProjectileManager().SpawnProjectile(*mp_rocket);
 	}
 }
 

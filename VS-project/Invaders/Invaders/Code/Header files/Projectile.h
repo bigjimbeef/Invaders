@@ -35,6 +35,9 @@ class IProjectile : public IRenderable
 		// Has the projectile hit anything or gone off-screen?
 		bool m_alive;
 
+		int m_spriteWidth;
+		int m_spriteHeight;
+
 };
 
 #endif // PROJECTILE_H

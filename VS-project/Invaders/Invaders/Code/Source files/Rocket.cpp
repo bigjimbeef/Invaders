@@ -4,7 +4,9 @@
 #include "Game.h"
 
 Rocket::Rocket() :
-	m_alive(true)
+	m_alive(true),
+	m_spriteWidth(8),
+	m_spriteHeight(16)
 {
 	m_spriteClipWidth = 6;
 	m_spriteClipHeight = 19;
@@ -12,7 +14,7 @@ Rocket::Rocket() :
 	m_spriteClipYOffset = 7;
 
 	// Create the sprite for the rocket.
-	mp_sprite = ResourceManager::GetRocketSprite();
+	mp_sprite = Game::GetInstance().GetResourceManager().GetRocketSprite();
 
 	// Initialise the position of the rocket based on the
 	// Player's position.
@@ -35,7 +37,10 @@ void Rocket::Update(float frameTime)
 		m_position.y -= offset;
 
 		// This represents the projectile going off-screen on the top.
-		if ( m_position.y < ( 0 - Game::GetInstance().GetSpriteSize() ) )
+		
+		// TODO!!!
+		
+		if ( m_position.y < ( 0 ) ) //- Game::GetInstance().GetSpriteSize() ) )
 		{
 			m_alive = false;
 		}
@@ -44,8 +49,8 @@ void Rocket::Update(float frameTime)
 
 void Rocket::Render()
 {
-	/*
-	mp_sprite->draw(static_cast<int>(m_position.x),
-					static_cast<int>(m_position.y));
-	*/
+	// Use the Renderer to draw the rocket sprite.
+	Game::GetInstance().GetRenderer().DrawSprite(
+		mp_sprite, m_position.x, m_position.y, m_spriteWidth, m_spriteHeight
+	);
 }

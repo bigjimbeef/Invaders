@@ -56,16 +56,13 @@ class Game
 			return *mp_inputController; }
 		inline ResourceManager& GetResourceManager() const {
 			return *mp_resourceManager; }
-
-		// REMOVE
-		//inline IDiceInvaders& GetSystem() const { return *mp_system; }
+		inline EnemyManager& GetEnemyManager() const {
+			return *mp_enemyManager; }
+		inline ProjectileManager& GetProjectileManager() const {
+			return *mp_projectileManager; }
 
 		inline float GetSpeedFactor() const { return m_gameSpeedFactor; }
 		void SetSpeedFactor(float value);
-		
-		static int GetScreenWidth() { return SCREEN_WIDTH; }
-		static int GetScreenHeight() { return SCREEN_HEIGHT; }
-		static int GetSpriteSize() { return SPRITE_SIZE; }
 
 	private:
 
@@ -91,18 +88,6 @@ class Game
 		bool m_frameRateCapped;
 		int m_frameRateCap;
 
-		// Instance of the external library for world drawing and updating.
-		/*
-		DiceInvadersLib* mp_library;
-		const char* mp_libPath;
-		IDiceInvaders* mp_system;
-		*/
-
-		// Game world dimensions
-		static const int SCREEN_WIDTH = 640;
-		static const int SCREEN_HEIGHT = 480;
-		static const int SPRITE_SIZE = 32;
-
 		// The game renderer.
 		Renderer* mp_renderer;
 
@@ -115,17 +100,17 @@ class Game
 		// The Audio Manager
 		AudioManager* mp_audioManager;
 
+		// The Enemy Manager
+		EnemyManager* mp_enemyManager;
+
+		// The Projectile Manager.
+		ProjectileManager* mp_projectileManager;
+
 		// Handles player input via DirectX messages.
 		InputController* mp_inputController;
 
 		// How fast is the game currently going?
 		float m_gameSpeedFactor;
-
-		static const int PLAYER_START_X = ( SCREEN_WIDTH / 2 ) - 16;
-
-		// Sprite height plus a bit more for aesthetic padding.
-		static const int PLAYER_Y_OFFSET = 70; 
-		static const int PLAYER_START_Y = SCREEN_HEIGHT - PLAYER_Y_OFFSET;
 
 		// Private default ctor to facilitate Singleton pattern.
 		Game();

@@ -22,7 +22,8 @@ class Enemy : public IRenderable
 {
 	public:
 		// Default ctor.
-		Enemy(float xPos, float yPos, int row, int col, int score);
+		Enemy(float xPos, float yPos, int width, int height, 
+			  int row, int col, int score);
 		virtual ~Enemy();
 
 		// Implement this function to show that this class is not abstract.
@@ -92,6 +93,10 @@ class Enemy : public IRenderable
 		// holds the bombs.
 		std::list<Bomb*> m_bombs;
         static const int MAX_BOMBS = 3;
+
+	protected:
+		int m_spriteWidth;
+		int m_spriteHeight;
 };
 
 #endif // ENEMY_H

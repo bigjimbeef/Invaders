@@ -5,7 +5,9 @@
 
 Bomb::Bomb(Enemy& bombOwner) :
 	m_bombOwner(bombOwner),
-	m_alive(true)
+	m_alive(true),
+	m_spriteWidth(8),
+	m_spriteHeight(16)
 {
 	m_spriteClipWidth = 8;
 	m_spriteClipHeight = 16;
@@ -13,12 +15,13 @@ Bomb::Bomb(Enemy& bombOwner) :
 	m_spriteClipYOffset = 8;
 
 	// Get the bomb sprite from the ResourceManager.
-	mp_sprite = ResourceManager::GetBombSprite();
+	mp_sprite = Game::GetInstance().GetResourceManager().GetBombSprite();
 
 	// Initialise the position of the bomb based on the firing enemy's
 	// position.
 	m_position = m_bombOwner.GetPosition();
-	m_position.y += BOMB_OFFSET;
+	
+	// TODO: OFFSET BOMBS BY ENEMY POSITION
 }
 Bomb::~Bomb()
 {
@@ -35,7 +38,7 @@ void Bomb::Update(float frameTime)
 		m_position.y += offset;
 
 		// This represents the projectile going off-screen at the bottom.
-		if ( m_position.y > Game::GetScreenHeight() )
+		if ( m_position.y > Renderer::GetScreenHeight() )
 		{
 			m_alive = false;
 		}
@@ -44,8 +47,8 @@ void Bomb::Update(float frameTime)
 
 void Bomb::Render()
 {
-	/*
-	mp_sprite->draw(static_cast<int>(m_position.x),
-					static_cast<int>(m_position.y));
-	*/
+	// Use the Renderer to draw the bomb sprite.
+	Game::GetInstance().GetRenderer().DrawSprite(
+		mp_sprite, m_position.x, m_position.y, m_spriteWidth, m_spriteHeight
+	);
 }

@@ -225,3 +225,45 @@ void Renderer::DrawSprite(IDirect3DTexture9* sprite, float xcentre,
 
 	mp_d3dDevice->DrawPrimitiveUP(D3DPT_TRIANGLESTRIP, 2, spriteVertexBuf, sizeof(CUSTOMVERTEX));
 }
+
+
+// Debug rendering.
+#ifdef _DEBUG
+void Renderer::DEBUG_DrawBox(float xPos, float yPos, 
+							 int width, int height, DWORD col )
+{
+	IDirect3DBaseTexture9 *oldtex = NULL;
+	mp_d3dDevice->GetTexture(0, &oldtex);
+	mp_d3dDevice->SetTexture(0, NULL);
+	
+	CUSTOMVERTEX debugVertBuffer[] =
+	{
+		{ xPos, yPos, 0.5f, 1.0f, col, 0,0, }, // x, y, z, rhw, color
+		{ xPos + width, yPos, 0.5f, 1.0f, col, 1,0, },
+		{ xPos + width, yPos + width, 0.5f, 1.0f, col, 0,0, },
+		{ xPos, yPos + width, 0.5f, 1.0f, col, 0,0, },
+		{ xPos, yPos, 0.5f, 1.0f, col, 0,0, }
+	};
+
+	mp_d3dDevice->DrawPrimitiveUP(D3DPT_LINESTRIP, 4, debugVertBuffer, sizeof(CUSTOMVERTEX));
+
+	mp_d3dDevice->SetTexture(0, oldtex);
+}
+
+void Renderer::DEBUG_DrawLine(const Vector2& p1, const Vector2& p2, DWORD col)
+{
+	IDirect3DBaseTexture9 *oldtex = NULL;
+	mp_d3dDevice->GetTexture(0, &oldtex);
+	mp_d3dDevice->SetTexture(0, NULL);
+
+	CUSTOMVERTEX debugVertBuffer[] =
+	{
+		{ p1.x, p1.y, 0.5f, 1.0f, col, 0,0, }, // x, y, z, rhw, color
+		{ p2.x, p2.y, 0.5f, 1.0f, col, 1,0, }
+	};
+
+	mp_d3dDevice->DrawPrimitiveUP(D3DPT_LINELIST, 1, debugVertBuffer, sizeof(CUSTOMVERTEX));
+
+	mp_d3dDevice->SetTexture(0, oldtex);
+}
+#endif

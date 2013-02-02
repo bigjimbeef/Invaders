@@ -22,6 +22,8 @@ ProjectileManager::~ProjectileManager()
 
 void ProjectileManager::Update(float frameTime)
 {
+	frameTime /= 1000.0f;
+
 	std::list<IProjectile*>::iterator it = m_projectiles.begin();
 	for ( it = m_projectiles.begin(); it != m_projectiles.end(); )
 	{

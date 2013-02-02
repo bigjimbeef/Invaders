@@ -17,13 +17,8 @@ class Game;
 class EnemyManager
 {
 	public:
-
-		static EnemyManager& GetInstance()
-		{
-			static EnemyManager instance;
-			return instance;
-		}
-		virtual ~EnemyManager();
+		EnemyManager();
+		~EnemyManager();
 
 		void Update(float frameTime);
 
@@ -112,13 +107,15 @@ class EnemyManager
 		float m_stepReductionPerKill;
 		
 		static const int NUM_ROWS = 5;
-		static const int NUM_COLS = 12;
+		static const int NUM_COLS = 11;
 
 		// This array contains the row of the nearest enemy in each column.
 		int m_maximumRows[NUM_COLS];
 
+		static const int ENEMY_SPRITE_WIDTH = 64;
+		static const int ENEMY_SPRITE_HEIGHT = 64;
 		static const int ROW_OFFSET = 40;
-		static const int COL_OFFSET = 40;
+		static const int COL_OFFSET = 60;
 
 		static const int MOVE_DISTANCE = 4;
 		static const int DROP_DISTANCE = 20;
@@ -127,14 +124,6 @@ class EnemyManager
 		static const int BACK_ENEMY_SCORE = 30;
 
 		static const int ENEMY_VELOCITY = 30;
-
-		// Private default ctor to facilitate Singleton pattern
-		EnemyManager();
-
-		// DO NOT IMPLEMENT
-		EnemyManager(EnemyManager const&);
-		void operator=(EnemyManager const&);
-
 };
 
 #endif // ENEMYMANAGER_H

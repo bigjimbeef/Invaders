@@ -25,8 +25,7 @@ enum MoveDirection
 class Player : public IRenderable
 {
 	public:
-		// Default ctor.
-		Player(float xPos, float yPos);
+		Player();
 		virtual ~Player();
 
 		// Implement this function to show that this class is not abstract.
@@ -72,6 +71,9 @@ class Player : public IRenderable
 		int m_health;
 		static const int STARTING_HEALTH = 3;
 		static const int PLAYER_VELOCITY = 160;
+
+		// How far is the player from the bottom of the screen?
+		static const int PLAYER_Y_OFFSET = 70; 
 
 		// The player is only allowed one rocket at once. This is a pointer
 		// to that rocket.

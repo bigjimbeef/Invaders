@@ -14,6 +14,7 @@ GameState::GameState() :
 	m_waveNumber(0),
 	m_lineDrawn(0)
 {
+	/*
 	for ( int i = 0; i < Game::GetInstance().GetPlayer().GetTotalHealth(); ++i )
 	{
 		float xPos = static_cast<float>(LIVES_XPOS + ( i * LIVES_XPOS ));
@@ -23,27 +24,31 @@ GameState::GameState() :
 		// Create and initialise the player UI elements.
 		mp_playerUI[i] = new PlayerUI(xPos, yPos);
 	}
+	
 
 	// Initialise the position for the Game Over UI.
 	// Please note that I am unable to measure the string, and as such
 	// I am simply hard-coding approximate string lengths.
 	int messageXLength = 80;
 	int messageYLength = 15;
-	m_gameOverMsgXPos = ( Game::GetScreenWidth() - messageXLength ) / 2;
-	m_gameOverMsgYPos = ( Game::GetScreenHeight() - messageYLength ) / 2;
+	m_gameOverMsgXPos = ( Renderer::GetScreenWidth() - messageXLength ) / 2;
+	m_gameOverMsgYPos = ( Renderer::GetScreenHeight() - messageYLength ) / 2;
 
 	int pressStartXLength = 160;
-	m_pressStartXPos = ( Game::GetScreenWidth() - pressStartXLength ) / 2;
+	m_pressStartXPos = ( Renderer::GetScreenWidth() - pressStartXLength ) / 2;
 	// Offset by height of string.
 	m_pressStartYPos = m_gameOverMsgYPos + messageYLength; 
+	*/
 }
 GameState::~GameState()
 {
+	/*
 	for ( int i = 0; i < Game::GetInstance().GetPlayer().GetTotalHealth(); ++i )
 	{
 		delete mp_playerUI[i];
 		mp_playerUI[i] = NULL;
 	}
+	*/
 }
 
 /*

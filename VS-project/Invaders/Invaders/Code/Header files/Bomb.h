@@ -48,6 +48,8 @@ class Bomb : public IProjectile
 	protected:
 		bool m_alive;
 
+		int m_spriteWidth;
+		int m_spriteHeight;
 };
 
 #endif // BOMB_H
