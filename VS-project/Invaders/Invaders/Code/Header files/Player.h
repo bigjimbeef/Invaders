@@ -78,11 +78,13 @@ class Player : public IRenderable
 		Rocket* mp_rocket;
 
 
-
 		// TODO: REMOVE THIS SILLY HACK
 		bool m_slowingDown;
 		bool m_speedingUp;
 		
+	protected:
+		int m_spriteWidth;
+		int m_spriteHeight;
 };
 
 #endif // PLAYER_H

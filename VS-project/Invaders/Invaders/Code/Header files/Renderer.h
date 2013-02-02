@@ -54,7 +54,7 @@ class Renderer
 
 		// Draw a specific sprite.
 		void DrawSprite(IDirect3DTexture9* sprite, float xcentre, 
-						float ycentre, float xsize, float ysize,
+						float ycentre, int xsize, int ysize,
 						float angle = 0.0f, DWORD colour = 0xFFFFFFFF);
 
 		static inline DWORD GetColour(int r, int g, int b) 
@@ -65,6 +65,17 @@ class Renderer
 		inline HWND GetWindow() const { return mp_HWND; }
 
 	private:
+		// Used to determine X,Y coords with rotation. The factor of two exists
+		// in order to more easily allow use of screen space coordinates.
+		inline float GetXPos(float xMid, int xSize, 
+							 int ySize, float cosine, float sine)
+			{ return (xMid + (xSize * cosine) + (ySize * sine)) / 2.f; }
+
+		inline float GetYPos(float yMid, int xSize, 
+							 int ySize, float cosine, float sine) 
+			{ return (yMid + (ySize * cosine) - (xSize * sine)) / 2.f; }
+
+
 		// A pointer to our window class.
 		WNDCLASSEX* mp_wc;
 		// The name used for the window class.

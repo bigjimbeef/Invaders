@@ -12,6 +12,8 @@
 Player::Player(float xPos, float yPos) :
 	m_health(STARTING_HEALTH),
 	mp_rocket(NULL),
+	m_spriteWidth(32),
+	m_spriteHeight(32),
 
 	// TODO: REMOVE THIS SILLY HACK
 	m_slowingDown(0),
@@ -231,14 +233,8 @@ void Player::Fire()
 
 void Player::Render()
 {
-	Game::GetInstance().GetRenderer().DrawSprite(mp_sprite, 
-												 m_position.x, 
-												 m_position.y, 
-												 16,16);
-
-	/*
-	// Draw the sprite for this renderable item.
-	mp_sprite->draw(static_cast<int>(m_position.x),
-					static_cast<int>(m_position.y));
-	*/
+	// Use the Renderer to draw the player's sprite.
+	Game::GetInstance().GetRenderer().DrawSprite(
+		mp_sprite, m_position.x, m_position.y, m_spriteWidth, m_spriteHeight
+	);
 }

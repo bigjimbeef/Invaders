@@ -16,9 +16,9 @@ ResourceManager::ResourceManager()
 	s_playerSprite = 
 		Game::GetInstance().GetRenderer().LoadSprite("Code/Resource files/Images/test.png");
 	s_enemyOneSprite = 
-		Game::GetInstance().GetRenderer().LoadSprite("Code/Resource files/Images/jelly.png");
+		Game::GetInstance().GetRenderer().LoadSprite("Code/Resource files/Images/jelly_test.png");
 	s_enemyTwoSprite = 
-		Game::GetInstance().GetRenderer().LoadSprite("Code/Resource files/Images/crabby.png");
+		Game::GetInstance().GetRenderer().LoadSprite("Code/Resource files/Images/crabby_test.png");
 
 	/*
 	s_playerSprite =

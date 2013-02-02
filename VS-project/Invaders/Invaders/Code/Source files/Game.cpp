@@ -35,8 +35,8 @@ Game::Game() :
 	mp_inputController = new InputController();
 
 	// Create the player object.
-	mp_player = new Player(static_cast<float>(PLAYER_START_X),
-						   static_cast<float>(PLAYER_START_Y));
+	mp_player = new Player(0,0);/*static_cast<float>(PLAYER_START_X),
+						   static_cast<float>(PLAYER_START_Y));*/
 
 	mp_audioManager = new AudioManager();
 
@@ -140,7 +140,7 @@ void Game::Update(const float frameTime)
 	mp_player->Update(frameTime);
 
 	// Update the EnemyManager, which will in turn update the Enemies.
-	EnemyManager::GetInstance().Update(frameTime);
+	//EnemyManager::GetInstance().Update(frameTime);
 
 	/*
 	// Update the ProjectileManager, which will in turn update the projectiles.
@@ -159,7 +159,7 @@ void Game::Render()
 	mp_player->Render();
 	
 	// Render the EnemyManager, which will in turn render the Enemies.
-	EnemyManager::GetInstance().Render();
+	// EnemyManager::GetInstance().Render();
 	
 	/*
 	// Render the ProjectileManager, which will in turn render the projectiles.

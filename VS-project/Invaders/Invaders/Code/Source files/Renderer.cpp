@@ -183,21 +183,44 @@ void Renderer::SetCurrentTexture(IDirect3DTexture9* tex)
 }
 
 void Renderer::DrawSprite(IDirect3DTexture9* sprite, float xcentre, 
-						  float ycentre, float xsize, float ysize, 
+						  float ycentre, int xsize, int ysize, 
 						  float angle, DWORD colour )
 {
 	SetCurrentTexture(sprite);
-	float c = cosf(angle);
-	float s = sinf(angle);
-
-#define ROTATE(xx,yy) xcentre+(xx)*c+(yy)*s,ycentre+(yy)*c-(xx)*s 
+	float cosine = cosf(angle);
+	float sine = sinf(angle);
 	
+	// This function renders a sprite that might be rotated. To do this,
+	// the rotational calculations are first applied to offset each vertex
+	// coordinate, then each vertex is translated, leaving it eventually in
+	// screen-space coordinates.
+
+	float x1 = GetXPos(xcentre, -xsize, -ysize, cosine, sine);
+	x1 += xsize / 2;
+	float y1 = GetYPos(ycentre, -xsize, -ysize, cosine, sine);
+	y1 += ysize / 2;
+	
+	float x2 = GetXPos(xcentre, xsize, -ysize, cosine, sine);
+	x2 += xsize / 2;
+	float y2 = GetYPos(ycentre, xsize, -ysize, cosine, sine);
+	y2 += ysize / 2;
+	
+	float x3 = GetXPos(xcentre, -xsize, ysize, cosine, sine);
+	x3 += xsize / 2;
+	float y3 = GetYPos(ycentre, -xsize, ysize, cosine, sine);
+	y3 += ysize / 2;
+
+	float x4 = GetXPos(xcentre, xsize, ysize, cosine, sine);
+	x4 += xsize / 2;
+	float y4 = GetYPos(ycentre, xsize, ysize, cosine, sine);
+	y4 += ysize / 2;	
+
 	CUSTOMVERTEX spriteVertexBuf[] =
 	{
-		{ ROTATE(-xsize,-ysize), 1.0f, 1.0f, colour, 0,0, }, // x, y, z, rhw, colour
-		{ ROTATE( xsize,-ysize), 1.0f, 1.0f, colour, 1,0, },
-		{ ROTATE(-xsize, ysize), 1.0f, 1.0f, colour, 0,1, },
-		{ ROTATE( xsize, ysize), 1.0f, 1.0f, colour, 1,1, },
+		{ x1, y1, 0.5f, 1.0f, colour, 0, 0 }, // x, y, z, rhw, colour
+		{ x2, y2, 0.5f, 1.0f, colour, 1, 0 },
+		{ x3, y3, 0.5f, 1.0f, colour, 0, 1 },
+		{ x4, y4, 0.5f, 1.0f, colour, 1, 1 },
 	};
 
 	mp_d3dDevice->DrawPrimitiveUP(D3DPT_TRIANGLESTRIP, 2, spriteVertexBuf, sizeof(CUSTOMVERTEX));

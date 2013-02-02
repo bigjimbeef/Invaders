@@ -38,6 +38,9 @@ class IRenderable
 		// The position that the renderable object is currently at.
 		Vector2 m_position;
 
+		int m_spriteWidth;
+		int m_spriteHeight;
+
 		// These variables are used for collision testing. It would look
 		// very peculiar if projectiles collided with things they hadn't hit.
 		int m_spriteClipWidth;

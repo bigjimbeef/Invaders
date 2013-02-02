@@ -97,7 +97,10 @@ void Enemy::Render()
 
 	// Use the Renderer to draw the sprite in place.
 	Game::GetInstance().GetRenderer().DrawSprite(
-		mp_sprite, xPos, yPos, 32, 32, 0.0f, targetCol
+		mp_sprite, xPos, yPos, 32, 32
+		
+		// TODO
+		//, 0.0f, targetCol
 	);
 }
 
