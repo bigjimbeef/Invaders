@@ -22,8 +22,9 @@ class IProjectile : public IRenderable
 		// This is an abstract base class. Mark it as such with pure virtual.
 		virtual void IsAbstract() = 0;
 
-		// Easily determines if the derived IProjectile is a bomb for casting.
-		virtual bool IsBomb() const { return false; }
+		// Easily determines if the derived IProjectile is an EnemyProjectile
+		// for casting.
+		virtual bool IsEnemyProjectile() const { return false; }
 
 		//---------------------------------------------------------------------
 		// Accessors

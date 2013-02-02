@@ -146,8 +146,8 @@ void Player::Update(float frameTime)
 		Game::GetInstance().SetSpeedFactor(speed);
 	}
 
-	// Manage collisions between the player and bombs, and between the player
-	// rocket and enemies.
+	// Manage collisions between the player and enemy projectiles, and between 
+	// the player rocket and enemies.
 
 	// Get a local enemy list.
 	const std::list<Enemy*>& enemyList = 
@@ -182,18 +182,18 @@ void Player::Update(float frameTime)
 	std::list<IProjectile*>::const_iterator projIt = projectileList.begin();
 	for ( projIt; projIt != projectileList.end(); ++projIt )
 	{
-		// We only want to examine bombs.
-		if ( (*projIt)->IsBomb() )
+		// We only want to examine enemy projectiles.
+		if ( (*projIt)->IsEnemyProjectile() )
 		{
-			Bomb* p_bomb = static_cast<Bomb*>(*projIt);
+			EnemyProjectile* p_proj = static_cast<EnemyProjectile*>(*projIt);
 
-			if ( CheckCollision(*this, *p_bomb) )
+			if ( CheckCollision(*this, *p_proj) )
 			{
 				// We've been hit!
 				m_health--;
 
-				// Destroy the offending bomb.
-				p_bomb->Kill();
+				// Destroy the offending projectile.
+				p_proj->Kill();
 			}
 		}
 	}

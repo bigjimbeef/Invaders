@@ -23,12 +23,13 @@ Enemy::Enemy(float xPos, float yPos, int width, int height,
 	m_spriteClipWidth = ( row < 2 ) ? 32 : 44;
 	m_spriteClipHeight = ( row < 2 ) ? 32 : 32;
 
-    // Create a std::list for holding the bombs.
-    m_bombs = std::list<Bomb*>();
+    // Create a std::list for holding the projectiles.
+    m_projectiles = std::list<EnemyProjectile*>();
 
 	// Initialise the enemy's position.
 	m_position = Vector2(xPos, yPos);
 
+	// TODO: Need to add in the the third enemy type
 	mp_sprite = ( m_row < 2 ) ? 
 		Game::GetInstance().GetResourceManager().GetEnemyOneSprite() :
 		Game::GetInstance().GetResourceManager().GetEnemyTwoSprite();
@@ -46,8 +47,8 @@ void Enemy::Update(float frameTime)
 		return;
 	}
 
-	// Ensure we can't fire too many bombs.
-    if ( m_bombs.size() < MAX_BOMBS )
+	// Ensure we can't fire too many projectiles.
+    if ( m_projectiles.size() < MAX_PROJECTILES )
     {
 		// We randomly pick a number in 5000.
 		// If the number exceeds our anger threshold (that is, the number which
@@ -187,18 +188,18 @@ void Enemy::Kill()
 	}
 }
 
-void Enemy::KillBomb(const Bomb& dyingBomb)
+void Enemy::KillProjectile(const EnemyProjectile& dyingProj)
 {
-	std::list<Bomb*>::iterator bombIt = m_bombs.begin();
-	for ( bombIt; bombIt != m_bombs.end(); ++bombIt )
+	std::list<EnemyProjectile*>::iterator projIt = m_projectiles.begin();
+	for ( projIt; projIt != m_projectiles.end(); ++projIt )
 	{
-		Bomb* p_bomb = static_cast<Bomb*>(*bombIt);
-		// Compare the mem locations of the bombs.
-		if ( p_bomb == &dyingBomb )
+		EnemyProjectile* p_enemyProj = static_cast<EnemyProjectile*>(*projIt);
+		// Compare the mem locations of the projectiles.
+		if ( p_enemyProj == &dyingProj )
 		{
-			// Remove the bomb from the local array.
+			// Remove the projectile from the local array.
 			// (deletion is handled in projectile manager)
-			bombIt = m_bombs.erase(bombIt);
+			projIt = m_projectiles.erase(projIt);
 			
 			// Don't need to continue.
 			return;
@@ -208,11 +209,11 @@ void Enemy::KillBomb(const Bomb& dyingBomb)
 
 void Enemy::Fire()
 {
-	// Create a new bomb, then spawn it with the projectile manager.
-    Bomb* p_bomb = new Bomb(*this);
-    Game::GetInstance().GetProjectileManager().SpawnProjectile(*p_bomb);
+	// Create a new proj, then spawn it with the projectile manager.
+    EnemyProjectile* p_enemyProj = new EnemyProjectile(*this);
+    Game::GetInstance().GetProjectileManager().SpawnProjectile(*p_enemyProj);
             
 	// We also manage the list internally too, though the memory
 	// management is handled in the ProjectileManager.
-	m_bombs.push_back(p_bomb);
+	m_projectiles.push_back(p_enemyProj);
 }

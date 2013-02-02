@@ -13,7 +13,7 @@
 // Include our base class.
 #include "Renderable.h"
 
-#include "Bomb.h"
+#include "EnemyProjectile.h"
 
 // Forward declare Game to allow access to Game singleton.
 class Game;
@@ -38,11 +38,11 @@ class Enemy : public IRenderable
 		// Causes the enemy to jitter in place when they're ready to fire.
 		void Jitter(float frameTime);
 
-		// Controls the enemy firing a bomb.
+		// Controls the enemy firing a projectile.
 		void Fire();
 
-		// Removes one of the enemy's bombs.
-		void KillBomb(const Bomb& dyingBomb);
+		// Removes one of the enemy's projectiles.
+		void KillProjectile(const EnemyProjectile& dyingProj);
 
 		// Kill the enemy. This needs to update more than the bool below, so it
 		// is declared in the cpp.
@@ -57,8 +57,8 @@ class Enemy : public IRenderable
 
 		inline void EnableWeapon() { m_canFire = true; }
 		
-		// Check if we have any bombs currently alive.
-		inline bool HasLiveBomb() const { return (m_bombs.size() > 0); }
+		// Check if we have any projectiles currently alive.
+		inline bool HasLiveProjectile() const { return (m_projectiles.size() > 0); }
 
 	private:
 		// Is this enemy alive?
@@ -89,10 +89,10 @@ class Enemy : public IRenderable
 		// This handles basic animation of sprites.
 		bool m_altSprite;
 
-		// Each enemy is allowed a static number of bombs at once. This array
-		// holds the bombs.
-		std::list<Bomb*> m_bombs;
-        static const int MAX_BOMBS = 3;
+		// Each enemy is allowed a static number of projectiles at once. 
+		// This array holds the projectiles.
+		std::list<EnemyProjectile*> m_projectiles;
+        static const int MAX_PROJECTILES = 3;
 };
 
 #endif // ENEMY_H

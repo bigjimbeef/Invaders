@@ -67,15 +67,15 @@ class EnemyManager
 		// Deletes the items from the enemy list, and clears the list.
 		void ClearEnemyList();
 
-		// Deletes enemies from the list either immediately or when their bombs
-		// are all dead.
+		// Deletes enemies from the list either immediately or when their 
+		// projectiles are all dead.
 		void HandleEnemyDeletion();
 
 		// A list of all enemies in the game world.
 		std::list<Enemy*> m_enemies;
 		// A list of the enemies that are currently awaiting deletion. This
 		// situation arises when the enemies are killed but have one or more of
-		// their bombs remaining in the game world.
+		// their projectiles remaining in the game world.
 		std::list<Enemy*> m_deadEnemies;
 
 		// This integer holds the width of the remaining enemy wave.
@@ -123,7 +123,7 @@ class EnemyManager
 		static const int FRONT_ENEMY_SCORE = 10;
 		static const int BACK_ENEMY_SCORE = 30;
 
-		static const int ENEMY_VELOCITY = 30;
+		static const int ENEMY_VELOCITY = 15;
 };
 
 #endif // ENEMYMANAGER_H

@@ -1,10 +1,10 @@
-#ifndef BOMB_H
-#define BOMB_H
+#ifndef ENEMYPROJECTILE_H
+#define ENEMYPROJECTILE_H
 
 //-----------------------------------------------------------------------------
-// Bomb.h
+// EnemyProjectile.h
 // Is a projectile which enemies fire. It can only collide with the player,
-// which will destroy the bomb, and decrement the player's lives.
+// which will destroy the projectile, and decrement the player's lives.
 //-----------------------------------------------------------------------------
 
 // Include our base class.
@@ -14,13 +14,11 @@
 class Game;
 class Enemy;
 
-class Bomb : public IProjectile
+class EnemyProjectile : public IProjectile
 {
 	public:
-		// The rocket doesn't need parameters to its default ctor, as it
-		// initialises its position based on the player.
-		Bomb(Enemy& bombOwner);
-		virtual ~Bomb();
+		EnemyProjectile(Enemy& projOwner);
+		virtual ~EnemyProjectile();
 
 		virtual void Update(float frameTime);
 		virtual void Render();
@@ -29,21 +27,20 @@ class Bomb : public IProjectile
 		inline void IsAbstract() { /* Do nothing */ }
 
 		// Override the base class function.
-		virtual bool IsBomb() const { return true; }
+		virtual bool IsEnemyProjectile() const { return true; }
 
 		//---------------------------------------------------------------------
 		// Accessors
 
 		inline bool IsAlive() const { return m_alive; }
 		inline void Kill() { m_alive = false; }
-		inline Enemy& GetOwner() const { return m_bombOwner; }
+		inline Enemy& GetOwner() const { return m_projOwner; }
 
 	private:
-	    // The enemy that fired this bomb.
-	    Enemy& m_bombOwner;
+	    // The enemy that fired this projectile.
+	    Enemy& m_projOwner;
 
-		static const int BOMB_VELOCITY = 225;
-		static const int BOMB_OFFSET = 20;
+		static const int PROJ_VELOCITY = 225;
 
 	protected:
 		bool m_alive;
@@ -54,4 +51,4 @@ class Bomb : public IProjectile
 		int m_spriteClipHeight;
 };
 
-#endif // BOMB_H
+#endif // ENEMYPROJECTILE_H

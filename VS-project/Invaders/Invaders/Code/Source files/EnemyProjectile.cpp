@@ -1,10 +1,10 @@
-#include "Bomb.h"
+#include "EnemyProjectile.h"
 
 // Include within .cpp file to match forward declare in .h
 #include "Game.h"
 
-Bomb::Bomb(Enemy& bombOwner) :
-	m_bombOwner(bombOwner),
+EnemyProjectile::EnemyProjectile(Enemy& projOwner) :
+	m_projOwner(projOwner),
 	m_alive(true)
 {
 	m_spriteWidth =8;
@@ -12,30 +12,32 @@ Bomb::Bomb(Enemy& bombOwner) :
 	m_spriteClipHeight = 8;
 	m_spriteClipWidth = 16;
 
-	// Get the bomb sprite from the ResourceManager.
-	mp_sprite = Game::GetInstance().GetResourceManager().GetBombSprite();
+	// Get the projectile sprite from the ResourceManager.
+	mp_sprite = 
+		Game::GetInstance().GetResourceManager().GetEnemyProjectileSprite();
 
-	// Initialise the position of the bomb based on the firing enemy's
+	// Initialise the position of the projectile based on the firing enemy's
 	// position.
-	m_position = m_bombOwner.GetPosition();
+	m_position = m_projOwner.GetPosition();
 	m_position.x +=
-		(m_bombOwner.GetSpriteWidth() - m_spriteWidth) / 2;
+		(m_projOwner.GetSpriteWidth() - m_spriteWidth) / 2;
 	m_position.y +=
-		(m_bombOwner.GetSpriteHeight() 
-		+ m_bombOwner.GetClipHeight() - m_spriteHeight) / 2;
+		(m_projOwner.GetSpriteHeight() 
+		+ m_projOwner.GetClipHeight() - m_spriteHeight) / 2;
 }
-Bomb::~Bomb()
+EnemyProjectile::~EnemyProjectile()
 {
 	mp_sprite = NULL;
 
-	// Deletion of the Bomb* in m_bombs is handled by ProjectileManager.
+	// Deletion of the EnemyProjectile* in m_projectiles is handled by 
+	// the ProjectileManager.
 }
 
-void Bomb::Update(float frameTime)
+void EnemyProjectile::Update(float frameTime)
 {
 	if ( m_alive )
 	{
-		float offset = frameTime * BOMB_VELOCITY * Game::GetInstance().GetSpeedFactor();
+		float offset = frameTime * PROJ_VELOCITY * Game::GetInstance().GetSpeedFactor();
 		m_position.y += offset;
 
 		// This represents the projectile going off-screen at the bottom.
@@ -46,9 +48,9 @@ void Bomb::Update(float frameTime)
 	}
 }
 
-void Bomb::Render()
+void EnemyProjectile::Render()
 {
-	// Use the Renderer to draw the bomb sprite.
+	// Use the Renderer to draw the projectile sprite.
 	Game::GetInstance().GetRenderer().DrawSprite(
 		mp_sprite, m_position.x, m_position.y, m_spriteWidth, m_spriteHeight
 	);

@@ -27,7 +27,7 @@ Renderer::Renderer() :
 	mp_d3dDevice(NULL),
 	mp_VB(NULL),
 	m_fullScreen(false),
-	m_bgColour(0)//D3DCOLOR_XRGB(100, 149, 237)) // Cornflower blue!
+	m_bgColour(0)
 {
 	// Register the window class
 	WNDCLASSEX wc = { sizeof(WNDCLASSEX), CS_CLASSDC, MsgProc, 0L, 0L,

@@ -134,16 +134,16 @@ void EnemyManager::Update(float frameTime)
 		}
 		else
 		{
-			// As Bombs are stored on Enemies, we can't delete them if they
-			// have any live bombs currently.
-			if ( enemy->HasLiveBomb() )
+			// As Projectiles are stored on Enemies, we can't delete them if 
+			// they have any live projectiles currently.
+			if ( enemy->HasLiveProjectile() )
 			{
 				// Add this enemy to the list to be deleted.
 				m_deadEnemies.push_back(enemy);
 			}
 			else
 			{
-				// If the enemy has no live bombs, we delete it immediately
+				// If the enemy has no live projectiles, we delete it
 				delete *it;
 				*it = NULL;
 			}
@@ -227,14 +227,14 @@ void EnemyManager::UpdateLowestPoint()
 
 void EnemyManager::HandleEnemyDeletion()
 {
-	// Now attempt to delete all enemies that have live bombs.
+	// Now attempt to delete all enemies that have live projectiles.
 	if ( m_deadEnemies.size() > 0 )
 	{
 		std::list<Enemy*>::iterator del = m_deadEnemies.begin();
 		for ( del = m_deadEnemies.begin(); del != m_deadEnemies.end(); )
 		{
 			Enemy* enemy = static_cast<Enemy*>(*del);
-			if ( !enemy->HasLiveBomb() )
+			if ( !enemy->HasLiveProjectile() )
 			{
 				delete *del;
 				*del = NULL;
