@@ -94,7 +94,7 @@ void EnemyManager::UpdateMovementSpeed()
 	m_pauseDuration = duration;
 }
 
-void EnemyManager::Update(const float frameTime)
+void EnemyManager::Update(float frameTime)
 {
 	// Increment the timer.
 	m_currentPause += frameTime;
@@ -155,6 +155,7 @@ void EnemyManager::Update(const float frameTime)
 	}
 
 	// Calculate the distance we should move this frame.
+	frameTime /= 1000.0f;
 	float moveDistance = 
 		static_cast<float>(m_directionOfTravel * ENEMY_VELOCITY * frameTime);
 

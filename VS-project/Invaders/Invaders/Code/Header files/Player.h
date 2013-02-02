@@ -16,6 +16,12 @@
 // Forward declare Game to allow access to Game singleton.
 class Game;
 
+enum MoveDirection
+{
+	MOVE_LEFT = -1,
+	MOVE_RIGHT = 1,
+};
+
 class Player : public IRenderable
 {
 	public:
@@ -35,7 +41,7 @@ class Player : public IRenderable
 		// Used to the move the player around the screen, with the direction
 		// indicating the cardinality of the X move:
 		//     1 is right, -1 is left.
-		void Move(int direction, float elapsedTime);
+		void Move(MoveDirection direction, float elapsedTime);
 
 		// This function ensures we don't go outside the game world.
 		void BoundMovement();
@@ -59,6 +65,7 @@ class Player : public IRenderable
 
 
 		inline void SetSpeedingUp() { m_speedingUp = true; }
+		inline void SetSlowingDown() { m_slowingDown = true; }
 
 	private:
 		// The current health of the player.

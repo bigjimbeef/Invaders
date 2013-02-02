@@ -107,10 +107,12 @@ void InputController::HandleInput(float frameTime)
 		}
 	}
 
+	// Process the controls for the game.
+	GameControls(frameTime);
+
 	for ( int i = 0; i < KEY_ARRAY_SIZE; ++i )
 	{
 		m_wasKeyDown[i] = m_isKeyDown[i];
-		m_isKeyDown[i] = false;
 	}
 
 	/*
@@ -133,54 +135,62 @@ void InputController::HandleInput(float frameTime)
 	*/
 }
 
+bool InputController::IsKeyDown(unsigned int key)
+{
+	if ( key >= KEY_ARRAY_SIZE )
+	{
+		return false;
+	}
 
+	return m_isKeyDown[key];
+}
+bool InputController::WasKeyDown(unsigned int key)
+{
+	if ( key >= KEY_ARRAY_SIZE )
+	{
+		return false;
+	}
 
-/*
+	return m_wasKeyDown[key];
+}
+
 void InputController::GameControls(float frameTime)
 {
 	// Process the key state.
-	if ( keystate.left )
+	if ( IsKeyDown(LEFT_ARROW) )
 	{
 		// Move the player in negative X.
-		Game::GetInstance().GetPlayer().Move(-1, frameTime);
+		Game::GetInstance().GetPlayer().Move(
+			MOVE_LEFT, frameTime
+		);
 
-		Game::GetInstance().GetPlayer().SetSpeedingUp();
+		//Game::GetInstance().GetPlayer().SetSpeedingUp();
 	}
-	
-	if ( keystate.right )
+
+	if ( IsKeyDown(RIGHT_ARROW) )
 	{
 		// Move the player in position X.
-		Game::GetInstance().GetPlayer().Move(1, frameTime);
+		Game::GetInstance().GetPlayer().Move(
+			MOVE_RIGHT, frameTime
+		);
 
-		Game::GetInstance().GetPlayer().SetSpeedingUp();
+		//Game::GetInstance().GetPlayer().SetSpeedingUp();
 	}
 
-	if ( keystate.fire )
+	if ( IsKeyDown(SPACEBAR) )
 	{
 		// We can only shoot again if we've let go of the key.
 		// Don't really want the player to be able to machine gun fire
 		// by just holding down the spacebar!
-		if ( !m_wasFiring)
+		if ( !WasKeyDown(SPACEBAR) )
 		{
 			// Make the player fire a rocket.
-			Game::GetInstance().GetPlayer().Fire();
+			// Game::GetInstance().GetPlayer().Fire();
 		}
 	}
-
-	// Cache whether or not we were firing.
-	m_wasFiring = keystate.fire;
-
-#ifdef _DEBUG
-	Vector2 playerPos = Game::GetInstance().GetPlayer().GetPosition();
-	
-	std::stringstream ss;
-	ss << "Player is at: [" << playerPos.x << ", " << playerPos.y << "]";
-	std::string pos = ss.str();
-
-	Game::GetInstance().GetSystem().drawText(0, 0, pos.c_str());
-#endif
 }
 
+/*
 void InputController::GameOverScreen(const IDiceInvaders::KeyStatus& keystate)
 {
 	if ( keystate.fire )

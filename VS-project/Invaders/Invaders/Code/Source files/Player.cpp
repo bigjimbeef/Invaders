@@ -114,7 +114,7 @@ void Player::Update(float frameTime)
 			m_slowingDown = false;
 		}
 
-		MathsHelper::Lerp(speed, 0.1f, 0.0025f);
+		MathsHelper::Lerp(speed, 0.1f, 0.025f);
 		Game::GetInstance().SetSpeedFactor(speed);
 
 		m_speedingUp = false;
@@ -128,7 +128,7 @@ void Player::Update(float frameTime)
 			m_speedingUp = false;
 		}
 
-		MathsHelper::Lerp(speed, 1.0f, 0.0025f);
+		MathsHelper::Lerp(speed, 1.0f, 0.025f);
 		Game::GetInstance().SetSpeedFactor(speed);
 	}
 
@@ -190,15 +190,13 @@ void Player::Update(float frameTime)
 	}
 }
 
-void Player::Move(int direction, float elapsedTime)
+void Player::Move(MoveDirection direction, float elapsedTime)
 {
+	// Convert elapsed time to seconds (from ms)
+	elapsedTime /= 1000.0f;
 	float offset = elapsedTime * PLAYER_VELOCITY;
 
-	if ( direction == -1 )
-	{
-		// Moving to the left.
-		offset = -offset;
-	}
+	offset *= direction;
 
 	// Update the player's position
 	m_position.x += offset;

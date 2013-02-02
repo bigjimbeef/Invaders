@@ -37,7 +37,7 @@ Enemy::~Enemy()
 	mp_sprite = NULL;
 }
 
-void Enemy::Update(const float frameTime)
+void Enemy::Update(float frameTime)
 {
 	// No need to process the rest of the function if we can't fire.
 	if ( !m_canFire )
@@ -48,13 +48,13 @@ void Enemy::Update(const float frameTime)
 	// Ensure we can't fire too many bombs.
     if ( m_bombs.size() < MAX_BOMBS )
     {
-		// We randomly pick a number in 100.
+		// We randomly pick a number in 5000.
 		// If the number exceeds our anger threshold (that is, the number which
 		// defines the percentage chance we'll start getting angry), we begin
 		// getting ANGRY. And thus jittering.
 
 		// TODO: Probably a better way of choosing whether or not to fire?
-		int random = ( rand() % 100001 );
+		int random = ( rand() % 5001 );
 		if ( random <= ANGER_THRESHOLD )
 		{
 			// Shake it, baby.
@@ -83,28 +83,22 @@ void Enemy::Update(const float frameTime)
 
 void Enemy::Render()
 {
-	/*
-	if ( m_row < 2 )
-	{
-		mp_sprite = m_altSprite 
-			? ResourceManager::GetEnemyOneSprite() 
-			: ResourceManager::GetEnemyOneAltSprite();
-	}
-	else 
-	{
-		mp_sprite = m_altSprite 
-			? ResourceManager::GetEnemyTwoSprite() 
-			: ResourceManager::GetEnemyTwoAltSprite();
-	}*/
-
 	float xPos = m_position.x + m_currentJitter.x;
 	float yPos = m_position.y + m_currentJitter.y;
 
-	Game::GetInstance().GetRenderer().DrawSprite(mp_sprite, xPos, yPos, 16, 16);
+	// TODO TODO TODO TODO TODO TODO TODO TODO TODO 
+	// This needs to be extended slightly to allow for drawing the sprites in their background colour.
+	// Either that, or find out why there appear to be white artifacts around them when drawn in white.
+	// TODO TODO TODO TODO TODO TODO TODO TODO TODO 
 
-	/*
-	mp_sprite->draw(xPos, yPos);
-	*/
+	DWORD targetCol = ( m_row < 2 ) ? 
+		Renderer::GetColour(0,255,0) : 
+		Renderer::GetColour(255,0,0);
+
+	// Use the Renderer to draw the sprite in place.
+	Game::GetInstance().GetRenderer().DrawSprite(
+		mp_sprite, xPos, yPos, 32, 32, 0.0f, targetCol
+	);
 }
 
 void Enemy::Move(float distance, bool dropDown)

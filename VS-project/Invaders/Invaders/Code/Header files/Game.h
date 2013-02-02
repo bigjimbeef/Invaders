@@ -12,6 +12,7 @@
 #include <string>
 // Stringstream include, used for converting ints to strings.
 #include <sstream>
+#include <ctime>
 
 #include "InputController.h"
 #include "Player.h"

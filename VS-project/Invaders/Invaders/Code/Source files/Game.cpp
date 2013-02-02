@@ -40,6 +40,9 @@ Game::Game() :
 
 	mp_audioManager = new AudioManager();
 
+	// Seed the random number generator.
+	srand( static_cast<unsigned int>(time(NULL)) );
+
 	// Spawn a wave of enemies.
 	EnemyManager::GetInstance().SpawnWave();
 }
@@ -54,10 +57,11 @@ Game::~Game()
 	delete mp_inputController;
 	mp_inputController = NULL;
 
+	delete mp_resourceManager;
+	mp_resourceManager = NULL;
+
 	delete mp_renderer;
 	mp_renderer = NULL;
-
-	//ResourceManager::GetInstance().Destroy();
 }
 
 // Gets the current time, in milliseconds
@@ -131,21 +135,20 @@ void Game::HandleInput(const float frameTime)
 
 void Game::Update(const float frameTime)
 {
-	/*
+	
 	// Update the player.
 	mp_player->Update(frameTime);
 
 	// Update the EnemyManager, which will in turn update the Enemies.
 	EnemyManager::GetInstance().Update(frameTime);
 
+	/*
 	// Update the ProjectileManager, which will in turn update the projectiles.
 	ProjectileManager::GetInstance().Update(frameTime);
 	*/
 
 	// Update the audio manager, which will update the play speed of all audio.
-	mp_audioManager->Update(frameTime);
-
-	
+	mp_audioManager->Update(frameTime);	
 }
 
 void Game::Render()

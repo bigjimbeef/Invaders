@@ -27,7 +27,7 @@ Renderer::Renderer() :
 	mp_d3dDevice(NULL),
 	mp_VB(NULL),
 	m_fullScreen(false),
-	m_bgColour(D3DCOLOR_XRGB(100, 149, 237)) // Cornflower blue!
+	m_bgColour(0)//D3DCOLOR_XRGB(100, 149, 237)) // Cornflower blue!
 {
 	// Register the window class
 	WNDCLASSEX wc = { sizeof(WNDCLASSEX), CS_CLASSDC, MsgProc, 0L, 0L,
@@ -194,10 +194,10 @@ void Renderer::DrawSprite(IDirect3DTexture9* sprite, float xcentre,
 	
 	CUSTOMVERTEX spriteVertexBuf[] =
 	{
-		{ ROTATE(-xsize,-ysize), 0.5f, 1.0f, colour, 0,0, }, // x, y, z, rhw, colour
-		{ ROTATE( xsize,-ysize), 0.5f, 1.0f, colour, 1,0, },
-		{ ROTATE(-xsize, ysize), 0.5f, 1.0f, colour, 0,1, },
-		{ ROTATE( xsize, ysize), 0.5f, 1.0f, colour, 1,1, },
+		{ ROTATE(-xsize,-ysize), 1.0f, 1.0f, colour, 0,0, }, // x, y, z, rhw, colour
+		{ ROTATE( xsize,-ysize), 1.0f, 1.0f, colour, 1,0, },
+		{ ROTATE(-xsize, ysize), 1.0f, 1.0f, colour, 0,1, },
+		{ ROTATE( xsize, ysize), 1.0f, 1.0f, colour, 1,1, },
 	};
 
 	mp_d3dDevice->DrawPrimitiveUP(D3DPT_TRIANGLESTRIP, 2, spriteVertexBuf, sizeof(CUSTOMVERTEX));

@@ -24,11 +24,15 @@ class InputController
 		// processing, through use of the DiceInvadersLib functions.
 		void HandleInput(float frameTime);
 
-		/*
-		// Controls for whilst the game is running.
-		void GameControls(const IDiceInvaders::KeyStatus& keystate,
-						  float frameTime);
+		// Check if a specific key is down.
+		bool IsKeyDown(unsigned int key);
+		// Check if a specific key was down last frame.
+		bool WasKeyDown(unsigned int key);
 
+		// Controls for whilst the game is running.
+		void GameControls(float frameTime);
+
+		/*
 		// Controls for the game over "screen".
 		void GameOverScreen(const IDiceInvaders::KeyStatus& keystate);
 		*/
@@ -47,6 +51,13 @@ class InputController
 		int m_keyHit[KEY_ARRAY_SIZE];
 		// Is the mouse button pressed?
 		int m_mb;
+
+		// Constants for accessing keys array.
+		static const int LEFT_ARROW = 37;
+		static const int UP_ARROW = 38;
+		static const int RIGHT_ARROW = 39;
+		static const int DOWN_ARROW = 40;
+		static const int SPACEBAR = 32;
 };
 
 #endif // INPUTCONTROLLER_H

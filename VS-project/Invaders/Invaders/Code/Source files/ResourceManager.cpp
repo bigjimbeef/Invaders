@@ -38,8 +38,10 @@ ResourceManager::ResourceManager()
 	*/
 }
 
-void ResourceManager::Destroy()
+ResourceManager::~ResourceManager()
 {
+
+	// TODO: Unload everything properly!
 
 	/*
 	SAFE_DESTROY(s_playerSprite);

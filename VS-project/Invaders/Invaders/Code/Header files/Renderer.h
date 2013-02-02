@@ -57,6 +57,9 @@ class Renderer
 						float ycentre, float xsize, float ysize,
 						float angle = 0.0f, DWORD colour = 0xFFFFFFFF);
 
+		static inline DWORD GetColour(int r, int g, int b) 
+			{ return D3DCOLOR_XRGB(r,g,b); }
+
 		//---------------------------------------------------------------------
 		// Accessors
 		inline HWND GetWindow() const { return mp_HWND; }
