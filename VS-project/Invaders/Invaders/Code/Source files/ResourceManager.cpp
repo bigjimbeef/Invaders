@@ -101,12 +101,3 @@ IDirect3DTexture9* ResourceManager::GetLetterSprite(char letter)
 
 	return p_letter;
 }
-
-IDirect3DTexture9* ResourceManager::GetRandomLetterSprite()
-{
-	const char* alphabet = "abcdefghijklmnopqrstuvwxyz";
-	int letterIdx = rand() % 26;
-	char letter = alphabet[letterIdx];
-
-	return m_letterSprites[letter];
-}

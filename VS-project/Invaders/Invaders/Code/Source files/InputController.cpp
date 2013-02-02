@@ -11,7 +11,6 @@ InputController::InputController() :
 	{
 		m_isKeyDown[i] = false;
 		m_wasKeyDown[i] = false;
-		m_keyHit[i] = 0;
 	}
 }
 InputController::~InputController()
@@ -27,19 +26,16 @@ LRESULT InputController::MessageHandler(HWND hWnd, UINT msg,
 			SetCapture(hWnd);
 			m_mb|=1;
 			m_isKeyDown[VK_LBUTTON]=true;
-			m_keyHit[VK_LBUTTON]++;
 			break;
 		case WM_RBUTTONDOWN:
 			SetCapture(hWnd);
 			m_isKeyDown[VK_RBUTTON]=true;
-			m_keyHit[VK_RBUTTON]++;
 			m_mb|=2;
 			break;
 		case WM_MBUTTONDOWN:
 			SetCapture(hWnd);
 			m_mb|=4;
 			m_isKeyDown[VK_MBUTTON]=true;
-			m_keyHit[VK_MBUTTON]++;
 			break;
 		case WM_LBUTTONUP:
 			ReleaseCapture();
@@ -60,7 +56,6 @@ LRESULT InputController::MessageHandler(HWND hWnd, UINT msg,
 		case WM_KEYDOWN:
 		case WM_SYSKEYDOWN:
 			m_isKeyDown[wParam&255]=true;
-			m_keyHit[wParam&255]++;
 			return 0;
 		case WM_KEYUP:
 		case WM_SYSKEYUP:
@@ -109,6 +104,12 @@ void InputController::HandleInput(float frameTime)
 
 	// Process the controls for the game.
 	GameControls(frameTime);
+
+	// TODO: IF WE'RE IN THE SECOND PART OF THE GAME
+	if ( true )
+	{
+		SendCharacters();
+	}
 
 	for ( int i = 0; i < KEY_ARRAY_SIZE; ++i )
 	{
@@ -187,6 +188,54 @@ void InputController::GameControls(float frameTime)
 			// Make the player fire a rocket.
 			Game::GetInstance().GetPlayer().Fire();
 		}
+	}
+}
+
+char InputController::GetHeldKey()
+{
+	char heldKey = 0;
+	const char* alphabet = "abcdefghijklmnopqrstuvwxyz";
+
+	for ( int i = A_KEY; i < A_KEY + 26; ++i )
+	{
+		if ( IsKeyDown(i) )
+		{
+			int index = i - A_KEY;
+			heldKey = alphabet[index];
+			break;
+		}
+	}
+
+	return heldKey;
+}
+
+void InputController::SendCharacters()
+{
+	int letter = GetHeldKey();
+	if ( letter == 0 )
+	{
+		return;
+	}
+
+	int test = 3;
+
+	// Firstly, we need to look and see if we're in "education" mode
+	// (that is, are we locked into typing a word to please the invader)
+	//if ( Game::GetInstance().AreEducating() ) {
+
+	// TODO
+
+	if ( false )
+	{
+
+	}
+	else
+	{
+		// In order to prevent keyboard spam, we just look at the first
+		// key that the player has held down.
+
+		// Search to see if there are any Projectiles with Words attached.
+		Game::GetInstance().GetProjectileManager().SendCharacter(letter);
 	}
 }
 

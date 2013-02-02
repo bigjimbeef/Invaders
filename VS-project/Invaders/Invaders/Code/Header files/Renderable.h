@@ -24,6 +24,10 @@ class IRenderable
 		virtual void Update(float frameTime) { }
 		virtual void Render() { }
 
+		// Easily determines if the derived IProjectile is an EnemyProjectile
+		// for casting.
+		virtual bool IsEnemyProjectile() const { return false; }
+
 		//---------------------------------------------------------------------
 		// Accessors
 		inline Vector2 GetPosition() const { return m_position; }

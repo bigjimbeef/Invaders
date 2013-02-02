@@ -29,8 +29,6 @@ class ResourceManager
 
 		// Access the letter map by name.
 		IDirect3DTexture9* GetLetterSprite(char letter);
-		// Get a random letter from the letter sprites map.
-		IDirect3DTexture9* GetRandomLetterSprite();
 
 		// Used to safely delete the static pointers to the sprites in the
 		// correct order.

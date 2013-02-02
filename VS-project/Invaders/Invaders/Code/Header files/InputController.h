@@ -29,8 +29,8 @@ class InputController
 		// Check if a specific key was down last frame.
 		bool WasKeyDown(unsigned int key);
 
-		// Controls for whilst the game is running.
-		void GameControls(float frameTime);
+
+
 
 		/*
 		// Controls for the game over "screen".
@@ -38,6 +38,14 @@ class InputController
 		*/
 
 	private:
+		// Controls for whilst the game is running.
+		void GameControls(float frameTime);
+
+		// Send the characters pressed to the Word objects in the game.
+		void SendCharacters();
+
+		// Determine which is the first (alphabetically) key currently held.
+		char GetHeldKey();
 
 		// How long was this frame.
 		float m_frameTime;
@@ -47,8 +55,6 @@ class InputController
 		// Which keys are down?
 		bool m_isKeyDown[KEY_ARRAY_SIZE];
 		bool m_wasKeyDown[KEY_ARRAY_SIZE];
-		// How many times have we hit each key?
-		int m_keyHit[KEY_ARRAY_SIZE];
 		// Is the mouse button pressed?
 		int m_mb;
 
@@ -58,6 +64,8 @@ class InputController
 		static const int RIGHT_ARROW = 39;
 		static const int DOWN_ARROW = 40;
 		static const int SPACEBAR = 32;
+
+		static const int A_KEY = 65;
 };
 
 #endif // INPUTCONTROLLER_H

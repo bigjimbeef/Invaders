@@ -56,7 +56,7 @@ void Enemy::Update(float frameTime)
 		// getting ANGRY. And thus jittering.
 
 		// TODO: Probably a better way of choosing whether or not to fire?
-		int random = ( rand() % 5001 );
+		int random = ( rand() % 2501 );
 		if ( random <= ANGER_THRESHOLD )
 		{
 			// Shake it, baby.

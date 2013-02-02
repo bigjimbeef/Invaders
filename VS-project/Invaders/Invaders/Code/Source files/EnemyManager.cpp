@@ -185,18 +185,6 @@ void EnemyManager::Update(float frameTime)
 
 	// Update the lowest point.
 	UpdateLowestPoint();
-
-	/*
-#ifdef _DEBUG
-	int numEnemies = m_enemies.size();
-	
-	std::stringstream ss;
-	ss << numEnemies << " enemies";
-	std::string enemies = ss.str();
-
-	Game::GetInstance().GetSystem().drawText(0, 40, enemies.c_str());
-#endif
-	*/
 }
 
 void EnemyManager::UpdateLowestPoint()

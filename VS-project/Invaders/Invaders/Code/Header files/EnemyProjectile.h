@@ -9,6 +9,7 @@
 
 // Include our base class.
 #include "Projectile.h"
+#include "Word.h"
 
 // Forward declare Game to allow access to Game singleton.
 class Game;
@@ -35,20 +36,21 @@ class EnemyProjectile : public IProjectile
 		inline bool IsAlive() const { return m_alive; }
 		inline void Kill() { m_alive = false; }
 		inline Enemy& GetOwner() const { return m_projOwner; }
+		inline Word* GetWord() const { return mp_word; }
 
 	private:
 	    // The enemy that fired this projectile.
 	    Enemy& m_projOwner;
 
-		static const int PROJ_VELOCITY = 225;
+		// Used in the second mode, this will make this into a "letter" 
+		// projectile
+		Word* mp_word;
+
+		//static const int PROJ_VELOCITY = 225;
+		static const int PROJ_VELOCITY = 150;
 
 	protected:
 		bool m_alive;
-
-		int m_spriteWidth;
-		int m_spriteHeight;
-		int m_spriteClipWidth;
-		int m_spriteClipHeight;
 };
 
 #endif // ENEMYPROJECTILE_H

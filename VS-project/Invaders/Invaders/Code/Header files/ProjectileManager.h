@@ -29,6 +29,10 @@ class ProjectileManager
 		// the projectile will be detailed in the Projectile itself.
 		void SpawnProjectile(IProjectile& proj);
 
+		// Intercepts a letter character from the keyboard, and sends it to
+		// any EnemyProjectiles.
+		void SendCharacter(char letter);
+
 		//---------------------------------------------------------------------
 		// Accessors
 		inline const std::list<IProjectile*>& 
