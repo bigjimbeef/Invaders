@@ -18,8 +18,11 @@ Bomb::Bomb(Enemy& bombOwner) :
 	// Initialise the position of the bomb based on the firing enemy's
 	// position.
 	m_position = m_bombOwner.GetPosition();
-	
-	// TODO: OFFSET BOMBS BY ENEMY POSITION
+	m_position.x +=
+		(m_bombOwner.GetSpriteWidth() - m_spriteWidth) / 2;
+	m_position.y +=
+		(m_bombOwner.GetSpriteHeight() 
+		+ m_bombOwner.GetClipHeight() - m_spriteHeight) / 2;
 }
 Bomb::~Bomb()
 {
@@ -49,4 +52,15 @@ void Bomb::Render()
 	Game::GetInstance().GetRenderer().DrawSprite(
 		mp_sprite, m_position.x, m_position.y, m_spriteWidth, m_spriteHeight
 	);
+
+#ifdef _DEBUG
+	Vector2 boundPos = m_position;
+	boundPos.x -= (32 - (m_spriteWidth/2));
+	boundPos.y -= (32 - (m_spriteHeight/2));
+
+	Game::GetInstance().GetRenderer().DEBUG_DrawBox(
+		boundPos.x, boundPos.y, 64, 64, 
+		Renderer::GetColour(255, 0, 255)
+		);
+#endif
 }

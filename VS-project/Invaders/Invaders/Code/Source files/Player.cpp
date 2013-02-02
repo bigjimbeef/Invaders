@@ -249,4 +249,15 @@ void Player::Render()
 	Game::GetInstance().GetRenderer().DrawSprite(
 		mp_sprite, m_position.x, m_position.y, m_spriteWidth, m_spriteHeight
 	);
+
+#ifdef _DEBUG
+	Vector2 boundPos = m_position;
+	boundPos.x -= (32 - (m_spriteWidth/2));
+	boundPos.y -= (32 - (m_spriteHeight/2));
+
+	Game::GetInstance().GetRenderer().DEBUG_DrawBox(
+		boundPos.x, boundPos.y, 64, 64, 
+		Renderer::GetColour(255, 255, 255)
+	);
+#endif
 }
