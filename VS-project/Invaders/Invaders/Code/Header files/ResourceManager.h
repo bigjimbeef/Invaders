@@ -20,9 +20,9 @@ class ResourceManager
 		~ResourceManager();
 
 		static inline IDirect3DTexture9* GetEnemyOneSprite() { return s_enemyOneSprite; }
-		static inline IDirect3DTexture9* GetEnemyOneAltSprite() { return s_enemyOneAltSprite; }
+		static inline IDirect3DTexture9* GetEnemyOneAlt() { return s_enemyOneAltSprite; }
 		static inline IDirect3DTexture9* GetEnemyTwoSprite() { return s_enemyTwoSprite; }
-		static inline IDirect3DTexture9* GetEnemyTwoAltSprite() { return s_enemyTwoAltSprite; }
+		static inline IDirect3DTexture9* GetEnemyTwoAlt() { return s_enemyTwoAltSprite; }
 		static inline IDirect3DTexture9* GetPlayerSprite() { return s_playerSprite; }
 		static inline IDirect3DTexture9* GetRocketSprite() { return s_rocketSprite; }
 		static inline IDirect3DTexture9* GetEnemyProjectileSprite() { return s_enemyProjSprite; }

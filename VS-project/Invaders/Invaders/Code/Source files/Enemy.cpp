@@ -50,9 +50,13 @@ void Enemy::Update(float frameTime)
 	// If we're in education mode, reset our anger.
 	if ( GameState::GetInstance().AreEducating() )
 	{
-		m_gettingAngry = false;
-		m_anger = 0;
+		if ( mp_word != NULL )
+		{
+			mp_word->Update(frameTime);
+		}
+
 		m_currentJitter = Vector2();
+		return;
 	}
 
 	// Ensure we can't fire too many projectiles.
@@ -70,6 +74,11 @@ void Enemy::Update(float frameTime)
 			// Shake it, baby.
 			m_gettingAngry = true;
 			m_anger = 1;
+
+			// TODO: Extend.
+			mp_sprite = ( m_row < 2 )
+				? Game::GetInstance().GetResourceManager().GetEnemyOneAlt()
+				: Game::GetInstance().GetResourceManager().GetEnemyTwoAlt();
 		}
 
 		if ( m_gettingAngry )
@@ -82,6 +91,10 @@ void Enemy::Update(float frameTime)
 			{
 				// ... then fire!
 				Fire();
+
+				mp_sprite = ( m_row < 2 )
+					? Game::GetInstance().GetResourceManager().GetEnemyOneSprite()
+					: Game::GetInstance().GetResourceManager().GetEnemyTwoSprite();
 
 				m_gettingAngry = false;
 				m_anger = 0;
@@ -96,19 +109,9 @@ void Enemy::Render()
 	float xPos = m_position.x + m_currentJitter.x;
 	float yPos = m_position.y + m_currentJitter.y;
 
-	// TODO TODO TODO TODO TODO TODO TODO TODO TODO 
-	// This needs to be extended slightly to allow for drawing the sprites in their background colour.
-	// Either that, or find out why there appear to be white artifacts around them when drawn in white.
-	// TODO TODO TODO TODO TODO TODO TODO TODO TODO 
-
-	DWORD targetCol = ( m_row < 2 ) ? 
-		Renderer::GetColour(0,255,0) : 
-		Renderer::GetColour(255,0,0);
-
 	// Use the Renderer to draw the sprite in place.
 	Game::GetInstance().GetRenderer().DrawSprite(
-		mp_sprite, xPos, yPos, m_spriteWidth, m_spriteHeight,
-		0.0f, targetCol
+		mp_sprite, xPos, yPos, m_spriteWidth, m_spriteHeight
 	);
 
 #ifdef _DEBUG

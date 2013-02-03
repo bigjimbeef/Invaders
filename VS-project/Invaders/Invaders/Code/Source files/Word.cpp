@@ -67,7 +67,7 @@ void Word::Update(float frameTime)
 {
 	if ( m_wordText.length() > 1 )
 	{
-
+		m_position = m_owner.GetPosition();
 	}
 	else
 	{
