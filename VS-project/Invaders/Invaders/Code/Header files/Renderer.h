@@ -10,6 +10,8 @@
 #include <d3d9.h>
 #include <d3dx9.h>
 
+#include <list>
+
 #include "Vector2.h"
 
 // TODO: Are these ok?
@@ -25,6 +27,30 @@ struct CUSTOMVERTEX
 	FLOAT x, y, z, rhw; // The transformed position for the vertex
 	DWORD color;        // The vertex color
 	float u,v;
+};
+
+struct MovingScore
+{
+	public:
+		MovingScore(int score = 0, Vector2 position = Vector2());
+
+		// Moves the text upwards.
+		void FloatUpwards(float frameTime);
+
+		//---------------------------------------------------------------------
+		// Accessors
+		inline float GetAliveTime() const { return m_aliveTime; }
+		inline void IncAliveTime(float value) { m_aliveTime += value; }
+		inline Vector2 GetPosition() const { return m_pos; }
+		inline std::string GetScoreString() const { return m_scoreString; }
+
+	private:
+		int m_score;
+		std::string m_scoreString;
+		Vector2 m_pos;
+		float m_aliveTime;
+
+		static const int FLOAT_SPEED = 30;
 };
 
 // Forward declare Game to allow access to Game singleton.
@@ -61,6 +87,15 @@ class Renderer
 
 		static inline DWORD GetColour(int r, int g, int b) 
 			{ return D3DCOLOR_XRGB(r,g,b); }
+
+		// Add a floating score to the list.
+		void AddScoreText(int score, Vector2 position);
+
+		// Updates the MovingScores that are within the array, deleting them
+		// when they have been alive for long enough.
+		void UpdateMovingScores(float frameTime);
+
+		void DrawMovingScores();
 
 #ifdef _DEBUG
 		// Debug rendering.
@@ -111,9 +146,18 @@ class Renderer
 		// The background colour we clear to.
 		DWORD m_bgColour;
 
+		// Floating score text items that are spawned when doing something
+		// that rewards the player with points.
+		std::list<MovingScore*> m_movingScores;
+
+		// The font interface, used for drawing moving scores.
+		ID3DXFont* mp_font;
+
 		static const int BACKBUFFER_WIDTH = 800;
 		static const int BACKBUFFER_HEIGHT = 600;
 		static const int SIXTY_HERTZ = 60;
+		static const int SCORE_DURATION = 1;
+		static const int FONT_HEIGHT = 24;
 };
 
 #endif // RENDERER_H

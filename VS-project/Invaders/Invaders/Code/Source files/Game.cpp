@@ -157,7 +157,10 @@ void Game::Update(const float frameTime)
 	mp_projectileManager->Update(frameTime);
 
 	// Update the audio manager, which will update the play speed of all audio.
-	mp_audioManager->Update(frameTime);	
+	mp_audioManager->Update(frameTime);
+
+	// Update the moving text in the Renderer.
+	mp_renderer->UpdateMovingScores(frameTime);
 }
 
 void Game::Render()
@@ -172,6 +175,9 @@ void Game::Render()
 	
 	// Render the ProjectileManager, which will in turn render the projectiles.
 	mp_projectileManager->Render();
+
+	// Draw the scores lastly.
+	mp_renderer->DrawMovingScores();
 
 	mp_renderer->PostRender();
 }

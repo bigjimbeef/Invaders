@@ -46,7 +46,6 @@ class EnemyProjectile : public IProjectile
 		// projectile
 		Word* mp_word;
 
-		//static const int PROJ_VELOCITY = 225;
 		static const int PROJ_VELOCITY = 150;
 
 	protected:

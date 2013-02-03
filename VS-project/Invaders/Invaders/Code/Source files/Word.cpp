@@ -95,6 +95,11 @@ bool Word::ReceiveLetter(char letter)
 						static_cast<EnemyProjectile*>(&m_owner);
 					
 					p_proj->Kill();
+
+					// Add a MovingScore to the screen.
+					Game::GetInstance().GetRenderer().AddScoreText(
+						50, m_position
+					);
 				}
 
 				return true;

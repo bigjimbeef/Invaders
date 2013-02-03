@@ -15,6 +15,21 @@ LRESULT WINAPI MsgProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 	return DefWindowProc( hWnd, msg, wParam, lParam );
 }
 
+MovingScore::MovingScore(int score, Vector2 position) :
+	m_score(score),
+	m_pos(position),
+	m_aliveTime(0.0f)
+{
+	std::stringstream ss;
+	ss << score;
+	m_scoreString = ss.str();
+}
+
+void MovingScore::FloatUpwards(float frameTime)
+{
+	m_pos.y -= ( frameTime * FLOAT_SPEED );
+}
+
 //-----------------------------------------------------------------------------
 // Start of Renderer-specific functionality.
 
@@ -27,7 +42,8 @@ Renderer::Renderer() :
 	mp_d3dDevice(NULL),
 	mp_VB(NULL),
 	m_fullScreen(false),
-	m_bgColour(0)
+	m_bgColour(0),
+	mp_font(NULL)
 {
 	// Register the window class
 	WNDCLASSEX wc = { sizeof(WNDCLASSEX), CS_CLASSDC, MsgProc, 0L, 0L,
@@ -60,6 +76,16 @@ Renderer::Renderer() :
 			UpdateWindow( mp_HWND );
 		}
 	}
+
+	m_movingScores = std::list<MovingScore*>();
+
+	// Create the font interface.
+	HRESULT hr = D3DXCreateFont(mp_d3dDevice, FONT_HEIGHT,
+				   0, FW_NORMAL, 1, false, DEFAULT_CHARSET, 
+				   OUT_DEFAULT_PRECIS, ANTIALIASED_QUALITY, 
+				   DEFAULT_PITCH|FF_DONTCARE, "fixedsys", &mp_font);
+
+	int test = 3;
 }
 Renderer::~Renderer()
 {
@@ -74,6 +100,10 @@ Renderer::~Renderer()
 	if ( mp_VB != NULL )
 	{
 		mp_VB->Release();
+	}
+	if ( mp_font != NULL )
+	{
+		mp_font->Release();
 	}
 
 	UnregisterClass( m_wcName, mp_wc->hInstance );
@@ -158,6 +188,25 @@ void Renderer::PreRender()
 
 	// Begin the scene
 	mp_d3dDevice->BeginScene();
+}
+
+void Renderer::DrawMovingScores()
+{
+	std::list<MovingScore*>::iterator it = m_movingScores.begin();
+	for ( it = m_movingScores.begin(); it != m_movingScores.end(); ++it )
+	{
+		RECT font_rect;
+		std::string scoreString = (*it)->GetScoreString();
+		const char* scoreCString = scoreString.c_str();
+
+		Vector2 pos = (*it)->GetPosition();
+		SetRect(&font_rect, static_cast<int>(pos.x), static_cast<int>(pos.y),
+			0, 0);
+
+		mp_font->DrawText(NULL, scoreCString, -1, &font_rect, 
+			DT_LEFT|DT_NOCLIP,
+			GetColour(255,255,255));
+	}
 }
 
 void Renderer::PostRender()
@@ -267,3 +316,38 @@ void Renderer::DEBUG_DrawLine(const Vector2& p1, const Vector2& p2, DWORD col)
 	mp_d3dDevice->SetTexture(0, oldtex);
 }
 #endif
+
+void Renderer::AddScoreText(int score, Vector2 position)
+{
+	// Add a new MovingScore to the list.
+	m_movingScores.push_back(new MovingScore(score, position));
+}
+
+void Renderer::UpdateMovingScores(float frameTime)
+{
+	// Put frame time into seconds.
+	frameTime /= 1000.0f;
+
+	std::list<MovingScore*>::iterator it = m_movingScores.begin();
+	for ( it = m_movingScores.begin(); it != m_movingScores.end(); )
+	{
+		float timeAlive = (*it)->GetAliveTime();
+
+		// Check if this score has been alive for long enough yet.
+		if ( timeAlive >= static_cast<float>(SCORE_DURATION) )
+		{
+			// If that is the case, we must remove and delete it from the list.
+			delete *it;
+			*it = NULL;
+			it = m_movingScores.erase(it);
+		}
+		else
+		{
+			// Otherwise move it up and increase its life timer.
+			(*it)->IncAliveTime(frameTime);
+			(*it)->FloatUpwards(frameTime);
+
+			++it;
+		}
+	}
+}
