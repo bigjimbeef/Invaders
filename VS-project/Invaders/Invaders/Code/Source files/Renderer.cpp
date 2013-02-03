@@ -301,6 +301,17 @@ void Renderer::DrawFilledRect(float xPos, float yPos,
 
 // Debug rendering.
 #ifdef _DEBUG
+void Renderer::DEBUG_DrawText(std::string text, Vector2 pos, DWORD col)
+{
+	const char* cString = text.c_str();
+
+	RECT font_rect;
+	SetRect(&font_rect, static_cast<int>(pos.x), static_cast<int>(pos.y),
+		0, 0);
+
+	mp_font->DrawText(NULL, cString, -1, &font_rect, DT_LEFT|DT_NOCLIP, col);
+}
+
 void Renderer::DEBUG_DrawBox(float xPos, float yPos, 
 							 int width, int height, DWORD col )
 {

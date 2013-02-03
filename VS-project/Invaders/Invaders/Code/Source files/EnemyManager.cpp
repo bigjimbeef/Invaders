@@ -11,6 +11,7 @@ EnemyManager::EnemyManager() :
 	m_lowestPoint(0.0f),
 	m_enemyProgress(0.0f),
 	m_remainingEnemies(0),
+	m_totalEnemies(0),
 	m_pauseDuration(0.0f),
 	m_basePauseDuration(0.60f),
 	m_currentPause(0.0f),
@@ -314,6 +315,8 @@ void EnemyManager::SpawnWave()
 	// are worth more points.
 	int backTwoRowCount = ( NUM_COLS * 2 );
 	int totalNumEnemies = NUM_ROWS * NUM_COLS;
+	// Cache that for later.
+	m_totalEnemies = totalNumEnemies;
 	
 	int currentCol = 0;
 	int currentRow = 0;

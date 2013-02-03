@@ -236,7 +236,6 @@ bool Word::ReceiveLetter(char letter)
 				{
 					EnemyProjectile* p_proj = 
 						static_cast<EnemyProjectile*>(&m_owner);
-					
 					p_proj->Kill();
 
 					// Play the letter sound effect
@@ -253,6 +252,9 @@ bool Word::ReceiveLetter(char letter)
 					// and transition out of education mode.
 					Enemy* p_owner = static_cast<Enemy*>(&m_owner);
 					p_owner->Kill(true);
+
+					// Work out the new difficulty because of the death.
+					GameState::GetInstance().RecalculateDifficulty();
 
 					GameState::GetInstance().EndEducation();
 				}

@@ -7,8 +7,6 @@
 // Include within .cpp file to match forward declare in .h
 #include "Game.h"
 
-#define SAFE_DELETE(x) if (x) { delete x; x = NULL; }
-
 Player::Player() :
 	m_health(STARTING_HEALTH),
 	mp_rocket(NULL)
@@ -154,6 +152,13 @@ void Player::Update(float frameTime)
 				}
 				else 
 				{
+					int score = enemy->GetScore();
+					Vector2 pos = enemy->GetPosition();
+					Game::GetInstance().GetRenderer().AddScoreText(score, pos);
+
+					// Work out the new difficulty because of the death.
+					GameState::GetInstance().RecalculateDifficulty();
+
 					mp_rocket->Kill();
 					enemy->Kill();
 				}

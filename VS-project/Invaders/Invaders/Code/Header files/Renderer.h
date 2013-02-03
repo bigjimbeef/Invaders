@@ -106,6 +106,8 @@ class Renderer
 
 #ifdef _DEBUG
 		// Debug rendering.
+		void DEBUG_DrawText(std::string text, Vector2 pos, DWORD col = 0xffffffff);
+
 		void DEBUG_DrawBox(
 			float xPos, float yPos, int width, int height, DWORD col );
 

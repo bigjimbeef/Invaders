@@ -5,6 +5,7 @@
 
 GameState::GameState() :
 	m_playerScore(0),
+	m_difficulty(0),
 	m_gameOver(false),
 	m_transitioningToEducation(false),
 	m_transitioningFromEducation(false),
@@ -27,7 +28,28 @@ void GameState::IncrementWaveNumber()
 	if ( m_waveNumber > MAX_WAVES ) 
 	{ 
 		m_waveNumber = 0; 
-	} 
+	}
+
+	// Set the base difficulty for this wave.
+	m_difficulty = DIFFICULTY_PER_WAVE * m_waveNumber;
+}
+
+void GameState::RecalculateDifficulty()
+{
+	// Get the number of remaining enemies, and change our difficulty based
+	// on that.
+	int remaining = Game::GetInstance().GetEnemyManager().GetRemainingEnemies();
+	int total = Game::GetInstance().GetEnemyManager().GetTotalEnemies();
+	float remainingF = static_cast<float>(remaining);
+	float totalF = static_cast<float>(total);
+
+	float proportion = 1.0f - (remainingF / totalF);
+	int difficulty = static_cast<int>(proportion * MAX_DIFFICULTY_PER_WAVE);
+
+	int newDifficulty = (DIFFICULTY_PER_WAVE * m_waveNumber) + difficulty;
+	newDifficulty = min(newDifficulty, MAX_WAVES * MAX_DIFFICULTY_PER_WAVE);
+
+	m_difficulty = newDifficulty;
 }
 
 void GameState::TransitionToEducation()
@@ -75,6 +97,7 @@ void GameState::TransitionFromEducation()
 void GameState::StartEducation(Enemy* tutee)
 {
 	mp_tutee = tutee;
+	m_transitioningFromEducation = false;
 	m_transitioningToEducation = true;
 }
 

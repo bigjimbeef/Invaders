@@ -27,6 +27,9 @@ class GameState
 		// Increase the wave number, capping at MAX_WAVES
 		void IncrementWaveNumber();
 
+		// Used to recalculate game difficulty based on number of enemies alive.
+		void RecalculateDifficulty();
+
 		// Move to the second game mode, where education is key.
 		void TransitionToMainGameMode();
 
@@ -45,6 +48,9 @@ class GameState
 
 		//---------------------------------------------------------------------
 		// Accessors
+		inline int GetDifficulty() const { return m_difficulty; }
+		inline void SetDifficulty(int val) { m_difficulty = val; }
+
 		inline int GetWaveNumber() const { return m_waveNumber; }
 		inline void IncrementScore(int amount) { m_playerScore += amount; }
 		
@@ -63,9 +69,12 @@ class GameState
 		// as true for this accessor
 		inline bool AreEducating() const 
 			{ return m_inEducationMode || m_transitioningToEducation; }
+		inline bool InEducationMode() const { return m_inEducationMode; }
 
 	private:
 		int m_playerScore;
+
+		int m_difficulty;
 
 		// Is the game finished?
 		bool m_gameOver;
@@ -89,6 +98,8 @@ class GameState
 
 		static const int MAX_WAVES = 5;
 		static const int BASE_EDUCATION_TIME = 5;
+		static const int DIFFICULTY_PER_WAVE = 20;
+		static const int MAX_DIFFICULTY_PER_WAVE = 50;
 
 		// Private default ctor to facilitate Singleton pattern.
 		GameState();

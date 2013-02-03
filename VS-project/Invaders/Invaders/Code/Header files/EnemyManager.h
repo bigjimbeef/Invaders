@@ -56,6 +56,7 @@ class EnemyManager
 		inline int GetMoveDelta() const
 		    { return ( m_directionOfTravel * MOVE_DISTANCE ); }
 		inline int GetRemainingEnemies() const { return m_remainingEnemies; }
+		inline int GetTotalEnemies() const { return m_totalEnemies; }
 		inline int GetMaxRow(unsigned int col) const
 		    { return m_maximumRows[col]; }
 
@@ -103,6 +104,8 @@ class EnemyManager
 			
 		// Track how many enemies remain.
 		int m_remainingEnemies;
+		// The total number of enemies
+		int m_totalEnemies;
 
 		// How long should the enemies pause for before moving?
 		// (This decreases as fewer enemies remain)

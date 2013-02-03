@@ -53,7 +53,12 @@ void EnemyProjectile::Update(float frameTime)
 	if ( m_alive )
 	{
 		float offset = frameTime * PROJ_VELOCITY * Game::GetInstance().GetSpeedFactor();
-		m_position.y += offset;
+		
+		// We stop moving the projectile when we're fully transitioned into education mode.
+		if ( !GameState::GetInstance().InEducationMode() )
+		{
+			m_position.y += offset;
+		}
 
 		// If we have a Word, then update it.
 		if ( mp_word != NULL )

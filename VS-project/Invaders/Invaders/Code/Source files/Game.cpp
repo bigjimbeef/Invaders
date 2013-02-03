@@ -183,6 +183,13 @@ void Game::Render()
 	// Draw the scores lastly.
 	mp_renderer->DrawMovingScores();
 
+#ifdef _DEBUG
+	std::stringstream ss;
+	int score = GameState::GetInstance().GetDifficulty();
+	ss << "Difficulty: " << score;
+	mp_renderer->DEBUG_DrawText(ss.str(), Vector2());
+#endif
+
 	mp_renderer->PostRender();
 }
 
