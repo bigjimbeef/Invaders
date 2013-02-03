@@ -36,6 +36,9 @@ class GameState
 		void TransitionToEducation();
 		void TransitionFromEducation();
 
+		// Set up the word for teaching with, on our tutee.
+		void StartTeaching();
+
 		//---------------------------------------------------------------------
 		// Accessors
 		inline int GetWaveNumber() const { return m_waveNumber; }
@@ -46,6 +49,8 @@ class GameState
 
 		inline bool InMainGameMode() const { return m_inMainGameMode; }
 		inline void SetEducating(bool value) { m_transitioningToEducation = value; }
+
+		inline Enemy* GetTutee() const { return mp_tutee; }
 		
 		// We consider the point where we are transitioning into education mode
 		// as true for this accessor

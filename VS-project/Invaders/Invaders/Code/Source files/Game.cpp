@@ -120,7 +120,7 @@ void Game::Run()
 	// We only update and render the game before Game Over.
 	if ( !GameState::GetInstance().IsGameOver() )
 	{
-		//mp_audioManager->PlayMusic();
+		mp_audioManager->PlayMusic();
 
 		// Update all objects in the game world.
 		Update(frameTime);
@@ -128,10 +128,6 @@ void Game::Run()
 		// Render the game world.
 		Render();
 	}
-
-	// Render the (rudimentary) UI for the game. Note that this persists
-	// even after the game is finished.
-	// GameState::GetInstance().RenderUI(frameTime);
 
 	// Cache the elapsed frame time.
 	m_lastFrameTime = currentTime;

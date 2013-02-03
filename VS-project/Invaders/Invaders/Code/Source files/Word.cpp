@@ -36,7 +36,12 @@ Word::Word(IRenderable& owner, const char* text) :
 	}
 	else
 	{
-		// TODO: init multi-letter words.
+		for ( unsigned int i = 0; i < m_wordText.length(); ++i )
+		{
+			char letter = m_wordText[i];
+			m_textSprites[i] = 
+				Game::GetInstance().GetResourceManager().GetLetterSprite(letter);
+		}
 	}
 
 	m_spriteWidth = LETTER_SIZE;
@@ -60,33 +65,62 @@ char Word::GetRandomLetter()
 
 void Word::Update(float frameTime)
 {
-	m_position = m_owner.GetPosition();
+	if ( m_wordText.length() > 1 )
+	{
 
-	int width = m_owner.GetSpriteWidth();
-	int height = m_owner.GetSpriteHeight();
+	}
+	else
+	{
+		m_position = m_owner.GetPosition();
 
-	m_position.x -= ((m_spriteWidth - width) /2);
-	m_position.y -= ((m_spriteHeight - height) /2);
+		int width = m_owner.GetSpriteWidth();
+		int height = m_owner.GetSpriteHeight();
 
-	// Increase our rotation.
-	m_rotation += m_rotationPerFrame;
+		m_position.x -= ((m_spriteWidth - width) /2);
+		m_position.y -= ((m_spriteHeight - height) /2);
+
+		// Increase our rotation.
+		m_rotation += m_rotationPerFrame;
+	}
 }
 
 void Word::Render()
 {
-	// TODO: MOST OF THIS
+	// If we're rendering a whole word...
+	if ( m_wordText.length() > 1 )
+	{
+		Vector2 charPos = m_position;
 
-	// Use the Renderer to draw the player's sprite.
-	Game::GetInstance().GetRenderer().DrawSprite(
-		m_textSprites[0], m_position.x, m_position.y, 
-		m_spriteWidth, m_spriteHeight, m_rotation
-	);
+		for ( unsigned int i = 0; i < m_wordText.length(); ++i )
+		{
+			DWORD col = Renderer::GetColour(255, 255, 255);
+			if ( m_lettersCleared > i )
+			{
+				col = Renderer::GetColour(0, 255, 0, 200);
+			}
 
+			// Space the letters out
+			charPos.x += LETTER_SPACING;
+
+			Game::GetInstance().GetRenderer().DrawSprite(
+				m_textSprites[i], charPos.x, charPos.y, 
+				m_spriteWidth, m_spriteHeight, m_rotation, col
+			);
+		}
+	}
+	else
+	{
+		// Use the Renderer to draw the player's sprite.
+		Game::GetInstance().GetRenderer().DrawSprite(
+			m_textSprites[0], m_position.x, m_position.y, 
+			m_spriteWidth, m_spriteHeight, m_rotation
+		);
+	}
 }
 
 bool Word::ReceiveLetter(char letter)
 {
-	int wordLength = m_wordText.length();
+	unsigned int wordLength = m_wordText.length();
 	
 	// This should always be true, but just being safe.
 	if ( m_lettersCleared < wordLength )
@@ -95,6 +129,24 @@ bool Word::ReceiveLetter(char letter)
 
 		if ( letter == currentChar )
 		{
+			// Add the score for each letter
+			if ( !m_owner.IsEnemyProjectile() )
+			{
+				Enemy* p_owner = static_cast<Enemy*>(&m_owner);
+
+				// Add the score for this letter at the point where the
+				// letter was.
+				float xPos = m_position.x 
+					+ (m_lettersCleared * LETTER_SPACING);
+				Vector2 pos(xPos, m_position.y);
+
+				// Add a MovingScore to the screen.
+				int score = p_owner->GetScore();
+				Game::GetInstance().GetRenderer().AddScoreText(
+					score, pos
+				);
+			}
+
 			// We've cleared a letter.
 			m_lettersCleared++;
 
@@ -112,6 +164,15 @@ bool Word::ReceiveLetter(char letter)
 					Game::GetInstance().GetRenderer().AddScoreText(
 						50, m_position
 					);
+				}
+				else
+				{
+					// We have cleared the word. Remove the invader,
+					// and transition out of education mode.
+					Enemy* p_owner = static_cast<Enemy*>(&m_owner);
+					p_owner->Kill();
+
+					GameState::GetInstance().EndEducation();
 				}
 
 				return true;

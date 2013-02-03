@@ -32,30 +32,40 @@ void GameState::TransitionToEducation()
 {
 	if ( m_transitioningToEducation )
 	{
+		float target = 0.1f;
 		float speed = Game::GetInstance().GetSpeedFactor();
-		float diff = speed - 0.1f;
+		float diff = speed - target;
+
+		MathsHelper::Lerp(speed, target, 0.025f);
+		Game::GetInstance().SetSpeedFactor(speed);
+
 		if ( MathsHelper::Abs(diff) < 0.1f ) {
 			m_transitioningToEducation = false;
 			m_inEducationMode = true;
-		}
 
-		MathsHelper::Lerp(speed, 0.1f, 0.025f);
-		Game::GetInstance().SetSpeedFactor(speed);
+			// Set-up the word to educate with.
+			StartTeaching();
+		}
 	}
 }
 void GameState::TransitionFromEducation()
 {
 	if ( m_transitioningFromEducation )
 	{
+		float target = 1.0f;
 		float speed = Game::GetInstance().GetSpeedFactor();
-		float diff = speed - 0.1f;
+		float diff = speed - target;
+
+		MathsHelper::Lerp(speed, target, 0.025f);
+		Game::GetInstance().SetSpeedFactor(speed);
+
 		if ( MathsHelper::Abs(diff) < 0.1f ) {
+			// Lock back to 100% play speed.
+			Game::GetInstance().SetSpeedFactor(target);
+
 			m_transitioningFromEducation = false;
 			m_inEducationMode = false;
 		}
-
-		MathsHelper::Lerp(speed, 1.0f, 0.025f);
-		Game::GetInstance().SetSpeedFactor(speed);
 	}
 }
 
@@ -80,5 +90,14 @@ void GameState::Update(float frameTime)
 	else if ( m_transitioningFromEducation )
 	{
 		TransitionFromEducation();
+	}
+}
+
+void GameState::StartTeaching()
+{
+	// Ensure we don't try to teach the aether.
+	if ( mp_tutee != NULL )
+	{
+		mp_tutee->GenerateWord();
 	}
 }

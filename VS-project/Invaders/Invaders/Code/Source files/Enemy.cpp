@@ -16,7 +16,8 @@ Enemy::Enemy(float xPos, float yPos, int width, int height,
 	m_col(col),
 	m_dropDistance(0.0f),
 	m_score(score),
-	m_altSprite(0)
+	m_altSprite(0),
+	mp_word(NULL)
 {
 	m_spriteWidth= width;
 	m_spriteHeight = height;
@@ -119,6 +120,12 @@ void Enemy::Render()
 		xPos, yPos, m_spriteWidth, m_spriteHeight, col
 	);
 #endif
+
+	// If we have a word, render it.
+	if ( mp_word != NULL )
+	{
+		mp_word->Render();
+	}
 }
 
 void Enemy::Move(float distance, bool dropDown)
@@ -221,4 +228,11 @@ void Enemy::Fire()
 	// We also manage the list internally too, though the memory
 	// management is handled in the ProjectileManager.
 	m_projectiles.push_back(p_enemyProj);
+}
+
+void Enemy::GenerateWord()
+{
+	const char* test = "testing";
+
+	mp_word = new Word(*this, test);
 }

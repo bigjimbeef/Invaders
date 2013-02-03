@@ -4,7 +4,7 @@
 #include "Game.h"
 
 AudioManager::AudioManager() :
-	m_musicPath("Code/Resource files/Audio/bgmusic.mp3"),
+	m_musicPath("Code/Resource files/Audio/funnybg.wav"),
 	mp_musicStream(NULL),
 	m_musicVolume(1.0f),
 	m_soundVolume(1.0f),

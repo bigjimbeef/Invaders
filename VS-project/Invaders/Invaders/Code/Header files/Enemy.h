@@ -48,6 +48,9 @@ class Enemy : public IRenderable
 		// is declared in the cpp.
 		void Kill();
 
+		// Generate a word to be "taught" to this invader.
+		void GenerateWord();
+
 		//---------------------------------------------------------------------
 		// Accessors
 		inline bool IsAlive() const { return m_alive; }
@@ -55,10 +58,16 @@ class Enemy : public IRenderable
 		inline int GetRow() const { return m_row; }
 		inline int GetCol() const { return m_col; }
 
+		inline int GetScore() const { return m_score; }
+
 		inline void EnableWeapon() { m_canFire = true; }
 		
 		// Check if we have any projectiles currently alive.
 		inline bool HasLiveProjectile() const { return (m_projectiles.size() > 0); }
+
+		inline Word* GetWord() const { return mp_word; }
+
+		inline bool IsGettingAngry() const { return m_gettingAngry; }
 
 	private:
 		// Is this enemy alive?
@@ -74,7 +83,7 @@ class Enemy : public IRenderable
 		float m_baseJitterWait;
 		static const int MAX_JITTER_OFFSET = 5;
 		static const int ANGER_THRESHOLD = 1;
-		static const int MAX_ANGER = 100;
+		static const int MAX_ANGER = 150;
 
 		// The starting row for the enemy. This controls their look.
 		int m_row;
@@ -93,6 +102,10 @@ class Enemy : public IRenderable
 		// This array holds the projectiles.
 		std::list<EnemyProjectile*> m_projectiles;
         static const int MAX_PROJECTILES = 3;
+
+		// Used in the second mode, this is the word this enemy wants to
+		// learn currently.
+		Word* mp_word;
 };
 
 #endif // ENEMY_H

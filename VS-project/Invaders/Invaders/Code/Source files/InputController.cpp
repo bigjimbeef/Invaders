@@ -115,25 +115,6 @@ void InputController::HandleInput(float frameTime)
 	{
 		m_wasKeyDown[i] = m_isKeyDown[i];
 	}
-
-	/*
-	// Populate the key state from the game system.
-	IDiceInvaders::KeyStatus keystate;
-	Game::GetInstance().GetSystem().getKeyStatus(keystate);
-
-	bool gameOver = GameState::GetInstance().IsGameOver();
-
-	// We want to process game controls if it's still running ...
-	if ( !gameOver )
-	{
-		GameControls(keystate, frameTime);
-	}
-	// ... otherwise we listen for space bar to exit the game.
-	else
-	{
-		GameOverScreen(keystate);
-	}
-	*/
 }
 
 bool InputController::IsKeyDown(unsigned int key)
@@ -170,8 +151,6 @@ void InputController::GameControls(float frameTime)
 		Game::GetInstance().GetPlayer().Move(
 			MOVE_LEFT, frameTime
 		);
-
-		//Game::GetInstance().GetPlayer().SetSpeedingUp();
 	}
 
 	if ( IsKeyDown(RIGHT_ARROW) )
@@ -180,8 +159,6 @@ void InputController::GameControls(float frameTime)
 		Game::GetInstance().GetPlayer().Move(
 			MOVE_RIGHT, frameTime
 		);
-
-		//Game::GetInstance().GetPlayer().SetSpeedingUp();
 	}
 
 	if ( IsKeyDown(SPACEBAR) )
@@ -223,17 +200,21 @@ void InputController::SendCharacters()
 		return;
 	}
 
-	int test = 3;
-
 	// Firstly, we need to look and see if we're in "education" mode
 	// (that is, are we locked into typing a word to please the invader)
-	//if ( GameState::GetInstance().AreEducating() ) {
-
-	// TODO
-
-	if ( false )
+	if ( GameState::GetInstance().AreEducating() ) 
 	{
+		Enemy* p_tutee = GameState::GetInstance().GetTutee();
+		if ( p_tutee != NULL )
+		{
+			Word* p_word = p_tutee->GetWord();
 
+			if ( p_word != NULL )
+			{
+				// Send the letter.
+				p_word->ReceiveLetter(letter);
+			}
+		}
 	}
 	else
 	{
@@ -244,17 +225,3 @@ void InputController::SendCharacters()
 		Game::GetInstance().GetProjectileManager().SendCharacter(letter);
 	}
 }
-
-/*
-void InputController::GameOverScreen(const IDiceInvaders::KeyStatus& keystate)
-{
-	if ( keystate.fire )
-	{
-		if ( !m_wasFiring)
-		{
-			// The game is no longer running.
-			Game::GetInstance().SetRunning(false);
-		}
-	}
-}
-*/

@@ -59,10 +59,6 @@ class Player : public IRenderable
 		inline int GetCurrentHealth() const { return m_health; }
 		static int GetTotalHealth() { return STARTING_HEALTH; }
 
-
-		inline void SetSpeedingUp() { m_speedingUp = true; }
-		inline void SetSlowingDown() { m_slowingDown = true; }
-
 	private:
 		// The current health of the player.
 		int m_health;
@@ -75,10 +71,6 @@ class Player : public IRenderable
 		// The player is only allowed one rocket at once. This is a pointer
 		// to that rocket.
 		Rocket* mp_rocket;
-
-		// TODO: REMOVE THIS SILLY HACK
-		bool m_slowingDown;
-		bool m_speedingUp;
 };
 
 #endif // PLAYER_H

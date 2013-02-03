@@ -11,11 +11,7 @@
 
 Player::Player() :
 	m_health(STARTING_HEALTH),
-	mp_rocket(NULL),
-
-	// TODO: REMOVE THIS SILLY HACK
-	m_slowingDown(0),
-	m_speedingUp(0)
+	mp_rocket(NULL)
 {
 	m_spriteWidth = 32;
 	m_spriteHeight = 32;
@@ -118,34 +114,6 @@ bool Player::CheckCollision(const IRenderable& objectOne,
 
 void Player::Update(float frameTime)
 {
-	// TODO: REMOVE THIS SILLY HACK
-	if ( m_slowingDown )
-	{
-		float speed = Game::GetInstance().GetSpeedFactor();
-
-		float diff = speed - 0.1f;
-		if ( MathsHelper::Abs(diff) < 0.1f ) {
-			m_slowingDown = false;
-		}
-
-		MathsHelper::Lerp(speed, 0.1f, 0.025f);
-		Game::GetInstance().SetSpeedFactor(speed);
-
-		m_speedingUp = false;
-	}
-	else if ( m_speedingUp )
-	{
-		float speed = Game::GetInstance().GetSpeedFactor();
-
-		float diff = speed - 0.1f;
-		if ( MathsHelper::Abs(diff) < 0.1f ) {
-			m_speedingUp = false;
-		}
-
-		MathsHelper::Lerp(speed, 1.0f, 0.025f);
-		Game::GetInstance().SetSpeedFactor(speed);
-	}
-
 	// Manage collisions between the player and enemy projectiles, and between 
 	// the player rocket and enemies.
 
@@ -165,8 +133,12 @@ void Player::Update(float frameTime)
 			// this is handled in the collision function.
 			if ( CheckCollision(*mp_rocket, *enemy) )
 			{
-				// Don't destroy the enemy if we're in the second game mode.
-				if ( GameState::GetInstance().InMainGameMode() )
+				bool mainGame = GameState::GetInstance().InMainGameMode();
+				bool gettingAngry = enemy->IsGettingAngry();
+
+				// We don't want to blow the enemy up if it's clamouring
+				// for an education.
+				if ( mainGame && gettingAngry )
 				{
 					// Transition into education mode with this enemy.
 					GameState::GetInstance().StartEducation(enemy);

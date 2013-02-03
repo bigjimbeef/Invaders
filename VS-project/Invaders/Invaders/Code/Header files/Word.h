@@ -44,7 +44,7 @@ class Word : public IRenderable
 		// What does the word say?
 		std::string m_wordText;
 		// How many letters have we cleared so far?
-		int m_lettersCleared;
+		unsigned int m_lettersCleared;
 
 		// The speed of rotation of the Word. Only used for single letters.
 		float m_rotation;
