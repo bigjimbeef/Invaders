@@ -4,7 +4,7 @@
 #include "Game.h"
 #include "EnemyProjectile.h"
 
-Word::Word(IRenderable& owner, const char* text) :
+Word::Word(IRenderable& owner, const char* text, bool mammoth) :
 	m_owner(owner),	
 	m_wordText(text),
 	m_lettersCleared(0),
@@ -47,10 +47,16 @@ Word::Word(IRenderable& owner, const char* text) :
 		}
 	}
 
-	m_spriteWidth = LETTER_SIZE;
-	m_spriteHeight = LETTER_SIZE;
-	m_spriteWidth = LETTER_SIZE;
-	m_spriteClipHeight = LETTER_SIZE;
+	m_spriteWidth = !mammoth ? LETTER_SIZE : LETTER_SIZE * MAMMOTH_LETTER;
+	m_spriteHeight = !mammoth ? LETTER_SIZE : LETTER_SIZE * MAMMOTH_LETTER;
+	m_spriteClipWidth = !mammoth ? LETTER_SIZE : LETTER_SIZE * MAMMOTH_LETTER;
+	m_spriteClipHeight = !mammoth ? LETTER_SIZE : LETTER_SIZE * MAMMOTH_LETTER;
+
+	// Big letters don't turn.
+	if ( mammoth )
+	{
+		m_rotationPerFrame = 0.0f;
+	}
 }
 Word::~Word()
 {

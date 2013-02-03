@@ -52,7 +52,7 @@ std::string Dictionary::GetRandomWord()
 	 * We then pick a value from 0 to 2^n, and use log_2 to calc the x value
 	 * to which this corresponds (i.e. the number of letters more than base).
 	 */
-	float maxRandVal = pow(2.0f, maxLetters - BASE_WORD_LENGTH);
+	float maxRandVal = pow(2.0f, ( maxLetters - BASE_WORD_LENGTH ) + 1);
 
 	// Now, choose a random float in the region.
 	float randomY = MathsHelper::randf(maxRandVal);

@@ -97,14 +97,6 @@ void Enemy::Update(float frameTime)
 			{
 				// ... then fire!
 				Fire();
-
-				mp_sprite = ( m_row < 2 )
-					? Game::GetInstance().GetResourceManager().GetEnemyOneSprite()
-					: Game::GetInstance().GetResourceManager().GetEnemyTwoSprite();
-
-				m_gettingAngry = false;
-				m_anger = 0;
-				m_currentJitter = Vector2();
 			}
 		}
     }
@@ -241,15 +233,29 @@ void Enemy::RemoveWord()
 	}
 }
 
-void Enemy::Fire()
+void Enemy::Fire(bool mammoth)
 {
 	// Create a new proj, then spawn it with the projectile manager.
-    EnemyProjectile* p_enemyProj = new EnemyProjectile(*this);
+    EnemyProjectile* p_enemyProj = new EnemyProjectile(*this, mammoth);
     Game::GetInstance().GetProjectileManager().SpawnProjectile(*p_enemyProj);
             
 	// We also manage the list internally too, though the memory
 	// management is handled in the ProjectileManager.
 	m_projectiles.push_back(p_enemyProj);
+
+	// Now calm yourself down.
+	CalmDown();
+}
+
+void Enemy::CalmDown()
+{
+	mp_sprite = ( m_row < 2 )
+		? Game::GetInstance().GetResourceManager().GetEnemyOneSprite()
+		: Game::GetInstance().GetResourceManager().GetEnemyTwoSprite();
+
+	m_gettingAngry = false;
+	m_anger = 0;
+	m_currentJitter = Vector2();
 }
 
 void Enemy::GenerateWord()

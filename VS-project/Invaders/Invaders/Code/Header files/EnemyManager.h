@@ -31,6 +31,9 @@ class EnemyManager
 		// active word.
 		void RemoveWord();
 
+		// Fire a massive letter at the player.
+		void FireMammothLetter();
+
 		// Spawn a new wave of enemies.
 		void SpawnWave();
 

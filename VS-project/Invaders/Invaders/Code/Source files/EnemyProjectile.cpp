@@ -3,10 +3,11 @@
 // Include within .cpp file to match forward declare in .h
 #include "Game.h"
 
-EnemyProjectile::EnemyProjectile(Enemy& projOwner) :
+EnemyProjectile::EnemyProjectile(Enemy& projOwner, bool mammoth) :
 	m_projOwner(projOwner),
-	m_alive(true),
-	mp_word(NULL)
+	mp_word(NULL),
+	m_mammoth(mammoth),
+	m_alive(true)
 {
 	m_spriteWidth = 8;
 	m_spriteHeight = 16;
@@ -29,7 +30,7 @@ EnemyProjectile::EnemyProjectile(Enemy& projOwner) :
 	// If we're in the game's second (main) mode.
 	if ( GameState::GetInstance().InMainGameMode() ) 
 	{
-		mp_word = new Word(*this);
+		mp_word = new Word(*this, "", mammoth);
 	}
 }
 EnemyProjectile::~EnemyProjectile()

@@ -39,7 +39,10 @@ class Enemy : public IRenderable
 		void Jitter(float frameTime);
 
 		// Controls the enemy firing a projectile.
-		void Fire();
+		void Fire(bool mammoth = false);
+
+		// Reset all variables that are associated with firing from anger.
+		void CalmDown();
 
 		// Removes one of the enemy's projectiles.
 		void KillProjectile(const EnemyProjectile& dyingProj);

@@ -39,11 +39,17 @@ bool Player::BroadPhase(const IRenderable& objectOne,
 	Vector2 onePos = objectOne.GetPosition();
 	Vector2 twoPos = objectTwo.GetPosition();
 	
-	int sixtyFour = 64;
+	// We use a base of 64 pixels for the broad phase collision
+	// unless either of the objects has a larger clip dimension.
+	int overlap = 64;
+	overlap = max( objectOne.GetClipWidth(), overlap );
+	overlap = max( objectOne.GetClipWidth(), overlap );
+	overlap = max( objectTwo.GetClipHeight(), overlap );
+	overlap = max( objectTwo.GetClipHeight(), overlap );
 
-	if ( abs(onePos.x - twoPos.x) < sixtyFour )
+	if ( abs(onePos.x - twoPos.x) < overlap )
 	{
-		if ( abs(onePos.y - twoPos.y) < sixtyFour )
+		if ( abs(onePos.y - twoPos.y) < overlap )
 		{
 #ifdef _DEBUG
 			const_cast<IRenderable&>(objectOne).DEBUG_SetColliding(true);
@@ -167,7 +173,14 @@ void Player::Update(float frameTime)
 		{
 			EnemyProjectile* p_proj = static_cast<EnemyProjectile*>(*projIt);
 
-			if ( CheckCollision(*this, *p_proj) )
+			// If the EnemyProjectile has a word, we use the sprite for that
+			// for collision instead.
+			IRenderable* obj = 
+				( p_proj->GetWord() != NULL )
+				? static_cast<IRenderable*>(p_proj->GetWord())
+				: static_cast<IRenderable*>(p_proj);
+
+			if ( CheckCollision(*this, *obj) )
 			{
 				// We've been hit!
 				m_health--;

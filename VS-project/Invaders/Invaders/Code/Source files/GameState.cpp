@@ -107,6 +107,9 @@ void GameState::Update(float frameTime)
 			// End the education mode.
 			EndEducation();
 
+			// Fire a massive letter.
+			Game::GetInstance().GetEnemyManager().FireMammothLetter();
+
 			// Destroy the word.
 			Game::GetInstance().GetEnemyManager().RemoveWord();
 		}

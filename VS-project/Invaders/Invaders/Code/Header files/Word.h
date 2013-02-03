@@ -17,7 +17,7 @@ class Game;
 class Word : public IRenderable
 {
 	public:
-		Word(IRenderable& owner, const char* text = "");
+		Word(IRenderable& owner, const char* text = "", bool mammoth = false);
 		~Word();
 
 		// Implement this function to show that this class is not abstract.
@@ -68,6 +68,8 @@ class Word : public IRenderable
 
 		static const int WIGGLE_FREQUENCY_SCALAR = 100;
 		static const int WIGGLE_AMPLITUDE = 3;
+
+		static const int MAMMOTH_LETTER = 4;
 };
 
 #endif // WORD_H

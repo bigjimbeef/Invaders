@@ -18,7 +18,7 @@ class Enemy;
 class EnemyProjectile : public IProjectile
 {
 	public:
-		EnemyProjectile(Enemy& projOwner);
+		EnemyProjectile(Enemy& projOwner, bool mammoth = false);
 		virtual ~EnemyProjectile();
 
 		virtual void Update(float frameTime);
@@ -45,6 +45,9 @@ class EnemyProjectile : public IProjectile
 		// Used in the second mode, this will make this into a "letter" 
 		// projectile
 		Word* mp_word;
+
+		// Is this a massive letter projectile?
+		bool m_mammoth;
 
 		static const int PROJ_VELOCITY = 150;
 
