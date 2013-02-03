@@ -26,6 +26,10 @@ class Word : public IRenderable
 		virtual void Update(float frameTime);
 		virtual void Render();
 
+		// This is used to render a background for the word when it is not
+		// a single letter (i.e. the timer).
+		void RenderBackground();
+
 		// Receives a letter from the player keyboard, passed through the
 		// ProjectileManager.
 		bool ReceiveLetter(char letter);

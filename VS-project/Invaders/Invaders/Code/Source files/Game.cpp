@@ -177,6 +177,9 @@ void Game::Render()
 	// Render the ProjectileManager, which will in turn render the projectiles.
 	mp_projectileManager->Render();
 
+	// If there is a word, then render it now, on top of everything else.
+	mp_enemyManager->RenderWords();
+
 	// Draw the scores lastly.
 	mp_renderer->DrawMovingScores();
 

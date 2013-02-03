@@ -44,6 +44,9 @@ class Enemy : public IRenderable
 		// Removes one of the enemy's projectiles.
 		void KillProjectile(const EnemyProjectile& dyingProj);
 
+		// Remove the Enemy's word if they have one.
+		void RemoveWord();
+
 		// Kill the enemy. This needs to update more than the bool below, so it
 		// is declared in the cpp.
 		void Kill(bool fromEducation = false);

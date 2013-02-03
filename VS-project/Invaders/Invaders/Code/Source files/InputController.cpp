@@ -183,9 +183,12 @@ char InputController::GetHeldKey()
 	{
 		if ( IsKeyDown(i) )
 		{
-			int index = i - A_KEY;
-			heldKey = alphabet[index];
-			break;
+			if ( !WasKeyDown(i) )
+			{
+				int index = i - A_KEY;
+				heldKey = alphabet[index];
+				break;
+			}
 		}
 	}
 

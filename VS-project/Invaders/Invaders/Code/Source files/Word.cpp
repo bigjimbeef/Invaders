@@ -105,11 +105,56 @@ void Word::Update(float frameTime)
 	}
 }
 
+void Word::RenderBackground()
+{
+	float time = GameState::GetInstance().GetTimeEducating();
+	float baseTime = static_cast<float>(GameState::GetEducationDuration());
+
+	// How much of the total time is left?
+	int baseWidth = LETTER_SPACING * m_wordText.length();
+	float proportion = 1.0f - ( time / baseTime );
+	int width = static_cast<int>(baseWidth * proportion);
+
+	// We render the bar in three colours depending on how much of it is left.
+	float twoThirds = 0.66f;
+	float oneThird = 0.33f;
+	DWORD colour = Renderer::GetColour(255, 255, 255);
+	colour =	
+			proportion > twoThirds
+			// Bright green if n > 0.66f
+			? Renderer::GetColour(0, 255, 0)
+			: proportion > oneThird
+				// Orange if 0.33f < n < 0.66f
+				? Renderer::GetColour(255, 127, 0)
+				// Red if n < 0.33f
+				: Renderer::GetColour(255, 0, 0);
+
+	// Add a border to the background.
+	float borderWidth = 3.0f;
+	float xPos = m_position.x - borderWidth;
+	float yPos = m_position.y - borderWidth;
+	int bgWidth = baseWidth + static_cast<int>( borderWidth * 2 );
+	int bgHeight = m_spriteHeight + static_cast<int>( borderWidth * 2 );
+
+	Game::GetInstance().GetRenderer().DrawFilledRect(
+		xPos, yPos, bgWidth, bgHeight, 
+		// Darkish grey.
+		Renderer::GetColour(100, 100, 100)
+	);
+	Game::GetInstance().GetRenderer().DrawFilledRect(
+		m_position.x, m_position.y, 
+		width, m_spriteHeight, colour
+	);
+}
+
 void Word::Render()
 {
 	// If we're rendering a whole word...
 	if ( m_wordText.length() > 1 )
 	{
+		// Render our background first.
+		RenderBackground();
+
 		Vector2 charPos = m_position;
 
 		for ( unsigned int i = 0; i < m_wordText.length(); ++i )
@@ -133,14 +178,6 @@ void Word::Render()
 			// Space the letters out
 			charPos.x += LETTER_SPACING;
 		}
-
-#ifdef _DEBUG
-		Game::GetInstance().GetRenderer().DEBUG_DrawBox(
-			m_position.x, m_position.y, 
-			LETTER_SPACING * m_wordText.length(), m_spriteHeight,
-			Renderer::GetColour(0,255,255)
-		);
-#endif
 	}
 	else
 	{
@@ -162,6 +199,7 @@ bool Word::ReceiveLetter(char letter)
 	{
 		char currentChar = m_wordText[m_lettersCleared];
 
+		// If it's the correct letter.
 		if ( letter == currentChar )
 		{
 			// Add the score for each letter
@@ -214,6 +252,16 @@ bool Word::ReceiveLetter(char letter)
 				}
 
 				return true;
+			}
+		}
+		// If it's the wrong letter...
+		else
+		{
+			// If we're a full word ...
+			if ( !m_owner.IsEnemyProjectile() )
+			{
+				// ... then increment the education timer!
+				GameState::GetInstance().IncTimeEducating(0.5f);
 			}
 		}
 	}

@@ -38,6 +38,12 @@ Enemy::Enemy(float xPos, float yPos, int width, int height,
 Enemy::~Enemy()
 {
 	mp_sprite = NULL;
+
+	if ( mp_word != NULL )
+	{
+		delete mp_word;
+		mp_word = NULL;
+	}
 }
 
 void Enemy::Update(float frameTime)
@@ -109,9 +115,13 @@ void Enemy::Render()
 	float xPos = m_position.x + m_currentJitter.x;
 	float yPos = m_position.y + m_currentJitter.y;
 
+	DWORD colour = GameState::GetInstance().AreEducating()
+		? Renderer::GetColour(255,255,255,100)
+		: Renderer::GetColour(255,255,255);
+
 	// Use the Renderer to draw the sprite in place.
 	Game::GetInstance().GetRenderer().DrawSprite(
-		mp_sprite, xPos, yPos, m_spriteWidth, m_spriteHeight
+		mp_sprite, xPos, yPos, m_spriteWidth, m_spriteHeight, 0.0f, colour
 	);
 
 #ifdef _DEBUG
@@ -123,12 +133,6 @@ void Enemy::Render()
 		xPos, yPos, m_spriteWidth, m_spriteHeight, col
 	);
 #endif
-
-	// If we have a word, render it.
-	if ( mp_word != NULL )
-	{
-		mp_word->Render();
-	}
 }
 
 void Enemy::Move(float distance, bool dropDown)
@@ -225,6 +229,15 @@ void Enemy::KillProjectile(const EnemyProjectile& dyingProj)
 			// Don't need to continue.
 			return;
 		}
+	}
+}
+
+void Enemy::RemoveWord()
+{
+	if ( mp_word != NULL )
+	{
+		delete mp_word;
+		mp_word = NULL;
 	}
 }
 

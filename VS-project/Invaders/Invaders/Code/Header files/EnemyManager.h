@@ -23,6 +23,13 @@ class EnemyManager
 		void Update(float frameTime);
 
 		void Render();
+		// Splitting word rendering into a separate function to ensure
+		// that words are rendered last, on top of everything else.
+		void RenderWords();
+
+		// Removes the word on the screen by checking each enemy for an
+		// active word.
+		void RemoveWord();
 
 		// Spawn a new wave of enemies.
 		void SpawnWave();

@@ -40,7 +40,7 @@ std::string Dictionary::GetRandomWord()
 	
 	// TODO: GET DIFFICULTY
 	//int difficulty = GameState::GetInstance().GetDifficulty();
-	int difficulty = 60;
+	int difficulty = 100;
 
 	int maxLetters = BASE_WORD_LENGTH + (difficulty / DIFFICULTY_PER_WORD_INC);
 

@@ -251,6 +251,39 @@ void EnemyManager::Render()
 	}
 }
 
+void EnemyManager::RenderWords()
+{
+	std::list<Enemy*>::iterator it = m_enemies.begin();
+	for ( it; it != m_enemies.end(); ++it )
+	{
+		// Render the enemy.
+		Enemy* enemy = static_cast<Enemy*>(*it);
+		if ( enemy->IsAlive() )
+		{
+			if ( enemy->GetWord() != NULL )
+			{
+				// Render the word.
+				enemy->GetWord()->Render();
+			}
+		}
+	}
+}
+
+void EnemyManager::RemoveWord()
+{
+	std::list<Enemy*>::iterator it = m_enemies.begin();
+	for ( it; it != m_enemies.end(); ++it )
+	{
+		// Render the enemy.
+		Enemy* enemy = static_cast<Enemy*>(*it);
+		if ( enemy->GetWord() != NULL )
+		{
+			enemy->RemoveWord();
+			break;
+		}
+	}
+}
+
 void EnemyManager::SpawnWave()
 {
 	// Enemies are spawned from the top-left initially. This is offset

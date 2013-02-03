@@ -279,6 +279,25 @@ void Renderer::DrawSprite(IDirect3DTexture9* sprite, float xcentre,
 	mp_d3dDevice->DrawPrimitiveUP(D3DPT_TRIANGLESTRIP, 2, spriteVertexBuf, sizeof(CUSTOMVERTEX));
 }
 
+void Renderer::DrawFilledRect(float xPos, float yPos, 
+	int width, int height, DWORD col )
+{
+	IDirect3DBaseTexture9 *oldtex = NULL;
+	mp_d3dDevice->GetTexture(0, &oldtex);
+	mp_d3dDevice->SetTexture(0, NULL);
+
+	CUSTOMVERTEX debugVertBuffer[] =
+	{
+		{ xPos, yPos, 0.5f, 1.0f, col, 0,0, }, // x, y, z, rhw, color
+		{ xPos + width, yPos, 0.5f, 1.0f, col, 1,0, },
+		{ xPos, yPos + height, 0.5f, 1.0f, col, 0,0, },
+		{ xPos + width, yPos + height, 0.5f, 1.0f, col, 0,0, }
+	};
+
+	mp_d3dDevice->DrawPrimitiveUP(D3DPT_TRIANGLESTRIP, 2, debugVertBuffer, sizeof(CUSTOMVERTEX));
+
+	mp_d3dDevice->SetTexture(0, oldtex);
+}
 
 // Debug rendering.
 #ifdef _DEBUG

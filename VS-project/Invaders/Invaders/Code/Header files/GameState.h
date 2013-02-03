@@ -39,6 +39,10 @@ class GameState
 		// Set up the word for teaching with, on our tutee.
 		void StartTeaching();
 
+		// Increase the time we've been educating for. This is used when we
+		// input the wrong letters for a word.
+		void IncTimeEducating(float value);
+
 		//---------------------------------------------------------------------
 		// Accessors
 		inline int GetWaveNumber() const { return m_waveNumber; }
@@ -52,6 +56,9 @@ class GameState
 
 		inline Enemy* GetTutee() const { return mp_tutee; }
 		
+		inline float GetTimeEducating() const { return m_timeEducating; }
+		inline static int GetEducationDuration() { return BASE_EDUCATION_TIME; }
+
 		// We consider the point where we are transitioning into education mode
 		// as true for this accessor
 		inline bool AreEducating() const 
@@ -73,10 +80,15 @@ class GameState
 		// Are we currently educating an Invader?
 		bool m_inEducationMode;
 
+		// How long have we been educating for?
+		float m_timeEducating;
+
 		// Tracks what enemy wave we are on. This is used as the enemies
 		// begin further down the screen in later waves.
 		int m_waveNumber;
+
 		static const int MAX_WAVES = 5;
+		static const int BASE_EDUCATION_TIME = 5;
 
 		// Private default ctor to facilitate Singleton pattern.
 		GameState();

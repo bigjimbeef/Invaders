@@ -10,7 +10,9 @@ GameState::GameState() :
 	m_transitioningFromEducation(false),
 	mp_tutee(NULL),
 	m_inMainGameMode(true),
-	m_inEducationMode(false)
+	m_inEducationMode(false),
+	m_timeEducating(0.0f),
+	m_waveNumber(0)
 {
 	
 }
@@ -50,6 +52,8 @@ void GameState::TransitionToEducation()
 }
 void GameState::TransitionFromEducation()
 {
+	m_inEducationMode = false;
+
 	if ( m_transitioningFromEducation )
 	{
 		float target = 1.0f;
@@ -64,7 +68,6 @@ void GameState::TransitionFromEducation()
 			Game::GetInstance().SetSpeedFactor(target);
 
 			m_transitioningFromEducation = false;
-			m_inEducationMode = false;
 		}
 	}
 }
@@ -77,6 +80,7 @@ void GameState::StartEducation(Enemy* tutee)
 
 void GameState::EndEducation()
 {
+	m_timeEducating = 0.0f;
 	mp_tutee = NULL;
 	m_transitioningFromEducation = true;
 }
@@ -91,6 +95,22 @@ void GameState::Update(float frameTime)
 	{
 		TransitionFromEducation();
 	}
+
+	if ( m_inEducationMode )
+	{
+		// Increase the timer.
+		m_timeEducating += ( frameTime / 1000.0f );
+
+		float targetTime = static_cast<float>(BASE_EDUCATION_TIME);
+		if ( m_timeEducating > targetTime )
+		{
+			// End the education mode.
+			EndEducation();
+
+			// Destroy the word.
+			Game::GetInstance().GetEnemyManager().RemoveWord();
+		}
+	}
 }
 
 void GameState::StartTeaching()
@@ -100,4 +120,11 @@ void GameState::StartTeaching()
 	{
 		mp_tutee->GenerateWord();
 	}
+}
+
+void GameState::IncTimeEducating(float value)
+{
+	m_timeEducating += value;
+	float baseTime = static_cast<float>(BASE_EDUCATION_TIME);
+	MathsHelper::Ceil(m_timeEducating, baseTime);
 }

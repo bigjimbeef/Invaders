@@ -100,6 +100,10 @@ class Renderer
 
 		void DrawMovingScores();
 
+		// This is used for drawing various UI elements.
+		void DrawFilledRect(
+			float xPos, float yPos, int width, int height, DWORD col );
+
 #ifdef _DEBUG
 		// Debug rendering.
 		void DEBUG_DrawBox(
