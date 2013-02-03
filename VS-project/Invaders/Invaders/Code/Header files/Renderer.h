@@ -85,7 +85,8 @@ class Renderer
 		// Draw a specific sprite.
 		void DrawSprite(IDirect3DTexture9* sprite, float xcentre, 
 						float ycentre, int xsize, int ysize,
-						float angle = 0.0f, DWORD colour = 0xFFFFFFFF);
+						float angle = 0.0f, DWORD colour = 0xFFFFFFFF,
+						float depth = 0.5f);
 
 		static inline DWORD GetColour(int r, int g, int b, int a = 255) 
 			{ return D3DCOLOR_RGBA(r,g,b,a); }

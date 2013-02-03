@@ -113,7 +113,8 @@ void Word::Render()
 		// Use the Renderer to draw the player's sprite.
 		Game::GetInstance().GetRenderer().DrawSprite(
 			m_textSprites[0], m_position.x, m_position.y, 
-			m_spriteWidth, m_spriteHeight, m_rotation
+			m_spriteWidth, m_spriteHeight, m_rotation,
+			Renderer::GetColour(255, 255, 255)
 		);
 	}
 }

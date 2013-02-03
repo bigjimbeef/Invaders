@@ -168,8 +168,8 @@ HRESULT Renderer::InitVB()
 void Renderer::PreRender()
 {
 	mp_d3dDevice->Clear( 0, NULL, D3DCLEAR_TARGET, m_bgColour, 1.0f, 0 );
-	mp_d3dDevice->SetRenderState(D3DRS_ALPHABLENDENABLE,true);
-	mp_d3dDevice->SetRenderState(D3DRS_ZENABLE,false);
+	mp_d3dDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, true);
+	mp_d3dDevice->SetRenderState(D3DRS_ZENABLE, false);
 
 	mp_d3dDevice->SetSamplerState(0,D3DSAMP_MAGFILTER,D3DTEXF_LINEAR);
 	mp_d3dDevice->SetSamplerState(0,D3DSAMP_MINFILTER,D3DTEXF_LINEAR);
@@ -184,7 +184,6 @@ void Renderer::PreRender()
 	mp_d3dDevice->SetRenderState(D3DRS_SRCBLEND,D3DBLEND_SRCALPHA);
 	mp_d3dDevice->SetRenderState(D3DRS_DESTBLEND,D3DBLEND_INVSRCALPHA);
 	mp_d3dDevice->SetRenderState(D3DRS_LIGHTING,false);
-	//mp_d3dDevice->SetTexture(0,NULL);
 	mp_d3dDevice->SetRenderState(D3DRS_CULLMODE,D3DCULL_NONE);
 
 	D3DVIEWPORT9 vp = { 0,0, BACKBUFFER_WIDTH, BACKBUFFER_HEIGHT, 0, 1};
@@ -238,7 +237,7 @@ void Renderer::SetCurrentTexture(IDirect3DTexture9* tex)
 
 void Renderer::DrawSprite(IDirect3DTexture9* sprite, float xcentre, 
 						  float ycentre, int xsize, int ysize, 
-						  float angle, DWORD colour )
+						  float angle, DWORD colour, float depth )
 {
 	SetCurrentTexture(sprite);
 	float cosine = cosf(angle);
@@ -271,10 +270,10 @@ void Renderer::DrawSprite(IDirect3DTexture9* sprite, float xcentre,
 
 	CUSTOMVERTEX spriteVertexBuf[] =
 	{
-		{ x1, y1, 0.5f, 1.0f, colour, 0, 0 }, // x, y, z, rhw, colour
-		{ x2, y2, 0.5f, 1.0f, colour, 1, 0 },
-		{ x3, y3, 0.5f, 1.0f, colour, 0, 1 },
-		{ x4, y4, 0.5f, 1.0f, colour, 1, 1 },
+		{ x1, y1, depth, 1.0f, colour, 0, 0 }, // x, y, z, rhw, colour
+		{ x2, y2, depth, 1.0f, colour, 1, 0 },
+		{ x3, y3, depth, 1.0f, colour, 0, 1 },
+		{ x4, y4, depth, 1.0f, colour, 1, 1 },
 	};
 
 	mp_d3dDevice->DrawPrimitiveUP(D3DPT_TRIANGLESTRIP, 2, spriteVertexBuf, sizeof(CUSTOMVERTEX));
