@@ -4,10 +4,12 @@
 #include "Game.h"
 
 AudioManager::AudioManager() :
-	m_musicPath("Code/Resource files/Audio/funnybg.wav"),
+	m_musicPath("Code/Resource files/Audio/bgmusic2.wav"),
 	mp_musicStream(NULL),
-	m_musicVolume(1.0f),
-	m_soundVolume(1.0f),
+
+	m_musicVolume(0.0f),
+	m_soundVolume(0.0f),
+
 	m_musicChannel(0),
 	m_musicFrequency(FORTY_FOUR_K),
 	m_playbackSpeed(1.0f),
@@ -16,6 +18,13 @@ AudioManager::AudioManager() :
 {
 	// Initialise FMOD.
 	FSOUND_Init(44100, 42, 0);
+
+	// Load all the sound effects.
+	std::string basePath = "Code/Resource files/Audio/FX/";
+
+	LoadSoundEffect("explosion", basePath + "explosion.aiff");
+	LoadSoundEffect("letter", basePath + "coin.aiff");
+	LoadSoundEffect("laser", basePath + "letter.aiff");
 }
 AudioManager::~AudioManager()
 {
@@ -69,10 +78,11 @@ void AudioManager::StopMusic()
 	}
 }
 
-void AudioManager::LoadSoundEffect(std::string effectPath, bool looping)
+void AudioManager::LoadSoundEffect(std::string name, std::string effectPath, 
+								   bool looping)
 {
 	int flags = 0;
-	if ( looping ) 
+	if ( looping )
 	{
 		flags |= FSOUND_LOOP_NORMAL;
 	}
@@ -82,7 +92,7 @@ void AudioManager::LoadSoundEffect(std::string effectPath, bool looping)
 		FSOUND_Sample_Load(FSOUND_FREE, effectPath.c_str(), flags, 0, 0);
 
 	// Now add the fully loaded sound to the sound effect map. 
-	m_sounds[effectPath] = soundEffect;
+	m_sounds[name] = soundEffect;
 }
 
 int AudioManager::PlaySoundEffect(std::string name)

@@ -24,6 +24,7 @@
 #include "MathsHelper.h"
 #include "AudioManager.h"
 #include "Renderer.h"
+#include "Dictionary.h"
 
 class Game
 {
@@ -60,6 +61,9 @@ class Game
 			return *mp_enemyManager; }
 		inline ProjectileManager& GetProjectileManager() const {
 			return *mp_projectileManager; }
+		inline AudioManager& GetAudioManager() const {
+			return *mp_audioManager; }
+		inline Dictionary& GetDictionary() const { return *mp_dictionary; }
 
 		inline float GetSpeedFactor() const { return m_gameSpeedFactor; }
 		void SetSpeedFactor(float value);
@@ -108,6 +112,9 @@ class Game
 
 		// Handles player input via DirectX messages.
 		InputController* mp_inputController;
+
+		// Reads list of words from a file into a multimap.
+		Dictionary* mp_dictionary;
 
 		// How fast is the game currently going?
 		float m_gameSpeedFactor;

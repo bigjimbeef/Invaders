@@ -293,8 +293,8 @@ void Renderer::DEBUG_DrawBox(float xPos, float yPos,
 	{
 		{ xPos, yPos, 0.5f, 1.0f, col, 0,0, }, // x, y, z, rhw, color
 		{ xPos + width, yPos, 0.5f, 1.0f, col, 1,0, },
-		{ xPos + width, yPos + width, 0.5f, 1.0f, col, 0,0, },
-		{ xPos, yPos + width, 0.5f, 1.0f, col, 0,0, },
+		{ xPos + width, yPos + height, 0.5f, 1.0f, col, 0,0, },
+		{ xPos, yPos + height, 0.5f, 1.0f, col, 0,0, },
 		{ xPos, yPos, 0.5f, 1.0f, col, 0,0, }
 	};
 

@@ -16,6 +16,9 @@ Word::Word(IRenderable& owner, const char* text) :
 	for ( int i = 0; i < MAX_LETTERS; ++i )
 	{
 		m_textSprites[i] = NULL;
+		// Initialise the vert deviation to nothing.
+		m_verticalDeviation[i] = 0.0f;
+		m_deviationTime[i] = static_cast<float>(i);
 	}
 
 	// If we're not being created with a specific word...
@@ -68,6 +71,24 @@ void Word::Update(float frameTime)
 	if ( m_wordText.length() > 1 )
 	{
 		m_position = m_owner.GetPosition();
+
+		// Need to limit the word to the screen.
+		int length = m_wordText.length() * LETTER_SPACING;
+		float maxPos = static_cast<float>(Renderer::GetScreenWidth() - length);
+
+		MathsHelper::Clamp(m_position.x, 0.0f, maxPos);
+
+		// Move characters up and down slightly, in a wave.
+		// The wave-like propagation is provided by the differeing initial
+		// deviation time created in the ctor.
+		for ( unsigned int i = 0; i < m_wordText.length(); ++i )
+		{
+			m_deviationTime[i] += 
+				static_cast<float>(frameTime / WIGGLE_FREQUENCY_SCALAR);
+			float deviation = 
+				static_cast<float>(WIGGLE_AMPLITUDE * sin(m_deviationTime[i]));
+			m_verticalDeviation[i] = deviation;
+		}
 	}
 	else
 	{
@@ -93,20 +114,33 @@ void Word::Render()
 
 		for ( unsigned int i = 0; i < m_wordText.length(); ++i )
 		{
+			// Apply vertical deviation.
+			float yPos = charPos.y + m_verticalDeviation[i];
+
 			DWORD col = Renderer::GetColour(255, 255, 255);
 			if ( m_lettersCleared > i )
 			{
-				col = Renderer::GetColour(0, 255, 0, 200);
+				// Render the letter transparent if it has
+				// already been entered.
+				col = Renderer::GetColour(0, 0, 0, 0);
 			}
+
+			Game::GetInstance().GetRenderer().DrawSprite(
+				m_textSprites[i], charPos.x, yPos, 
+				m_spriteWidth, m_spriteHeight, m_rotation, col
+			);
 
 			// Space the letters out
 			charPos.x += LETTER_SPACING;
-
-			Game::GetInstance().GetRenderer().DrawSprite(
-				m_textSprites[i], charPos.x, charPos.y, 
-				m_spriteWidth, m_spriteHeight, m_rotation, col
-			);
 		}
+
+#ifdef _DEBUG
+		Game::GetInstance().GetRenderer().DEBUG_DrawBox(
+			m_position.x, m_position.y, 
+			LETTER_SPACING * m_wordText.length(), m_spriteHeight,
+			Renderer::GetColour(0,255,255)
+		);
+#endif
 	}
 	else
 	{
@@ -161,6 +195,9 @@ bool Word::ReceiveLetter(char letter)
 					
 					p_proj->Kill();
 
+					// Play the letter sound effect
+					Game::GetInstance().GetAudioManager().PlaySoundEffect("letter");
+
 					// Add a MovingScore to the screen.
 					Game::GetInstance().GetRenderer().AddScoreText(
 						50, m_position
@@ -171,7 +208,7 @@ bool Word::ReceiveLetter(char letter)
 					// We have cleared the word. Remove the invader,
 					// and transition out of education mode.
 					Enemy* p_owner = static_cast<Enemy*>(&m_owner);
-					p_owner->Kill();
+					p_owner->Kill(true);
 
 					GameState::GetInstance().EndEducation();
 				}

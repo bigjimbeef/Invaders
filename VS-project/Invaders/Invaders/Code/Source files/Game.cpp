@@ -15,6 +15,7 @@ Game::Game() :
 	mp_enemyManager(NULL),
 	mp_projectileManager(NULL),
 	mp_inputController(NULL),
+	mp_dictionary(NULL),
 	m_gameSpeedFactor(1.0f)
 {
 	// Initialise the ResourceManager, which sets the static pointers to
@@ -44,6 +45,8 @@ Game::Game() :
 	mp_enemyManager = new EnemyManager();
 
 	mp_projectileManager = new ProjectileManager();
+
+	mp_dictionary = new Dictionary();
 
 	// Seed the random number generator.
 	srand( static_cast<unsigned int>(time(NULL)) );

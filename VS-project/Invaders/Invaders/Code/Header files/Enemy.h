@@ -46,7 +46,7 @@ class Enemy : public IRenderable
 
 		// Kill the enemy. This needs to update more than the bool below, so it
 		// is declared in the cpp.
-		void Kill();
+		void Kill(bool fromEducation = false);
 
 		// Generate a word to be "taught" to this invader.
 		void GenerateWord();

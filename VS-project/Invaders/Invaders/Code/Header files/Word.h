@@ -54,9 +54,16 @@ class Word : public IRenderable
 		// Array of sprites that make up the word.
 		IDirect3DTexture9* m_textSprites[MAX_LETTERS];
 
+		// The deviation from base position of each letter.
+		float m_verticalDeviation[MAX_LETTERS];
+		float m_deviationTime[MAX_LETTERS];
+
 		// Used for spacing and rendering words.
 		static const int LETTER_SIZE = 32;
 		static const int LETTER_SPACING = 36;
+
+		static const int WIGGLE_FREQUENCY_SCALAR = 100;
+		static const int WIGGLE_AMPLITUDE = 3;
 };
 
 #endif // WORD_H

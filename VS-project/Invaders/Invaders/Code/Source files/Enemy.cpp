@@ -176,10 +176,16 @@ void Enemy::Jitter(float frameTime)
 	m_jitterTimer += ( frameTime * Game::GetInstance().GetSpeedFactor() );
 }
 
-void Enemy::Kill()
+void Enemy::Kill(bool fromEducation)
 {
 	// This enemy is no longer alive.
 	m_alive = false;
+
+	if ( !fromEducation )
+	{
+		// Play the sound effect.
+		Game::GetInstance().GetAudioManager().PlaySoundEffect("explosion");
+	}
 
 	// Add to the player's score.
 	GameState::GetInstance().IncrementScore(m_score);
@@ -235,7 +241,8 @@ void Enemy::Fire()
 
 void Enemy::GenerateWord()
 {
-	const char* test = "testing";
+	// Get a random word from the dictionary.
+	std::string word = Game::GetInstance().GetDictionary().GetRandomWord();
 
-	mp_word = new Word(*this, test);
+	mp_word = new Word(*this, word.c_str());
 }

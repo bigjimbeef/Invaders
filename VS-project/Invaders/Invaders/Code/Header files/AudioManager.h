@@ -27,7 +27,8 @@ class AudioManager
 		void PlayMusic(bool stopCurrent = false);
 		void StopMusic();
 
-		void LoadSoundEffect(std::string effectPath, bool looping);
+		void LoadSoundEffect(std::string name, std::string effectPath, 
+							 bool looping = false);
 		// Returns the channel the sound is playing in.
 		int PlaySoundEffect(std::string name);
 		void StopSoundEffect(int channel);
