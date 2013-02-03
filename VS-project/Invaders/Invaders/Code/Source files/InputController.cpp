@@ -105,8 +105,8 @@ void InputController::HandleInput(float frameTime)
 	// Process the controls for the game.
 	GameControls(frameTime);
 
-	// TODO: IF WE'RE IN THE SECOND PART OF THE GAME
-	if ( true )
+	// If we're in the second part of the game, we need to send characters.
+	if ( GameState::GetInstance().InMainGameMode() )
 	{
 		SendCharacters();
 	}
@@ -157,6 +157,12 @@ bool InputController::WasKeyDown(unsigned int key)
 
 void InputController::GameControls(float frameTime)
 {
+	// If we're in education mode, we can't control the player.
+	if ( GameState::GetInstance().AreEducating() )
+	{
+		return;
+	}
+
 	// Process the key state.
 	if ( IsKeyDown(LEFT_ARROW) )
 	{
@@ -221,7 +227,7 @@ void InputController::SendCharacters()
 
 	// Firstly, we need to look and see if we're in "education" mode
 	// (that is, are we locked into typing a word to please the invader)
-	//if ( Game::GetInstance().AreEducating() ) {
+	//if ( GameState::GetInstance().AreEducating() ) {
 
 	// TODO
 

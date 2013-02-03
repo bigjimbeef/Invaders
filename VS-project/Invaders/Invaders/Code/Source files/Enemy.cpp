@@ -46,6 +46,13 @@ void Enemy::Update(float frameTime)
 	{
 		return;
 	}
+	// If we're in education mode, reset our anger.
+	if ( GameState::GetInstance().AreEducating() )
+	{
+		m_gettingAngry = false;
+		m_anger = 0;
+		m_currentJitter = Vector2();
+	}
 
 	// Ensure we can't fire too many projectiles.
     if ( m_projectiles.size() < MAX_PROJECTILES )

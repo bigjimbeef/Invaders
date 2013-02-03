@@ -10,6 +10,7 @@
 
 // Forward declare Game to allow access to Game singleton.
 class Game;
+class Enemy;
 
 class GameState
 {
@@ -19,23 +20,21 @@ class GameState
 			static GameState instance;
 			return instance;
 		}
-		virtual ~GameState();		
+		virtual ~GameState();	
 
-		// This function renders the Score and Lives UI.
-		void RenderUI(float frameTime);
+		void Update(float frameTime);	
 
-		// This function draws a line above the UI, much like
-		// the original game.
-		void RenderLine();
-		// This function draws the player score, on two lines.
-		void RenderScore();
-		// The function draws the player's remaining lives.
-		void RenderLives();
 		// Increase the wave number, capping at MAX_WAVES
 		void IncrementWaveNumber();
 
-		// The game is over, so indicate that in text form.
-		void GameOverMessage(float frameTime);
+		// Move to the second game mode, where education is key.
+		void TransitionToMainGameMode();
+
+		// Lock into educating an invader.
+		void StartEducation(Enemy* tutee);
+		void EndEducation();
+		void TransitionToEducation();
+		void TransitionFromEducation();
 
 		//---------------------------------------------------------------------
 		// Accessors
@@ -45,42 +44,34 @@ class GameState
 		inline bool IsGameOver() const { return m_gameOver; }
 		inline void SetGameOver() { m_gameOver = true; }
 
+		inline bool InMainGameMode() const { return m_inMainGameMode; }
+		inline void SetEducating(bool value) { m_transitioningToEducation = value; }
+		
+		// We consider the point where we are transitioning into education mode
+		// as true for this accessor
+		inline bool AreEducating() const 
+			{ return m_inEducationMode || m_transitioningToEducation; }
+
 	private:
 		int m_playerScore;
 
 		// Is the game finished?
 		bool m_gameOver;
-		const char* m_gameOverMessage;
-		int m_gameOverMsgXPos;
-		int m_gameOverMsgYPos;
-		int m_pressStartXPos;
-		int m_pressStartYPos;
+
+		// Reusable bool to check when we're done transitioning.
+		bool m_transitioningToEducation;
+		bool m_transitioningFromEducation;
+		Enemy* mp_tutee;
+
+		// Have we progressed into the second mode?
+		bool m_inMainGameMode;
+		// Are we currently educating an Invader?
+		bool m_inEducationMode;
 
 		// Tracks what enemy wave we are on. This is used as the enemies
 		// begin further down the screen in later waves.
 		int m_waveNumber;
 		static const int MAX_WAVES = 5;
-		
-		// Have we drawn the line at the bottom of the screen?
-		bool m_lineDrawn;
-
-		//---------------------------------------------------------------------
-		// UI positioning constants.
-		// Note that these are all just trial and error measurements for
-		// aesthetic purposes.
-		static const int UI_OFFSET = 35;
-		static const int LINE_OFFSET = 45;
-		static const int SCORE_OFFSET = 10;
-
-		static const int LINE_LENGTH = 160;
-
-		static const int LIVES_XPOS = 50;
-		static const int SCORE_XPOS = 500;
-		
-		static const int NUM_PADDING_ZEROES = 6;		
-
-		// The lives UI is an array of three PlayerUI objects.
-		PlayerUI* mp_playerUI[3];
 
 		// Private default ctor to facilitate Singleton pattern.
 		GameState();

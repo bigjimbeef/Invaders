@@ -26,9 +26,11 @@ EnemyProjectile::EnemyProjectile(Enemy& projOwner) :
 		(m_projOwner.GetSpriteHeight() 
 		+ m_projOwner.GetClipHeight() - m_spriteHeight) / 2;
 
-	// TODO:
 	// If we're in the game's second (main) mode.
-	mp_word = new Word(*this);
+	if ( GameState::GetInstance().InMainGameMode() ) 
+	{
+		mp_word = new Word(*this);
+	}
 }
 EnemyProjectile::~EnemyProjectile()
 {

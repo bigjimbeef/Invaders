@@ -165,12 +165,20 @@ void Player::Update(float frameTime)
 			// this is handled in the collision function.
 			if ( CheckCollision(*mp_rocket, *enemy) )
 			{
+				// Don't destroy the enemy if we're in the second game mode.
+				if ( GameState::GetInstance().InMainGameMode() )
+				{
+					// Transition into education mode with this enemy.
+					GameState::GetInstance().StartEducation(enemy);
 
-				// TODO: Here is why we can slot in the code for the text input stuff.
-
-
-				mp_rocket->Kill();
-				enemy->Kill();
+					// Remove the "rocket".
+					mp_rocket->Kill();
+				}
+				else 
+				{
+					mp_rocket->Kill();
+					enemy->Kill();
+				}
 			}
 		}
 	}

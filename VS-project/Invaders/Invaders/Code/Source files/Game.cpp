@@ -138,15 +138,17 @@ void Game::Run()
 }
 
 
-void Game::HandleInput(const float frameTime)
+void Game::HandleInput(float frameTime)
 {
 	// Farm the input handling out to the input controller.
 	mp_inputController->HandleInput(frameTime);
 }
 
-void Game::Update(const float frameTime)
+void Game::Update(float frameTime)
 {
-	
+	// Update the game state.
+	GameState::GetInstance().Update(frameTime);
+
 	// Update the player.
 	mp_player->Update(frameTime);
 
