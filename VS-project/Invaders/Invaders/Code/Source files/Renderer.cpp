@@ -18,7 +18,8 @@ LRESULT WINAPI MsgProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 MovingScore::MovingScore(int score, Vector2 position) :
 	m_score(score),
 	m_pos(position),
-	m_aliveTime(0.0f)
+	m_aliveTime(0.0f),
+	m_opacity(1.0f)
 {
 	std::stringstream ss;
 	ss << score;
@@ -28,6 +29,9 @@ MovingScore::MovingScore(int score, Vector2 position) :
 void MovingScore::FloatUpwards(float frameTime)
 {
 	m_pos.y -= ( frameTime * FLOAT_SPEED );
+	m_opacity -= frameTime;
+	// Can't go below 0 opacity.
+	MathsHelper::Floor(m_opacity, 0.0f);
 }
 
 //-----------------------------------------------------------------------------
@@ -203,9 +207,10 @@ void Renderer::DrawMovingScores()
 		SetRect(&font_rect, static_cast<int>(pos.x), static_cast<int>(pos.y),
 			0, 0);
 
+		int opacity = static_cast<int>((*it)->GetOpacity() * 255);
 		mp_font->DrawText(NULL, scoreCString, -1, &font_rect, 
 			DT_LEFT|DT_NOCLIP,
-			GetColour(255,255,255));
+			GetColour(255,255,255, opacity));
 	}
 }
 

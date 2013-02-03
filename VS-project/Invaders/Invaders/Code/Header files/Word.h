@@ -46,6 +46,10 @@ class Word : public IRenderable
 		// How many letters have we cleared so far?
 		int m_lettersCleared;
 
+		// The speed of rotation of the Word. Only used for single letters.
+		float m_rotation;
+		float m_rotationPerFrame;
+
 		static const int MAX_LETTERS = 10;
 		// Array of sprites that make up the word.
 		IDirect3DTexture9* m_textSprites[MAX_LETTERS];

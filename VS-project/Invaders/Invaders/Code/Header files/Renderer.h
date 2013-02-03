@@ -43,12 +43,14 @@ struct MovingScore
 		inline void IncAliveTime(float value) { m_aliveTime += value; }
 		inline Vector2 GetPosition() const { return m_pos; }
 		inline std::string GetScoreString() const { return m_scoreString; }
+		inline float GetOpacity() const { return m_opacity; }
 
 	private:
 		int m_score;
 		std::string m_scoreString;
 		Vector2 m_pos;
 		float m_aliveTime;
+		float m_opacity;
 
 		static const int FLOAT_SPEED = 30;
 };
@@ -85,8 +87,8 @@ class Renderer
 						float ycentre, int xsize, int ysize,
 						float angle = 0.0f, DWORD colour = 0xFFFFFFFF);
 
-		static inline DWORD GetColour(int r, int g, int b) 
-			{ return D3DCOLOR_XRGB(r,g,b); }
+		static inline DWORD GetColour(int r, int g, int b, int a = 255) 
+			{ return D3DCOLOR_RGBA(r,g,b,a); }
 
 		// Add a floating score to the list.
 		void AddScoreText(int score, Vector2 position);

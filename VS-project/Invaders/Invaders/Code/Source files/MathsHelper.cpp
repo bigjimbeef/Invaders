@@ -49,3 +49,13 @@ float MathsHelper::Round( float& input )
 {
 	return floor( input + 0.5f );
 }
+
+float MathsHelper::randf(float max, float min)
+{
+	float random = 
+		static_cast<float>((rand() / static_cast<float>(RAND_MAX)) * max);
+
+	Floor(random, min);
+
+	return random;
+}

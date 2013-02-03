@@ -8,6 +8,7 @@
 //-----------------------------------------------------------------------------
 
 #include <cmath>
+#include <cstdlib>
 
 class MathsHelper
 {
@@ -41,6 +42,9 @@ class MathsHelper
 
 		// Return the nearest integer to a float.
 		static float Round( float& input );
+
+		// Return a random float.
+		static float randf(float max, float min = 0.0f);
 
 	private:
 

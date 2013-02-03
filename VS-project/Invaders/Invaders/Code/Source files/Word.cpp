@@ -7,7 +7,9 @@
 Word::Word(IRenderable& owner, const char* text) :
 	m_owner(owner),	
 	m_wordText(text),
-	m_lettersCleared(0)
+	m_lettersCleared(0),
+	m_rotation(0.0f),
+	m_rotationPerFrame(0.0f)
 {
 	m_position = m_owner.GetPosition();
 
@@ -25,6 +27,12 @@ Word::Word(IRenderable& owner, const char* text) :
 
 		m_textSprites[0] = 
 			Game::GetInstance().GetResourceManager().GetLetterSprite(letter);
+
+		// Get a random rotation, between sensible min/max.
+		float randRot = MathsHelper::randf(0.1f, 0.01f);
+		// Generate -1 or 1 for spin direction.
+		int randDir = ( rand() % 2 ) == 0 ? -1 : 1;
+		m_rotationPerFrame = randDir * randRot;
 	}
 	else
 	{
@@ -59,6 +67,9 @@ void Word::Update(float frameTime)
 
 	m_position.x -= ((m_spriteWidth - width) /2);
 	m_position.y -= ((m_spriteHeight - height) /2);
+
+	// Increase our rotation.
+	m_rotation += m_rotationPerFrame;
 }
 
 void Word::Render()
@@ -67,7 +78,8 @@ void Word::Render()
 
 	// Use the Renderer to draw the player's sprite.
 	Game::GetInstance().GetRenderer().DrawSprite(
-		m_textSprites[0], m_position.x, m_position.y, m_spriteWidth, m_spriteHeight
+		m_textSprites[0], m_position.x, m_position.y, 
+		m_spriteWidth, m_spriteHeight, m_rotation
 	);
 
 }
