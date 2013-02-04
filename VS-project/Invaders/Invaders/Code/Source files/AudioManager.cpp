@@ -7,8 +7,8 @@ AudioManager::AudioManager() :
 	m_musicPath("Code/Resource files/Audio/bgmusic2.wav"),
 	mp_musicStream(NULL),
 
-	m_musicVolume(0.0f),
-	m_soundVolume(0.0f),
+	m_musicVolume(0.1f),
+	m_soundVolume(0.2f),
 
 	m_musicChannel(0),
 	m_musicFrequency(FORTY_FOUR_K),
@@ -25,6 +25,7 @@ AudioManager::AudioManager() :
 	LoadSoundEffect("explosion", basePath + "explosion.aiff");
 	LoadSoundEffect("letter", basePath + "coin.aiff");
 	LoadSoundEffect("laser", basePath + "letter.aiff");
+	LoadSoundEffect("tick", basePath + "blipveryhi.aiff");
 }
 AudioManager::~AudioManager()
 {

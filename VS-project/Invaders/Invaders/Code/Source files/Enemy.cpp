@@ -192,9 +192,6 @@ void Enemy::Kill(bool fromEducation)
 		Game::GetInstance().GetAudioManager().PlaySoundEffect("explosion");
 	}
 
-	// Add to the player's score.
-	GameState::GetInstance().IncrementScore(m_score);
-
 	// When the enemy is killed, we need to check if it is in the current
 	// outside column. If it is, we need to check if there are any more
 	// in the column. If not, we update the EnemyManager's column width

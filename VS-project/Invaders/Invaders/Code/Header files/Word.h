@@ -65,6 +65,7 @@ class Word : public IRenderable
 		// Used for spacing and rendering words.
 		static const int LETTER_SIZE = 32;
 		static const int LETTER_SPACING = 36;
+		static const int LETTER_SCORE = 20;
 
 		static const int WIGGLE_FREQUENCY_SCALAR = 100;
 		static const int WIGGLE_AMPLITUDE = 3;

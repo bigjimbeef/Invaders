@@ -243,7 +243,7 @@ bool Word::ReceiveLetter(char letter)
 
 					// Add a MovingScore to the screen.
 					Game::GetInstance().GetRenderer().AddScoreText(
-						50, m_position
+						LETTER_SCORE, m_position
 					);
 				}
 				else

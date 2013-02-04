@@ -379,6 +379,9 @@ void Renderer::DEBUG_DrawLine(const Vector2& p1, const Vector2& p2, DWORD col)
 
 void Renderer::AddScoreText(int score, Vector2 position)
 {
+	// Actually increment the score.
+	GameState::GetInstance().IncrementScore(score);
+
 	// Add a new MovingScore to the list.
 	m_movingScores.push_back(new MovingScore(score, position));
 }

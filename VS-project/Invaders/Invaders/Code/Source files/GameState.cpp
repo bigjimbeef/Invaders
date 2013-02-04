@@ -16,7 +16,7 @@ GameState::GameState() :
 	m_transitioningToEducation(false),
 	m_transitioningFromEducation(false),
 	mp_tutee(NULL),
-	m_inMainGameMode(false),
+	m_inMainGameMode(true),
 	m_inEducationMode(false),
 	m_timeEducating(0.0f),
 	m_waveNumber(0)
@@ -178,6 +178,11 @@ void GameState::TransitionToMainGameMode(float frameTime)
 		if ( currentLen < m_explanationString.length() )
 		{
 			char next = m_explanationString[currentLen];
+			// Play a blip sound, unless it's a new line.
+			if  ( next != '\n' && next != ' ' )
+			{
+				Game::GetInstance().GetAudioManager().PlaySoundEffect("tick");
+			}
 
 			m_currentExplanation += next;
 
@@ -269,30 +274,55 @@ void GameState::Render()
 
 	if ( m_paused && !m_toMainGame )
 	{
-		int semitrans = 200;
-		Game::GetInstance().GetRenderer().RenderOverlay(semitrans);
-
-		std::string paused = "Paused. Press Enter to resume.";
-		RECT fontDimensions = Game::GetInstance().GetRenderer().MeasureString(paused, true);
-		int width = fontDimensions.right - fontDimensions.left;
-		int height = fontDimensions.bottom - fontDimensions.top;
-
-		float xPos = static_cast<float>( Renderer::GetScreenWidth() - width ) / 2.0f;
-		float yPos = static_cast<float>( Renderer::GetScreenHeight() - height ) / 2.0f;
-
-		Game::GetInstance().GetRenderer().DrawText(paused, Vector2(xPos, yPos), true);
+		RenderPauseScreen();
 	}
 	else if ( m_paused && m_toMainGame )
 	{
-		int semitrans = 100;
-		Game::GetInstance().GetRenderer().RenderOverlay(semitrans);
-
-		RECT fontDimensions = Game::GetInstance().GetRenderer().MeasureString(m_currentExplanation);
-		int width = fontDimensions.right - fontDimensions.left;
-		int height = fontDimensions.bottom - fontDimensions.top;
-		float xPos = static_cast<float>( Renderer::GetScreenWidth() - width ) / 2.0f;
-		float yPos = static_cast<float>( Renderer::GetScreenHeight() - height ) / 2.0f;
-
-		Game::GetInstance().GetRenderer().DrawText(m_currentExplanation, Vector2(xPos, yPos));
+		RenderGreeting();
 	}
+
+	RenderUI();
+}
+
+void GameState::RenderGreeting()
+{
+	// This is used for rendering the ticking text greeting.
+	int semitrans = 100;
+	Game::GetInstance().GetRenderer().RenderOverlay(semitrans);
+
+	RECT fontDimensions = Game::GetInstance().GetRenderer().MeasureString(m_currentExplanation);
+	int width = fontDimensions.right - fontDimensions.left;
+	int height = fontDimensions.bottom - fontDimensions.top;
+	float xPos = static_cast<float>( Renderer::GetScreenWidth() - width ) / 2.0f;
+	float yPos = static_cast<float>( Renderer::GetScreenHeight() - height ) / 2.0f;
+
+	Game::GetInstance().GetRenderer().DrawText(m_currentExplanation, Vector2(xPos, yPos));
+}
+
+void GameState::RenderPauseScreen()
+{
+	int semitrans = 200;
+	Game::GetInstance().GetRenderer().RenderOverlay(semitrans);
+
+	std::string paused = "Paused. Press Enter to resume.";
+	RECT fontDimensions = Game::GetInstance().GetRenderer().MeasureString(paused, true);
+	int width = fontDimensions.right - fontDimensions.left;
+	int height = fontDimensions.bottom - fontDimensions.top;
+
+	float xPos = static_cast<float>( Renderer::GetScreenWidth() - width ) / 2.0f;
+	float yPos = static_cast<float>( Renderer::GetScreenHeight() - height ) / 2.0f;
+
+	Game::GetInstance().GetRenderer().DrawText(paused, Vector2(xPos, yPos), true);
+}
+
+void GameState::RenderUI()
+{
+	// Render the player's score.
+	float xPos = static_cast<float>( Renderer::GetScreenWidth() / 2 );
+	float yPos = static_cast<float>( Renderer::GetScreenHeight() - 50.0f );
+	Vector2 scorePos(xPos, yPos);
+	
+	std::stringstream ss;
+	ss << "Score: " << m_playerScore;
+	Game::GetInstance().GetRenderer().DrawText(ss.str(), Vector2(xPos, yPos), true);
 }

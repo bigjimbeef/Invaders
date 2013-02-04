@@ -29,6 +29,9 @@ class GameState
 		void Update(float frameTime);
 		// The render function is used entirely to render UI elements and overlays.
 		void Render();
+		void RenderPauseScreen();
+		void RenderGreeting();
+		void RenderUI();
 
 		// Read the file containing the Invaders' greeting.
 		void ReadGreeting();
@@ -130,7 +133,7 @@ class GameState
 		static const int DAMAGE_TO_CHANGE = 2;
 
 		static const int MAX_WAVES = 5;
-		static const int BASE_EDUCATION_TIME = 5;
+		static const int BASE_EDUCATION_TIME = 3;
 		static const int DIFFICULTY_PER_WAVE = 20;
 		static const int MAX_DIFFICULTY_PER_WAVE = 50;
 
