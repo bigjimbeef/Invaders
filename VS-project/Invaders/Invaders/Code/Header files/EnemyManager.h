@@ -124,6 +124,8 @@ class EnemyManager
 		// This array contains the row of the nearest enemy in each column.
 		int m_maximumRows[NUM_COLS];
 
+		static const int BASE_Y_POS = 50;
+
 		static const int ENEMY_SPRITE_WIDTH = 64;
 		static const int ENEMY_SPRITE_HEIGHT = 64;
 		static const int ROW_OFFSET = 40;

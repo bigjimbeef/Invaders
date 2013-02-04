@@ -297,7 +297,7 @@ void EnemyManager::SpawnWave()
 	m_currentX = static_cast<float>(baseXPosition);
 
 	int baseYPosition = 
-		0 + ( GameState::GetInstance().GetWaveNumber() * ROW_OFFSET );
+		BASE_Y_POS + ( GameState::GetInstance().GetWaveNumber() * ROW_OFFSET );
 	m_enemyProgress = 0.0f;
 
 	// We need to find out how many enemies are in the back two rows, as these

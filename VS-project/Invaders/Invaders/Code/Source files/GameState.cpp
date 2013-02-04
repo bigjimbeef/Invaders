@@ -6,10 +6,12 @@
 GameState::GameState() :
 	m_paused(false),
 	m_playerScore(0),
+	m_highScore(0),
 	m_difficulty(0),
 	m_gameOver(false),
 	m_toMainGame(false),
-	m_filePath("Code/Resource files/greeting.txt"),
+	m_highScoreFilePath("Code/Resource files/hiscore.txt"),
+	m_greetingFilePath("Code/Resource files/greeting.txt"),
 	m_explanationString(""),
 	m_currentExplanation(""),
 	m_textTimer(0.0f),
@@ -23,6 +25,9 @@ GameState::GameState() :
 {
 	// Read the Invaders' greeting into the string.
 	ReadGreeting();
+
+	// Read the high score into memory.
+	ReadHighScore();
 }
 GameState::~GameState()
 {
@@ -32,7 +37,7 @@ void GameState::ReadGreeting()
 {
 	char current;
 
-	m_inputFile.open(m_filePath);
+	m_inputFile.open(m_greetingFilePath);
 	if ( m_inputFile.is_open() )
 	{
 		while( m_inputFile.good() )
@@ -46,6 +51,40 @@ void GameState::ReadGreeting()
 	}
 	// Close our greetings file.
 	m_inputFile.close();
+}
+
+void GameState::ReadHighScore()
+{
+	int highest = 0;
+
+	m_inputFile.open(m_highScoreFilePath);
+	if ( m_inputFile.is_open() )
+	{
+		std::string line;
+		while( std::getline(m_inputFile, line) )
+		{
+			int number;
+			std::istringstream ( line ) >> number;
+
+			if ( number > highest )
+			{
+				highest = number;
+			}
+		}
+	}
+
+	// Cache the high score.
+	m_highScore = highest;
+
+	// Close our greetings file.
+	m_inputFile.close();
+}
+void GameState::WriteHighScore()
+{
+	m_outputFile.open(m_highScoreFilePath);
+	int targetScore = ( m_highScore > m_playerScore ) ? m_highScore : m_playerScore;
+	m_outputFile << targetScore;
+	m_outputFile.close();
 }
 
 void GameState::IncrementWaveNumber()
@@ -282,6 +321,11 @@ void GameState::Render()
 	}
 
 	RenderUI();
+
+	if ( m_gameOver )
+	{
+		RenderGameOverScreen();
+	}
 }
 
 void GameState::RenderGreeting()
@@ -317,12 +361,91 @@ void GameState::RenderPauseScreen()
 
 void GameState::RenderUI()
 {
-	// Render the player's score.
-	float xPos = static_cast<float>( Renderer::GetScreenWidth() / 2 );
-	float yPos = static_cast<float>( Renderer::GetScreenHeight() - 50.0f );
-	Vector2 scorePos(xPos, yPos);
-	
 	std::stringstream ss;
-	ss << "Score: " << m_playerScore;
+	ss << m_playerScore;
+
+	// Fit the player's score to the screen right.
+	RECT fontDimensions = 
+		Game::GetInstance().GetRenderer().MeasureString(ss.str(), true);
+	int width = fontDimensions.right - fontDimensions.left;
+	int height = fontDimensions.bottom - fontDimensions.top;
+	float xPos = 
+		static_cast<float>(Renderer::GetScreenWidth() - width - UI_PADDING);
+	float yPos = 
+		static_cast<float>(Renderer::GetScreenHeight() - height);
+
+	// Draw the background.
+	Game::GetInstance().GetRenderer().DrawFilledRect(
+		0.0f, yPos, 
+		Renderer::GetScreenWidth(), height,
+		Renderer::GetColour(0, 0, 100) // Dark blue
+	);
+	Game::GetInstance().GetRenderer().DrawFilledRect(
+		0.0f, 0.0f, 
+		Renderer::GetScreenWidth(), height,
+		Renderer::GetColour(0, 0, 100) // Dark blue
+	);
+
+	// Render the player's current score.
 	Game::GetInstance().GetRenderer().DrawText(ss.str(), Vector2(xPos, yPos), true);
+
+
+	// Render the player's remaining life.
+	int remaining = Game::GetInstance().GetPlayer().GetCurrentHealth();
+	DWORD colour =
+		remaining == 3
+		// Bright green if n == 3
+		? Renderer::GetColour(0, 255, 0)
+		: remaining == 2
+		// Orange if n == 2
+		? Renderer::GetColour(255, 127, 0)
+		// Red if n == 1
+		: Renderer::GetColour(255, 0, 0);
+	
+	int blobHeight = height - ( UI_PADDING_SMALL * 2 );
+	
+	for ( int i = 0; i < remaining; ++i )
+	{
+		float blobXPos = 
+			static_cast<float>(UI_PADDING + ( i * (UI_PADDING + TEXT_BLOB_WIDTH) ));
+		float blobYPos = 
+			static_cast<float>(yPos + UI_PADDING_SMALL);
+
+		Game::GetInstance().GetRenderer().DrawFilledRect(
+			blobXPos, blobYPos, 
+			TEXT_BLOB_WIDTH, blobHeight,
+			colour
+		);
+	}
+
+	// Render the high score.
+	ss.str("");
+	int targetScore = ( m_highScore > m_playerScore ) ? m_highScore : m_playerScore;
+	ss << "HI-SCORE:     " << targetScore;
+
+	// Fit the player's score to the screen right.
+	fontDimensions = 
+		Game::GetInstance().GetRenderer().MeasureString(ss.str(), true);
+	width = fontDimensions.right - fontDimensions.left;
+	height = fontDimensions.bottom - fontDimensions.top;
+	xPos = static_cast<float>( Renderer::GetScreenWidth() - width ) / 2.0f;
+	yPos = 0.0f;
+	// Now render the high score.
+	Game::GetInstance().GetRenderer().DrawText(ss.str(), Vector2(xPos, yPos), true);	
+}
+
+void GameState::RenderGameOverScreen()
+{
+	int semitrans = 220;
+	Game::GetInstance().GetRenderer().RenderOverlay(semitrans);
+
+	std::string paused = "GAME OVER!\n\nPress fire to exit.";
+	RECT fontDimensions = Game::GetInstance().GetRenderer().MeasureString(paused, true);
+	int width = fontDimensions.right - fontDimensions.left;
+	int height = fontDimensions.bottom - fontDimensions.top;
+
+	float xPos = static_cast<float>( Renderer::GetScreenWidth() - width ) / 2.0f;
+	float yPos = static_cast<float>( Renderer::GetScreenHeight() - height ) / 2.0f;
+
+	Game::GetInstance().GetRenderer().DrawText(paused, Vector2(xPos, yPos), true);
 }

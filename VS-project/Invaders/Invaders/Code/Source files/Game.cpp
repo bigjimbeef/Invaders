@@ -127,10 +127,10 @@ void Game::Run()
 
 		// Update all objects in the game world.
 		Update(frameTime);
-
-		// Render the game world.
-		Render();
 	}
+
+	// Render the game world.
+	Render();
 
 	// Cache the elapsed frame time.
 	m_lastFrameTime = currentTime;

@@ -110,7 +110,8 @@ void InputController::HandleInput(float frameTime)
 	}
 
 	// If we're paused, we just want to handle the pause button
-	if ( !GameState::GetInstance().IsPaused() )
+	if ( !GameState::GetInstance().IsPaused() 
+	  && !GameState::GetInstance().IsGameOver() )
 	{
 		// Process the controls for the game.
 		GameControls(frameTime);
@@ -119,6 +120,16 @@ void InputController::HandleInput(float frameTime)
 		if ( GameState::GetInstance().InMainGameMode() )
 		{
 			SendCharacters();
+		}
+	}
+	else if ( GameState::GetInstance().IsGameOver() )
+	{
+		// Exit on spacebar.
+		if ( IsKeyDown(SPACEBAR) )
+		{
+			// Write the high score out.
+			GameState::GetInstance().WriteHighScore();
+			Game::GetInstance().SetRunning(false);
 		}
 	}
 

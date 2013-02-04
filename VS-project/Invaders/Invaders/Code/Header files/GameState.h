@@ -32,9 +32,15 @@ class GameState
 		void RenderPauseScreen();
 		void RenderGreeting();
 		void RenderUI();
+		void RenderGameOverScreen();
 
 		// Read the file containing the Invaders' greeting.
 		void ReadGreeting();
+
+		// Read the file containing the high score.
+		void ReadHighScore();
+		// Write the latest high score.
+		void WriteHighScore();
 
 		// Increase the wave number, capping at MAX_WAVES
 		void IncrementWaveNumber();
@@ -92,6 +98,9 @@ class GameState
 		bool m_paused;
 
 		int m_playerScore;
+		int m_highScore;
+		std::string m_highScoreFilePath;
+		std::ofstream m_outputFile;
 
 		int m_difficulty;
 
@@ -104,12 +113,11 @@ class GameState
 		//---------------------------------------------------------------------
 		// Transition text.
 		// These variables are used when we transition to the main game mode.
-		std::string m_filePath;
+		std::string m_greetingFilePath;
 		std::ifstream m_inputFile;		
 		std::string m_explanationString;
 		std::string m_currentExplanation;
 		float m_textTimer;
-
 
 		// Reusable bool to check when we're done transitioning.
 		bool m_transitioningToEducation;
@@ -140,6 +148,10 @@ class GameState
 		// Transition variables are in ms for ease.
 		static const int CHARACTER_WAIT_TIME = 50;
 		static const int FINAL_WAIT_TIME = 3000;
+
+		static const int UI_PADDING = 10;
+		static const int UI_PADDING_SMALL = 5;
+		static const int TEXT_BLOB_WIDTH = 40;
 
 		// Private default ctor to facilitate Singleton pattern.
 		GameState();

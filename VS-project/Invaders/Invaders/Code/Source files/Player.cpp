@@ -20,7 +20,7 @@ Player::Player() :
 	float xPos = static_cast<float>(Renderer::GetScreenWidth()
 		- m_spriteWidth) / 2.f;
 	float yPos = static_cast<float>(Renderer::GetScreenHeight()
-		- PLAYER_Y_OFFSET);
+		- PLAYER_Y_OFFSET - m_spriteHeight);
 	m_position = Vector2(xPos, yPos);
 
 	// Get the sprite for the player.
