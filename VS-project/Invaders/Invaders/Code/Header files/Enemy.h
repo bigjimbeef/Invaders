@@ -90,6 +90,7 @@ class Enemy : public IRenderable
 		static const int MAX_JITTER_OFFSET = 5;
 		static const int ANGER_THRESHOLD = 1;
 		static const int MAX_ANGER = 150;
+		static const int ANGER_POOL = 2500;
 
 		// The starting row for the enemy. This controls their look.
 		int m_row;

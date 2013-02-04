@@ -116,8 +116,7 @@ class EnemyManager
 		float m_respawnTime;
 
 		// Variables for tracking the speed up from killing enemies.
-		float m_minStep;
-		float m_stepReductionPerKill;
+		float m_speedUp;
 		
 		static const int NUM_ROWS = 5;
 		static const int NUM_COLS = 11;
@@ -137,6 +136,8 @@ class EnemyManager
 		static const int BACK_ENEMY_SCORE = 30;
 
 		static const int ENEMY_VELOCITY = 15;
+		static const int BASE_SPEED = 1;
+		static const int SPEED_UP_AMOUNT = 2;
 };
 
 #endif // ENEMYMANAGER_H

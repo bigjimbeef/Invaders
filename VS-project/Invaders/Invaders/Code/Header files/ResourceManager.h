@@ -26,6 +26,7 @@ class ResourceManager
 		static inline IDirect3DTexture9* GetPlayerSprite() { return s_playerSprite; }
 		static inline IDirect3DTexture9* GetRocketSprite() { return s_rocketSprite; }
 		static inline IDirect3DTexture9* GetEnemyProjectileSprite() { return s_enemyProjSprite; }
+		static inline IDirect3DTexture9* GetPauseOverlay() { return s_pauseOverlaySprite; }
 
 		// Access the letter map by name.
 		IDirect3DTexture9* GetLetterSprite(char letter);
@@ -42,6 +43,7 @@ class ResourceManager
 		static IDirect3DTexture9* s_playerSprite;
 		static IDirect3DTexture9* s_rocketSprite;
 		static IDirect3DTexture9* s_enemyProjSprite;
+		static IDirect3DTexture9* s_pauseOverlaySprite;
 
 		static const int NUM_LETTERS;
 		std::map<char, IDirect3DTexture9*> m_letterSprites;

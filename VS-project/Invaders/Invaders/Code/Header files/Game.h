@@ -68,6 +68,8 @@ class Game
 		inline float GetSpeedFactor() const { return m_gameSpeedFactor; }
 		void SetSpeedFactor(float value);
 
+		inline float GetTotalTime() const { return m_totalTime; }
+
 	private:
 
 		// Gets the current game time, in ms.

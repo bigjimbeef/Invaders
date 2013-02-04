@@ -47,7 +47,8 @@ Renderer::Renderer() :
 	mp_VB(NULL),
 	m_fullScreen(false),
 	m_bgColour(0),
-	mp_font(NULL)
+	mp_smallFont(NULL),
+	mp_largeFont(NULL)
 {
 	// Register the window class
 	WNDCLASSEX wc = { sizeof(WNDCLASSEX), CS_CLASSDC, MsgProc, 0L, 0L,
@@ -83,13 +84,16 @@ Renderer::Renderer() :
 
 	m_movingScores = std::list<MovingScore*>();
 
-	// Create the font interface.
-	HRESULT hr = D3DXCreateFont(mp_d3dDevice, FONT_HEIGHT,
+	// Create the large and small font interfaces.
+	HRESULT hr = D3DXCreateFont(mp_d3dDevice, SMALL_FONT_HEIGHT,
 				   0, FW_NORMAL, 1, false, DEFAULT_CHARSET, 
 				   OUT_DEFAULT_PRECIS, ANTIALIASED_QUALITY, 
-				   DEFAULT_PITCH|FF_DONTCARE, "fixedsys", &mp_font);
+				   DEFAULT_PITCH|FF_DONTCARE, "fixedsys", &mp_smallFont);
 
-	int test = 3;
+	hr = D3DXCreateFont(mp_d3dDevice, LARGE_FONT_HEIGHT,
+		0, FW_NORMAL, 1, false, DEFAULT_CHARSET, 
+		OUT_DEFAULT_PRECIS, ANTIALIASED_QUALITY, 
+		DEFAULT_PITCH|FF_DONTCARE, "fixedsys", &mp_largeFont);
 }
 Renderer::~Renderer()
 {
@@ -105,9 +109,13 @@ Renderer::~Renderer()
 	{
 		mp_VB->Release();
 	}
-	if ( mp_font != NULL )
+	if ( mp_smallFont != NULL )
 	{
-		mp_font->Release();
+		mp_smallFont->Release();
+	}
+	if ( mp_largeFont != NULL )
+	{
+		mp_largeFont->Release();
 	}
 
 	UnregisterClass( m_wcName, mp_wc->hInstance );
@@ -207,7 +215,7 @@ void Renderer::DrawMovingScores()
 			0, 0);
 
 		int opacity = static_cast<int>((*it)->GetOpacity() * 255);
-		mp_font->DrawText(NULL, scoreCString, -1, &font_rect, 
+		mp_smallFont->DrawText(NULL, scoreCString, -1, &font_rect, 
 			DT_LEFT|DT_NOCLIP,
 			GetColour(255,255,255, opacity));
 	}
@@ -299,18 +307,36 @@ void Renderer::DrawFilledRect(float xPos, float yPos,
 	mp_d3dDevice->SetTexture(0, oldtex);
 }
 
-// Debug rendering.
-#ifdef _DEBUG
-void Renderer::DEBUG_DrawText(std::string text, Vector2 pos, DWORD col)
+RECT Renderer::MeasureString(std::string text, bool largeFont)
+{
+	// Draw the text with the DT_CALCRECT formatting option to just return info.
+	RECT out = DrawText(text, Vector2(), largeFont, 0xffffffff, DT_CALCRECT);
+
+	return out;
+}
+
+RECT Renderer::DrawText(std::string text, Vector2 pos, bool largeFont, DWORD col, DWORD format)
 {
 	const char* cString = text.c_str();
 
 	RECT font_rect;
 	SetRect(&font_rect, static_cast<int>(pos.x), static_cast<int>(pos.y),
 		0, 0);
+	
+	if ( largeFont )
+	{
+		mp_largeFont->DrawText(NULL, cString, -1, &font_rect, format, col);
+	}
+	else 
+	{
+		mp_smallFont->DrawText(NULL, cString, -1, &font_rect, format, col);
+	}
 
-	mp_font->DrawText(NULL, cString, -1, &font_rect, DT_LEFT|DT_NOCLIP, col);
+	return font_rect;
 }
+
+// Debug rendering.
+#ifdef _DEBUG
 
 void Renderer::DEBUG_DrawBox(float xPos, float yPos, 
 							 int width, int height, DWORD col )
@@ -384,4 +410,16 @@ void Renderer::UpdateMovingScores(float frameTime)
 			++it;
 		}
 	}
+}
+
+void Renderer::RenderOverlay(int opacity)
+{
+	IDirect3DTexture9* pause = ResourceManager::GetPauseOverlay();
+	int w = Renderer::GetScreenWidth();
+	int h = Renderer::GetScreenHeight();
+
+	Game::GetInstance().GetRenderer().DrawSprite(
+		pause, 0.0f, 0.0f, w, h, 0.0f, 
+		GetColour(0, 0, 0, opacity)
+	);
 }

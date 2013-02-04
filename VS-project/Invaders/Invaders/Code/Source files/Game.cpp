@@ -148,20 +148,23 @@ void Game::Update(float frameTime)
 	// Update the game state.
 	GameState::GetInstance().Update(frameTime);
 
-	// Update the player.
-	mp_player->Update(frameTime);
+	if ( !GameState::GetInstance().IsPaused() )
+	{
+		// Update the player.
+		mp_player->Update(frameTime);
 
-	// Update the EnemyManager, which will in turn update the Enemies.
-	mp_enemyManager->Update(frameTime);
+		// Update the EnemyManager, which will in turn update the Enemies.
+		mp_enemyManager->Update(frameTime);
 
-	// Update the ProjectileManager, which will in turn update the projectiles.
-	mp_projectileManager->Update(frameTime);
+		// Update the ProjectileManager, which will in turn update the projectiles.
+		mp_projectileManager->Update(frameTime);
 
-	// Update the audio manager, which will update the play speed of all audio.
-	mp_audioManager->Update(frameTime);
+		// Update the audio manager, which will update the play speed of all audio.
+		mp_audioManager->Update(frameTime);
 
-	// Update the moving text in the Renderer.
-	mp_renderer->UpdateMovingScores(frameTime);
+		// Update the moving text in the Renderer.
+		mp_renderer->UpdateMovingScores(frameTime);
+	}
 }
 
 void Game::Render()
@@ -183,12 +186,8 @@ void Game::Render()
 	// Draw the scores lastly.
 	mp_renderer->DrawMovingScores();
 
-#ifdef _DEBUG
-	std::stringstream ss;
-	int score = GameState::GetInstance().GetDifficulty();
-	ss << "Difficulty: " << score;
-	mp_renderer->DEBUG_DrawText(ss.str(), Vector2());
-#endif
+	// Render the game state last, for UI elements.
+	GameState::GetInstance().Render();
 
 	mp_renderer->PostRender();
 }

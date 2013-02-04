@@ -3,6 +3,8 @@
 // Include within .cpp file to match forward declare in .h
 #include "Game.h"
 
+// Initialise here as they're static pointers and therefore can't be init'd in
+// the initialisation list of the ctor.
 IDirect3DTexture9* ResourceManager::s_enemyOneSprite = NULL;
 IDirect3DTexture9* ResourceManager::s_enemyOneAltSprite = NULL;
 IDirect3DTexture9* ResourceManager::s_enemyTwoSprite = NULL;
@@ -10,6 +12,7 @@ IDirect3DTexture9* ResourceManager::s_enemyTwoAltSprite = NULL;
 IDirect3DTexture9* ResourceManager::s_playerSprite = NULL;
 IDirect3DTexture9* ResourceManager::s_rocketSprite = NULL;
 IDirect3DTexture9* ResourceManager::s_enemyProjSprite = NULL;
+IDirect3DTexture9* ResourceManager::s_pauseOverlaySprite = NULL;
 
 ResourceManager::ResourceManager()
 {
@@ -27,6 +30,9 @@ ResourceManager::ResourceManager()
 		Game::GetInstance().GetRenderer().LoadSprite("Code/Resource files/Images/enemybomb1.png");
 	s_rocketSprite =
 		Game::GetInstance().GetRenderer().LoadSprite("Code/Resource files/Images/rocket.png");
+	s_pauseOverlaySprite =
+		Game::GetInstance().GetRenderer().LoadSprite("Code/Resource files/Images/paused.png");
+
 
 	// Create the name:letter texture map.
 	m_letterSprites = std::map<char, IDirect3DTexture9*>();
@@ -88,7 +94,6 @@ ResourceManager::~ResourceManager()
 {
 
 	// TODO: Unload everything properly!
-
 
 }
 

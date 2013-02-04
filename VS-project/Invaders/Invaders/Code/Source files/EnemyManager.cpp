@@ -12,22 +12,13 @@ EnemyManager::EnemyManager() :
 	m_enemyProgress(0.0f),
 	m_remainingEnemies(0),
 	m_totalEnemies(0),
-	m_pauseDuration(0.0f),
-	m_basePauseDuration(0.60f),
 	m_currentPause(0.0f),
 	m_respawnTime(1.0f),
-	m_minStep(0.01f),
-	m_stepReductionPerKill(0.0f)
+	m_speedUp(1.0f)
 {
-	m_pauseDuration = m_basePauseDuration;
-
 	// Create a new vector for holding enemies.
 	m_enemies = std::list<Enemy*>();
 	m_deadEnemies = std::list<Enemy*>();
-
-	// Calculate the step reduction per kill.
-	m_stepReductionPerKill = 
-		( m_basePauseDuration - m_minStep ) / (NUM_COLS * NUM_ROWS );
 }
 EnemyManager::~EnemyManager()
 {
@@ -83,22 +74,19 @@ bool EnemyManager::CheckForDrop(float moveDistance)
 
 void EnemyManager::UpdateMovementSpeed()
 {
-	int totalNumEnemies = NUM_ROWS * NUM_COLS;
+	// The speed is inversely proportional to the number of enemies remaining.
+	float proportionDead = 
+		1.0f - (static_cast<float>(m_remainingEnemies) / 
+		static_cast<float>(m_totalEnemies));
 
-	// The duration of the pause is inversely proportional to the number
-	// of enemies remaining; capped at MIN_STEP.
-	// duration = base_duration - ( ( totalEn - currenEn ) * eachStep
-	float duration = m_basePauseDuration -
-		( totalNumEnemies - m_remainingEnemies ) * m_stepReductionPerKill;
-
-	// Now actually utilise this value.
-	m_pauseDuration = duration;
+	m_speedUp = 
+		static_cast<float>(BASE_SPEED + (proportionDead * SPEED_UP_AMOUNT));
 }
 
 void EnemyManager::Update(float frameTime)
 {
 	// Increment the timer.
-	m_currentPause += frameTime;
+	m_currentPause += ( frameTime / 1000.0f );
 
 	// Check if the enemy list is empty and we need to spawn a new wave.
 	if ( m_enemies.size() <= 0 )
@@ -157,8 +145,9 @@ void EnemyManager::Update(float frameTime)
 
 	// Calculate the distance we should move this frame.
 	frameTime /= 1000.0f;
+	float velocity = m_speedUp * ENEMY_VELOCITY;
 	float moveDistance = 
-		static_cast<float>(m_directionOfTravel * ENEMY_VELOCITY * frameTime);
+		static_cast<float>(m_directionOfTravel * velocity * frameTime);
 
 	// We need to calculate some information to pass to each Enemy before
 	// we update them.

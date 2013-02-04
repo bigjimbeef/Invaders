@@ -29,17 +29,18 @@ class InputController
 		// Check if a specific key was down last frame.
 		bool WasKeyDown(unsigned int key);
 
+		//---------------------------------------------------------------------
+		// Accessors
 
-
-
-		/*
-		// Controls for the game over "screen".
-		void GameOverScreen(const IDiceInvaders::KeyStatus& keystate);
-		*/
+		inline void SetControlsBlocked(bool blocked) 
+			{ m_controlsBlocked = blocked; }
 
 	private:
 		// Controls for whilst the game is running.
 		void GameControls(float frameTime);
+
+		// Controls that are always in use unless specifically blocked.
+		void MenuControls();
 
 		// Send the characters pressed to the Word objects in the game.
 		void SendCharacters();
@@ -58,12 +59,17 @@ class InputController
 		// Is the mouse button pressed?
 		int m_mb;
 
+		// Are the menu controls blocked? Only happens during transition
+		// to main game mode.
+		bool m_controlsBlocked;
+
 		// Constants for accessing keys array.
 		static const int LEFT_ARROW = 37;
 		static const int UP_ARROW = 38;
 		static const int RIGHT_ARROW = 39;
 		static const int DOWN_ARROW = 40;
 		static const int SPACEBAR = 32;
+		static const int RETURN = 13;
 
 		static const int A_KEY = 65;
 };

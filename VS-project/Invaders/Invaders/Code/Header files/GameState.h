@@ -22,7 +22,9 @@ class GameState
 		}
 		virtual ~GameState();	
 
-		void Update(float frameTime);	
+		void Update(float frameTime);
+		// The render function is used entirely to render UI elements and overlays.
+		void Render();
 
 		// Increase the wave number, capping at MAX_WAVES
 		void IncrementWaveNumber();
@@ -31,7 +33,8 @@ class GameState
 		void RecalculateDifficulty();
 
 		// Move to the second game mode, where education is key.
-		void TransitionToMainGameMode();
+		bool ShouldTransitionToMainGameMode();
+		void TransitionToMainGameMode(float frameTime);
 
 		// Lock into educating an invader.
 		void StartEducation(Enemy* tutee);
@@ -48,6 +51,9 @@ class GameState
 
 		//---------------------------------------------------------------------
 		// Accessors
+		inline bool IsPaused() const { return m_paused; }
+		inline void SetIsPaused(bool value) { m_paused = value; }
+
 		inline int GetDifficulty() const { return m_difficulty; }
 		inline void SetDifficulty(int val) { m_difficulty = val; }
 
@@ -72,6 +78,9 @@ class GameState
 		inline bool InEducationMode() const { return m_inEducationMode; }
 
 	private:
+		// Is the game paused?
+		bool m_paused;
+
 		int m_playerScore;
 
 		int m_difficulty;
@@ -95,6 +104,10 @@ class GameState
 		// Tracks what enemy wave we are on. This is used as the enemies
 		// begin further down the screen in later waves.
 		int m_waveNumber;
+
+		static const int KILLS_TO_CHANGE = 10;
+		static const int SECONDS_TO_CHANGE = 30;
+		static const int DAMAGE_TO_CHANGE = 2;
 
 		static const int MAX_WAVES = 5;
 		static const int BASE_EDUCATION_TIME = 5;

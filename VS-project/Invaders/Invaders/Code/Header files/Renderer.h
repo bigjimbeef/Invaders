@@ -104,9 +104,19 @@ class Renderer
 		void DrawFilledRect(
 			float xPos, float yPos, int width, int height, DWORD col );
 
+		// This is use to draw an overlay over the screen.
+		void RenderOverlay(int opacity = 255);
+
+		// Render text on the screen.
+		RECT DrawText(std::string text, Vector2 pos, 
+					  bool largeFont = false, DWORD col = 0xffffffff,
+					  DWORD format = DT_LEFT|DT_NOCLIP);
+
+		// Measure a font string and return the resulting rectangle.
+		RECT MeasureString(std::string test, bool largeFont = false);
+
 #ifdef _DEBUG
 		// Debug rendering.
-		void DEBUG_DrawText(std::string text, Vector2 pos, DWORD col = 0xffffffff);
 
 		void DEBUG_DrawBox(
 			float xPos, float yPos, int width, int height, DWORD col );
@@ -120,6 +130,8 @@ class Renderer
 
 		inline static int GetScreenWidth() { return BACKBUFFER_WIDTH; }
 		inline static int GetScreenHeight() { return BACKBUFFER_HEIGHT; }
+		inline static int GetSmallFontHeight() { return SMALL_FONT_HEIGHT; }
+		inline static int GetLargeFontHeight() { return LARGE_FONT_HEIGHT; }
 
 	private:
 		// Used to determine X,Y coords with rotation. The factor of two exists
@@ -159,14 +171,17 @@ class Renderer
 		// that rewards the player with points.
 		std::list<MovingScore*> m_movingScores;
 
-		// The font interface, used for drawing moving scores.
-		ID3DXFont* mp_font;
+		// The font interfaces, used for drawing text. Large one generally
+		// used for menu text, smaller for in-game stuff.
+		ID3DXFont* mp_smallFont;
+		ID3DXFont* mp_largeFont;
 
 		static const int BACKBUFFER_WIDTH = 800;
 		static const int BACKBUFFER_HEIGHT = 600;
 		static const int SIXTY_HERTZ = 60;
 		static const int SCORE_DURATION = 1;
-		static const int FONT_HEIGHT = 24;
+		static const int SMALL_FONT_HEIGHT = 24;
+		static const int LARGE_FONT_HEIGHT = 36;
 };
 
 #endif // RENDERER_H

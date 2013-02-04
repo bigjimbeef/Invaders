@@ -4,13 +4,14 @@
 #include "Game.h"
 
 GameState::GameState() :
+	m_paused(true),
 	m_playerScore(0),
 	m_difficulty(0),
 	m_gameOver(false),
 	m_transitioningToEducation(false),
 	m_transitioningFromEducation(false),
 	mp_tutee(NULL),
-	m_inMainGameMode(true),
+	m_inMainGameMode(false),
 	m_inEducationMode(false),
 	m_timeEducating(0.0f),
 	m_waveNumber(0)
@@ -108,33 +109,80 @@ void GameState::EndEducation()
 	m_transitioningFromEducation = true;
 }
 
+bool GameState::ShouldTransitionToMainGameMode()
+{
+	// We transition when we have either:
+	// 10 kills.
+	int remaining = Game::GetInstance().GetEnemyManager().GetRemainingEnemies();
+	int total = Game::GetInstance().GetEnemyManager().GetTotalEnemies();
+	if ( total - remaining >= KILLS_TO_CHANGE )
+	{
+		return true;
+	}
+
+	// 30 seconds have passed.
+	float timePassed = Game::GetInstance().GetTotalTime() / 1000.0f;
+	if ( timePassed >= SECONDS_TO_CHANGE )
+	{
+		return true;
+	}
+
+	// The player has taken two damage.
+	int playerHealthTotal = Game::GetInstance().GetPlayer().GetTotalHealth();
+	int playerHealthNow = Game::GetInstance().GetPlayer().GetCurrentHealth();
+	if ( playerHealthTotal - playerHealthNow >= DAMAGE_TO_CHANGE )
+	{
+		return true;
+	}
+
+	return false;
+}
+
+void GameState::TransitionToMainGameMode(float frameTime)
+{
+	Game::GetInstance().GetInputController().SetControlsBlocked(true);
+
+	// Do the transition!
+}
+
 void GameState::Update(float frameTime)
 {
-	if ( m_transitioningToEducation )
+	// Check to see if we need to move to the second game mode.
+	if ( !m_inMainGameMode )
 	{
-		TransitionToEducation();
-	}
-	else if ( m_transitioningFromEducation )
-	{
-		TransitionFromEducation();
-	}
-
-	if ( m_inEducationMode )
-	{
-		// Increase the timer.
-		m_timeEducating += ( frameTime / 1000.0f );
-
-		float targetTime = static_cast<float>(BASE_EDUCATION_TIME);
-		if ( m_timeEducating > targetTime )
+		if ( ShouldTransitionToMainGameMode() )
 		{
-			// End the education mode.
-			EndEducation();
+			TransitionToMainGameMode(frameTime);
+		}
+	}
+	else
+	{
+		if ( m_transitioningToEducation )
+		{
+			TransitionToEducation();
+		}
+		else if ( m_transitioningFromEducation )
+		{
+			TransitionFromEducation();
+		}
 
-			// Fire a massive letter.
-			Game::GetInstance().GetEnemyManager().FireMammothLetter();
+		if ( m_inEducationMode )
+		{
+			// Increase the timer.
+			m_timeEducating += ( frameTime / 1000.0f );
 
-			// Destroy the word.
-			Game::GetInstance().GetEnemyManager().RemoveWord();
+			float targetTime = static_cast<float>(BASE_EDUCATION_TIME);
+			if ( m_timeEducating > targetTime )
+			{
+				// End the education mode.
+				EndEducation();
+
+				// Fire a massive letter.
+				Game::GetInstance().GetEnemyManager().FireMammothLetter();
+
+				// Destroy the word.
+				Game::GetInstance().GetEnemyManager().RemoveWord();
+			}
 		}
 	}
 }
@@ -153,4 +201,30 @@ void GameState::IncTimeEducating(float value)
 	m_timeEducating += value;
 	float baseTime = static_cast<float>(BASE_EDUCATION_TIME);
 	MathsHelper::Ceil(m_timeEducating, baseTime);
+}
+
+void GameState::Render()
+{
+#ifdef _DEBUG
+	std::stringstream ss;
+	int score = GameState::GetInstance().GetDifficulty();
+	ss << "Difficulty: " << score;
+	Game::GetInstance().GetRenderer().DrawText(ss.str(), Vector2());
+#endif
+
+	if ( m_paused )
+	{
+		int semitrans = 200;
+		Game::GetInstance().GetRenderer().RenderOverlay(semitrans);
+
+		std::string paused = "Paused. Press Enter to resume.";
+		RECT fontDimensions = Game::GetInstance().GetRenderer().MeasureString(paused, true);
+		int width = fontDimensions.right - fontDimensions.left;
+		int height = fontDimensions.bottom - fontDimensions.top;
+
+		float xPos = static_cast<float>( Renderer::GetScreenWidth() - width ) / 2.0f;
+		float yPos = static_cast<float>( Renderer::GetScreenHeight() - height ) / 2.0f;
+
+		Game::GetInstance().GetRenderer().DrawText(paused, Vector2(xPos, yPos), true);
+	}
 }

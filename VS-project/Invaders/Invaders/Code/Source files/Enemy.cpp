@@ -48,6 +48,8 @@ Enemy::~Enemy()
 
 void Enemy::Update(float frameTime)
 {
+	bool mainMode = GameState::GetInstance().InMainGameMode();
+
 	// No need to process the rest of the function if we can't fire.
 	if ( !m_canFire )
 	{
@@ -74,20 +76,27 @@ void Enemy::Update(float frameTime)
 		// getting ANGRY. And thus jittering.
 
 		// TODO: Probably a better way of choosing whether or not to fire?
-		int random = ( rand() % 2501 );
+		int random = ( rand() % ANGER_POOL );
 		if ( random <= ANGER_THRESHOLD )
 		{
-			// Shake it, baby.
-			m_gettingAngry = true;
-			m_anger = 1;
+			if ( mainMode )
+			{
+				// Shake it, baby.
+				m_gettingAngry = true;
+				m_anger = 1;
 
-			// TODO: Extend.
-			mp_sprite = ( m_row < 2 )
-				? Game::GetInstance().GetResourceManager().GetEnemyOneAlt()
-				: Game::GetInstance().GetResourceManager().GetEnemyTwoAlt();
+				// TODO: Extend.
+				mp_sprite = ( m_row < 2 )
+					? Game::GetInstance().GetResourceManager().GetEnemyOneAlt()
+					: Game::GetInstance().GetResourceManager().GetEnemyTwoAlt();
+			}
+			else 
+			{
+				Fire();
+			}
 		}
 
-		if ( m_gettingAngry )
+		if ( mainMode && m_gettingAngry )
 		{
 			// Handle the jittering of the enemy as it gets ready to fire.
 			Jitter(frameTime);

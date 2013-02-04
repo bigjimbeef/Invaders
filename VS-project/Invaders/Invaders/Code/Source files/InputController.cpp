@@ -5,7 +5,8 @@
 
 InputController::InputController() :
 	m_frameTime(0.0f),	
-	m_mb(0)
+	m_mb(0),
+	m_controlsBlocked(false)
 {
 	for( int i = 0; i < KEY_ARRAY_SIZE; ++i )
 	{
@@ -102,13 +103,23 @@ void InputController::HandleInput(float frameTime)
 		}
 	}
 
-	// Process the controls for the game.
-	GameControls(frameTime);
-
-	// If we're in the second part of the game, we need to send characters.
-	if ( GameState::GetInstance().InMainGameMode() )
+	// Send the pause button regardless of mode.
+	if ( !m_controlsBlocked )
 	{
-		SendCharacters();
+		MenuControls();
+	}
+
+	// If we're paused, we just want to handle the pause button
+	if ( !GameState::GetInstance().IsPaused() )
+	{
+		// Process the controls for the game.
+		GameControls(frameTime);
+
+		// If we're in the second part of the game, we need to send characters.
+		if ( GameState::GetInstance().InMainGameMode() )
+		{
+			SendCharacters();
+		}
 	}
 
 	for ( int i = 0; i < KEY_ARRAY_SIZE; ++i )
@@ -170,6 +181,19 @@ void InputController::GameControls(float frameTime)
 		{
 			// Make the player fire a rocket.
 			Game::GetInstance().GetPlayer().Fire();
+		}
+	}
+}
+
+void InputController::MenuControls()
+{
+	if ( IsKeyDown(RETURN) )
+	{
+		if ( !WasKeyDown(RETURN) )
+		{
+			bool isPaused = GameState::GetInstance().IsPaused();
+
+			GameState::GetInstance().SetIsPaused(!isPaused);
 		}
 	}
 }
