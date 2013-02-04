@@ -45,8 +45,9 @@ class Player : public IRenderable
 		// Controls the player firing a rocket.
 		void Fire();
 
-		// Removes the player's rocket.
-		inline void KillRocket() { mp_rocket = 0; }
+		// Moves the Rocket off-screen to a ridiculous location for checking
+		// when we can fire again.
+		void KillRocket();
 
 		// Check collision between two Renderable objects.
 		bool CheckCollision(const IRenderable& objectOne, const IRenderable& objectTwo);
@@ -62,15 +63,23 @@ class Player : public IRenderable
 	private:
 		// The current health of the player.
 		int m_health;
-		static const int STARTING_HEALTH = 3;
-		static const int PLAYER_VELOCITY = 160;
-
-		// How far is the player from the bottom of the screen?
-		static const int PLAYER_Y_OFFSET = 70; 
 
 		// The player is only allowed one rocket at once. This is a pointer
 		// to that rocket.
 		Rocket* mp_rocket;
+
+		// The Vector2 that corresponds to the static coords below.
+		Vector2 m_offscreen;
+
+		static const int STARTING_HEALTH = 3;
+		static const int PLAYER_VELOCITY = 160;
+
+		// How far is the player from the bottom of the screen?
+		static const int PLAYER_Y_OFFSET = 70;
+
+		static const int OFFSCREEN_X = -1000;
+		static const int OFFSCREEN_Y = -1000;
+		static const int ROCKET_OFFSET = -20;
 };
 
 #endif // PLAYER_H

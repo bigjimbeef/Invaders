@@ -13,6 +13,10 @@ struct Vector2
 	Vector2(float xPos = 0, float yPos = 0);
 	~Vector2();
 
+	inline bool operator==( Vector2 const& rhs ) {
+		return (x == rhs.x) && (y == rhs.y);
+	}
+
 	float x;
 	float y;
 };

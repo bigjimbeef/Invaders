@@ -18,7 +18,7 @@ class Rocket : public IProjectile
 	public:
 		// The rocket doesn't need parameters to its default ctor, as it
 		// initialises its position based on the player.
-		Rocket();
+		Rocket(Vector2 position = Vector2());
 		virtual ~Rocket();
 
 		virtual void Update(float frameTime);
@@ -31,11 +31,10 @@ class Rocket : public IProjectile
 		// Accessors
 		inline bool IsAlive() const { return m_alive; }
 		inline void Kill() { m_alive = false; }
+		inline void Resurrect() { m_alive = true; }
 
 	private:
 		static const int ROCKET_VELOCITY = 350;
-	
-		static const int ROCKET_OFFSET = -20;
 
 	protected:
 		bool m_alive;

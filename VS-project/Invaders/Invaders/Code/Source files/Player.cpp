@@ -25,10 +25,14 @@ Player::Player() :
 
 	// Get the sprite for the player.
 	mp_sprite = Game::GetInstance().GetResourceManager().GetPlayerSprite();
+
+	// Create our rocket.
+	m_offscreen = Vector2(static_cast<float>(OFFSCREEN_X), 
+						  static_cast<float>(OFFSCREEN_Y));
+	mp_rocket = new Rocket(m_offscreen);
 }
 Player::~Player()
 {
-	mp_sprite = NULL;
 }
 
 bool Player::BroadPhase(const IRenderable& objectOne, 
@@ -148,7 +152,7 @@ void Player::Update(float frameTime)
 					GameState::GetInstance().StartEducation(enemy);
 
 					// Remove the "rocket".
-					mp_rocket->Kill();
+					KillRocket();
 				}
 				else 
 				{
@@ -159,7 +163,7 @@ void Player::Update(float frameTime)
 					// Work out the new difficulty because of the death.
 					GameState::GetInstance().RecalculateDifficulty();
 
-					mp_rocket->Kill();
+					KillRocket();
 					enemy->Kill();
 				}
 			}
@@ -229,14 +233,31 @@ void Player::BoundMovement()
 	MathsHelper::Clamp(m_position.x, 0.0f, rightBounds);
 }
 
+void Player::KillRocket()
+{
+	// Kill the rocket ...
+	mp_rocket->Kill();
+
+	// ... and move it off-screen.
+	mp_rocket->SetPosition(m_offscreen);
+}
+
 void Player::Fire()
 {
 	// We only fire if we don't already have a rocket in motion.
-	if ( mp_rocket == NULL )
+	Vector2 rocketPos = mp_rocket->GetPosition();
+	// Check if we're off screen. If we are, we can fire.
+	if ( rocketPos.x < 0 && rocketPos.y < 0 )
 	{
-		// Create a new rocket ...
-		mp_rocket = new Rocket();
-		// ... and spawn it with the ProjectileManager.
+		// Make the Rocket live again ...
+		mp_rocket->Resurrect();
+
+		// ... and move it back onto the screen.
+		Vector2 pos = m_position;
+		pos.y += ROCKET_OFFSET;
+		mp_rocket->SetPosition(pos);
+
+		// Add the rocket back into list in the ProjectileManager.
 		Game::GetInstance().GetProjectileManager().SpawnProjectile(*mp_rocket);
 	}
 }

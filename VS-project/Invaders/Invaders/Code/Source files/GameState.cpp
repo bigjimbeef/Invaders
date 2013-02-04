@@ -4,7 +4,7 @@
 #include "Game.h"
 
 GameState::GameState() :
-	m_paused(true),
+	m_paused(false),
 	m_playerScore(0),
 	m_difficulty(0),
 	m_gameOver(false),

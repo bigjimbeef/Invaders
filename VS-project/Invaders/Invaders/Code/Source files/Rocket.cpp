@@ -3,28 +3,23 @@
 // Include within .cpp file to match forward declare in .h
 #include "Game.h"
 
-Rocket::Rocket() :
-	m_alive(true)
+Rocket::Rocket(Vector2 position) :
+	m_alive(false)
 {
 	m_spriteWidth = 8;
 	m_spriteHeight = 16;
-	m_spriteClipWidth =8;
-	m_spriteClipHeight =16;
+	m_spriteClipWidth = 8;
+	m_spriteClipHeight = 16;
 
 	// Create the sprite for the rocket.
 	mp_sprite = Game::GetInstance().GetResourceManager().GetRocketSprite();
 
 	// Initialise the position of the rocket based on the
 	// Player's position.
-	m_position = Game::GetInstance().GetPlayer().GetPosition();
-	m_position.y += ROCKET_OFFSET;
+	m_position = position;
 }
 Rocket::~Rocket()
 {
-	mp_sprite = NULL;
-
-	// The player now has no rocket.
-	Game::GetInstance().GetPlayer().KillRocket();
 }
 
 void Rocket::Update(float frameTime)
@@ -35,12 +30,9 @@ void Rocket::Update(float frameTime)
 		m_position.y -= offset;
 
 		// This represents the projectile going off-screen on the top.
-		
-		// TODO!!!
-		
-		if ( m_position.y < ( 0 ) ) //- Game::GetInstance().GetSpriteSize() ) )
+		if ( m_position.y < ( 0 - m_spriteHeight ) )
 		{
-			m_alive = false;
+			Game::GetInstance().GetPlayer().KillRocket();
 		}
 	}
 }

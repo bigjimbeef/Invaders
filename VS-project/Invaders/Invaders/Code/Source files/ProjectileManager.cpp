@@ -40,9 +40,6 @@ void ProjectileManager::Update(float frameTime)
 				p_proj->GetOwner().KillProjectile(*p_proj);
 			}
 
-			// If that is the case, we must remove and delete it from the list.
-			delete *it;
-			*it = NULL;
 			it = m_projectiles.erase(it);
 		}
 		else
@@ -50,18 +47,6 @@ void ProjectileManager::Update(float frameTime)
 			++it;
 		}
 	}
-
-	/*
-#ifdef _DEBUG
-	int numProjectiles = m_projectiles.size();
-	
-	std::stringstream ss;
-	ss << numProjectiles << " projectiles";
-	std::string pos = ss.str();
-
-	Game::GetInstance().GetSystem().drawText(0, 20, pos.c_str());
-#endif
-	*/
 }
 
 void ProjectileManager::Render()
