@@ -8,6 +8,11 @@ GameState::GameState() :
 	m_playerScore(0),
 	m_difficulty(0),
 	m_gameOver(false),
+	m_toMainGame(false),
+	m_filePath("Code/Resource files/greeting.txt"),
+	m_explanationString(""),
+	m_currentExplanation(""),
+	m_textTimer(0.0f),
 	m_transitioningToEducation(false),
 	m_transitioningFromEducation(false),
 	mp_tutee(NULL),
@@ -16,10 +21,31 @@ GameState::GameState() :
 	m_timeEducating(0.0f),
 	m_waveNumber(0)
 {
-	
+	// Read the Invaders' greeting into the string.
+	ReadGreeting();
 }
 GameState::~GameState()
 {
+}
+
+void GameState::ReadGreeting()
+{
+	char current;
+
+	m_inputFile.open(m_filePath);
+	if ( m_inputFile.is_open() )
+	{
+		while( m_inputFile.good() )
+		{
+			current = m_inputFile.get();
+			if ( m_inputFile.good() )
+			{
+				m_explanationString += current;
+			}
+		}
+	}
+	// Close our greetings file.
+	m_inputFile.close();
 }
 
 void GameState::IncrementWaveNumber()
@@ -117,6 +143,7 @@ bool GameState::ShouldTransitionToMainGameMode()
 	int total = Game::GetInstance().GetEnemyManager().GetTotalEnemies();
 	if ( total - remaining >= KILLS_TO_CHANGE )
 	{
+		m_toMainGame = true;
 		return true;
 	}
 
@@ -124,6 +151,7 @@ bool GameState::ShouldTransitionToMainGameMode()
 	float timePassed = Game::GetInstance().GetTotalTime() / 1000.0f;
 	if ( timePassed >= SECONDS_TO_CHANGE )
 	{
+		m_toMainGame = true;
 		return true;
 	}
 
@@ -132,6 +160,7 @@ bool GameState::ShouldTransitionToMainGameMode()
 	int playerHealthNow = Game::GetInstance().GetPlayer().GetCurrentHealth();
 	if ( playerHealthTotal - playerHealthNow >= DAMAGE_TO_CHANGE )
 	{
+		m_toMainGame = true;
 		return true;
 	}
 
@@ -140,9 +169,31 @@ bool GameState::ShouldTransitionToMainGameMode()
 
 void GameState::TransitionToMainGameMode(float frameTime)
 {
-	Game::GetInstance().GetInputController().SetControlsBlocked(true);
+	// Increase the timer.
+	m_textTimer += frameTime;
 
-	// Do the transition!
+	if ( m_textTimer > CHARACTER_WAIT_TIME )
+	{
+		unsigned int currentLen = m_currentExplanation.length();
+		if ( currentLen < m_explanationString.length() )
+		{
+			char next = m_explanationString[currentLen];
+
+			m_currentExplanation += next;
+
+			m_textTimer = 0.0f;
+		}
+		else
+		{
+			if ( m_textTimer > FINAL_WAIT_TIME )
+			{
+				// Let's do this.
+				m_inMainGameMode = true;
+				m_toMainGame = false;
+				m_paused = false;
+			}
+		}
+	}
 }
 
 void GameState::Update(float frameTime)
@@ -150,8 +201,12 @@ void GameState::Update(float frameTime)
 	// Check to see if we need to move to the second game mode.
 	if ( !m_inMainGameMode )
 	{
-		if ( ShouldTransitionToMainGameMode() )
+		if ( m_toMainGame || ShouldTransitionToMainGameMode() )
 		{
+			// Do the transition!
+			m_paused = true;
+			Game::GetInstance().GetInputController().SetControlsBlocked(true);
+
 			TransitionToMainGameMode(frameTime);
 		}
 	}
@@ -212,7 +267,7 @@ void GameState::Render()
 	Game::GetInstance().GetRenderer().DrawText(ss.str(), Vector2());
 #endif
 
-	if ( m_paused )
+	if ( m_paused && !m_toMainGame )
 	{
 		int semitrans = 200;
 		Game::GetInstance().GetRenderer().RenderOverlay(semitrans);
@@ -226,5 +281,18 @@ void GameState::Render()
 		float yPos = static_cast<float>( Renderer::GetScreenHeight() - height ) / 2.0f;
 
 		Game::GetInstance().GetRenderer().DrawText(paused, Vector2(xPos, yPos), true);
+	}
+	else if ( m_paused && m_toMainGame )
+	{
+		int semitrans = 100;
+		Game::GetInstance().GetRenderer().RenderOverlay(semitrans);
+
+		RECT fontDimensions = Game::GetInstance().GetRenderer().MeasureString(m_currentExplanation);
+		int width = fontDimensions.right - fontDimensions.left;
+		int height = fontDimensions.bottom - fontDimensions.top;
+		float xPos = static_cast<float>( Renderer::GetScreenWidth() - width ) / 2.0f;
+		float yPos = static_cast<float>( Renderer::GetScreenHeight() - height ) / 2.0f;
+
+		Game::GetInstance().GetRenderer().DrawText(m_currentExplanation, Vector2(xPos, yPos));
 	}
 }

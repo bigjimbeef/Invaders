@@ -8,6 +8,10 @@
 
 #include "PlayerUI.h"
 
+#include <string>
+#include <istream>
+#include <fstream>
+
 // Forward declare Game to allow access to Game singleton.
 class Game;
 class Enemy;
@@ -25,6 +29,9 @@ class GameState
 		void Update(float frameTime);
 		// The render function is used entirely to render UI elements and overlays.
 		void Render();
+
+		// Read the file containing the Invaders' greeting.
+		void ReadGreeting();
 
 		// Increase the wave number, capping at MAX_WAVES
 		void IncrementWaveNumber();
@@ -88,6 +95,19 @@ class GameState
 		// Is the game finished?
 		bool m_gameOver;
 
+		// Are we on our way to the main game.
+		bool m_toMainGame;
+
+		//---------------------------------------------------------------------
+		// Transition text.
+		// These variables are used when we transition to the main game mode.
+		std::string m_filePath;
+		std::ifstream m_inputFile;		
+		std::string m_explanationString;
+		std::string m_currentExplanation;
+		float m_textTimer;
+
+
 		// Reusable bool to check when we're done transitioning.
 		bool m_transitioningToEducation;
 		bool m_transitioningFromEducation;
@@ -113,6 +133,10 @@ class GameState
 		static const int BASE_EDUCATION_TIME = 5;
 		static const int DIFFICULTY_PER_WAVE = 20;
 		static const int MAX_DIFFICULTY_PER_WAVE = 50;
+
+		// Transition variables are in ms for ease.
+		static const int CHARACTER_WAIT_TIME = 50;
+		static const int FINAL_WAIT_TIME = 3000;
 
 		// Private default ctor to facilitate Singleton pattern.
 		GameState();
