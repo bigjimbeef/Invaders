@@ -45,6 +45,8 @@ Renderer::Renderer() :
 	mp_D3D(NULL),
 	mp_d3dDevice(NULL),
 	mp_VB(NULL),
+	// I left fullscreen in, but couldn't get it working properly. If you want
+	// to see it, then enable this bool. Note that it will be stretched.
 	m_fullScreen(false),
 	m_overrideWidth(-1),
 	m_overrideHeight(-1),

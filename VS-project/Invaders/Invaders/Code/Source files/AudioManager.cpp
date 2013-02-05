@@ -6,10 +6,8 @@
 AudioManager::AudioManager() :
 	m_musicPath("Code/Resource files/Audio/bgmusic2.wav"),
 	mp_musicStream(NULL),
-
-	m_musicVolume(0.3f),
-	m_soundVolume(0.2f),
-
+	m_musicVolume(0.5f),
+	m_soundVolume(0.4f),
 	m_musicChannel(0),
 	m_musicFrequency(FORTY_FOUR_K),
 	m_playbackSpeed(1.0f),

@@ -18,10 +18,6 @@ Game::Game() :
 	mp_dictionary(NULL),
 	m_gameSpeedFactor(1.0f)
 {
-	// Initialise the ResourceManager, which sets the static pointers to
-	// the sprites, for use in drawing all IRenderables.
-	//ResourceManager::GetInstance();
-
 	// Initialise game frequency ...
 	QueryPerformanceFrequency (&m_frequency );
 	// ... and game time.
@@ -98,12 +94,14 @@ void Game::Run()
 	// Update the time since the game started.
 	m_totalTime = currentTime - m_startTime;
 
+#ifdef _DEBUG
 	// Render the FPS in the window title.
 	float fps = 1000.0f / frameTime;
 	std::stringstream ss;
-	ss << "FPS: " << fps;
+	ss << fps;
 	std::string title = ss.str();
 	SetWindowText(mp_renderer->GetWindow(), title.c_str());
+#endif
 
 	if( m_frameRateCapped )
 	{

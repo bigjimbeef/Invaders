@@ -98,9 +98,23 @@ ResourceManager::ResourceManager()
 
 ResourceManager::~ResourceManager()
 {
+	// Release the sprites' memory.
+	s_playerSprite->Release(); 
+	s_enemyOneSprite->Release();
+	s_enemyOneAltSprite->Release();
+	s_enemyTwoSprite->Release();
+	s_enemyTwoAltSprite->Release();
+	s_enemyThreeSprite->Release();
+	s_enemyThreeAltSprite->Release();
+	s_enemyProjSprite->Release();
+	s_rocketSprite->Release();
+	s_pauseOverlaySprite->Release();
 
-	// TODO: Unload everything properly!
-
+	std::map<char, IDirect3DTexture9*>::const_iterator it = m_letterSprites.begin();
+	for ( it; it != m_letterSprites.end(); ++it )
+	{
+		it->second->Release();
+	}
 }
 
 IDirect3DTexture9* ResourceManager::GetLetterSprite(char letter)
