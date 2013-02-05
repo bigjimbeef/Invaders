@@ -9,6 +9,8 @@ IDirect3DTexture9* ResourceManager::s_enemyOneSprite = NULL;
 IDirect3DTexture9* ResourceManager::s_enemyOneAltSprite = NULL;
 IDirect3DTexture9* ResourceManager::s_enemyTwoSprite = NULL;
 IDirect3DTexture9* ResourceManager::s_enemyTwoAltSprite = NULL;
+IDirect3DTexture9* ResourceManager::s_enemyThreeSprite = NULL;
+IDirect3DTexture9* ResourceManager::s_enemyThreeAltSprite = NULL;
 IDirect3DTexture9* ResourceManager::s_playerSprite = NULL;
 IDirect3DTexture9* ResourceManager::s_rocketSprite = NULL;
 IDirect3DTexture9* ResourceManager::s_enemyProjSprite = NULL;
@@ -17,7 +19,7 @@ IDirect3DTexture9* ResourceManager::s_pauseOverlaySprite = NULL;
 ResourceManager::ResourceManager()
 {
 	s_playerSprite = 
-		Game::GetInstance().GetRenderer().LoadSprite("Code/Resource files/Images/test.png");
+		Game::GetInstance().GetRenderer().LoadSprite("Code/Resource files/Images/player.png");
 	s_enemyOneSprite = 
 		Game::GetInstance().GetRenderer().LoadSprite("Code/Resource files/Images/jelly.png");
 	s_enemyOneAltSprite = 
@@ -26,6 +28,10 @@ ResourceManager::ResourceManager()
 		Game::GetInstance().GetRenderer().LoadSprite("Code/Resource files/Images/crabby.png");
 	s_enemyTwoAltSprite = 
 		Game::GetInstance().GetRenderer().LoadSprite("Code/Resource files/Images/crabby_alt.png");
+	s_enemyThreeSprite = 
+		Game::GetInstance().GetRenderer().LoadSprite("Code/Resource files/Images/octo.png");
+	s_enemyThreeAltSprite = 
+		Game::GetInstance().GetRenderer().LoadSprite("Code/Resource files/Images/octo_alt.png");
 	s_enemyProjSprite =
 		Game::GetInstance().GetRenderer().LoadSprite("Code/Resource files/Images/enemybomb1.png");
 	s_rocketSprite =

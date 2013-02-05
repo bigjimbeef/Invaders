@@ -4,7 +4,7 @@
 #include "Game.h"
 #include "EnemyProjectile.h"
 
-Word::Word(IRenderable& owner, const char* text, bool mammoth) :
+Word::Word(RenderableBase& owner, const char* text, bool mammoth) :
 	m_owner(owner),	
 	m_wordText(text),
 	m_lettersCleared(0),
@@ -124,16 +124,16 @@ void Word::RenderBackground()
 	// We render the bar in three colours depending on how much of it is left.
 	float twoThirds = 0.66f;
 	float oneThird = 0.33f;
-	DWORD colour = Renderer::GetColour(255, 255, 255);
-	colour =	
-			proportion > twoThirds
-			// Bright green if n > 0.66f
-			? Renderer::GetColour(0, 255, 0)
-			: proportion > oneThird
-				// Orange if 0.33f < n < 0.66f
-				? Renderer::GetColour(255, 127, 0)
-				// Red if n < 0.33f
-				: Renderer::GetColour(255, 0, 0);
+	// Bright green if n > 0.66f, Orange if 0.33f < n < 0.66f, Red if n < 0.33f.
+	DWORD colour = Renderer::GetColour(0, 255, 0);
+	if ( proportion < twoThirds && proportion >= oneThird)
+	{
+		colour = Renderer::GetColour(255, 127, 0);
+	}
+	else if ( proportion < oneThird )
+	{
+		colour = Renderer::GetColour(255, 0, 0);
+	}
 
 	// Add a border to the background.
 	float borderWidth = 3.0f;
@@ -211,6 +211,9 @@ bool Word::ReceiveLetter(char letter)
 			// Add the score for each letter
 			if ( !m_owner.IsEnemyProjectile() )
 			{
+				// Play the correct letter sound.
+				Game::GetInstance().GetAudioManager().PlaySoundEffect("lettergood");
+
 				Enemy* p_owner = static_cast<Enemy*>(&m_owner);
 
 				// Add the score for this letter at the point where the
@@ -268,6 +271,9 @@ bool Word::ReceiveLetter(char letter)
 			// If we're a full word ...
 			if ( !m_owner.IsEnemyProjectile() )
 			{
+				// Wrong letter noise!
+				Game::GetInstance().GetAudioManager().PlaySoundEffect("letterbad");
+
 				// ... then increment the education timer!
 				GameState::GetInstance().IncTimeEducating(0.5f);
 			}

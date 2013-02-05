@@ -27,7 +27,7 @@ class ProjectileManager
 
 		// Spawn a projectile. The position and other properties of
 		// the projectile will be detailed in the Projectile itself.
-		void SpawnProjectile(IProjectile& proj);
+		void SpawnProjectile(ProjectileBase& proj);
 
 		// Intercepts a letter character from the keyboard, and sends it to
 		// any EnemyProjectiles.
@@ -35,13 +35,13 @@ class ProjectileManager
 
 		//---------------------------------------------------------------------
 		// Accessors
-		inline const std::list<IProjectile*>& 
+		inline const std::list<ProjectileBase*>& 
 			GetProjectileList() const { return m_projectiles; }
 
 	private:
 
 		// A list of all projectiles in the game world.
-		std::list<IProjectile*> m_projectiles;
+		std::list<ProjectileBase*> m_projectiles;
 };
 
 #endif // PROJECTILEMANAGER_H

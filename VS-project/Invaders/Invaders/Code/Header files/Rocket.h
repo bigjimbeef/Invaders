@@ -13,7 +13,7 @@
 // Forward declare Game to allow access to Game singleton.
 class Game;
 
-class Rocket : public IProjectile
+class Rocket : public ProjectileBase
 {
 	public:
 		// The rocket doesn't need parameters to its default ctor, as it

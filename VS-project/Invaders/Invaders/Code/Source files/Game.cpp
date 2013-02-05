@@ -123,8 +123,6 @@ void Game::Run()
 	// We only update and render the game before Game Over.
 	if ( !GameState::GetInstance().IsGameOver() )
 	{
-		mp_audioManager->PlayMusic();
-
 		// Update all objects in the game world.
 		Update(frameTime);
 	}

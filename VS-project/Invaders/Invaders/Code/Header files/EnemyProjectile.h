@@ -15,7 +15,7 @@
 class Game;
 class Enemy;
 
-class EnemyProjectile : public IProjectile
+class EnemyProjectile : public ProjectileBase
 {
 	public:
 		EnemyProjectile(Enemy& projOwner, bool mammoth = false);

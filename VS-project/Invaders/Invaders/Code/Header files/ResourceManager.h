@@ -23,6 +23,8 @@ class ResourceManager
 		static inline IDirect3DTexture9* GetEnemyOneAlt() { return s_enemyOneAltSprite; }
 		static inline IDirect3DTexture9* GetEnemyTwoSprite() { return s_enemyTwoSprite; }
 		static inline IDirect3DTexture9* GetEnemyTwoAlt() { return s_enemyTwoAltSprite; }
+		static inline IDirect3DTexture9* GetEnemyThreeSprite() { return s_enemyThreeSprite; }
+		static inline IDirect3DTexture9* GetEnemyThreeAlt() { return s_enemyThreeAltSprite; }
 		static inline IDirect3DTexture9* GetPlayerSprite() { return s_playerSprite; }
 		static inline IDirect3DTexture9* GetRocketSprite() { return s_rocketSprite; }
 		static inline IDirect3DTexture9* GetEnemyProjectileSprite() { return s_enemyProjSprite; }
@@ -40,6 +42,8 @@ class ResourceManager
 		static IDirect3DTexture9* s_enemyOneAltSprite;
 		static IDirect3DTexture9* s_enemyTwoSprite;
 		static IDirect3DTexture9* s_enemyTwoAltSprite;
+		static IDirect3DTexture9* s_enemyThreeSprite;
+		static IDirect3DTexture9* s_enemyThreeAltSprite;
 		static IDirect3DTexture9* s_playerSprite;
 		static IDirect3DTexture9* s_rocketSprite;
 		static IDirect3DTexture9* s_enemyProjSprite;

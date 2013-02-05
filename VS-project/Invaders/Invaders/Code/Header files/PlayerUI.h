@@ -12,7 +12,7 @@
 // Forward declare Game to allow access to Game singleton.
 class Game;
 
-class PlayerUI : public IRenderable
+class PlayerUI : public RenderableBase
 {
 	public:
 		PlayerUI(float xPos = 0.0f, float yPos = 0.0f);

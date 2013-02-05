@@ -103,6 +103,11 @@ void InputController::HandleInput(float frameTime)
 		}
 	}
 
+	if ( GameState::GetInstance().InMenu() )
+	{
+		MainMenu();
+	}
+
 	// Send the pause button regardless of mode.
 	if ( !m_controlsBlocked )
 	{
@@ -116,8 +121,9 @@ void InputController::HandleInput(float frameTime)
 		// Process the controls for the game.
 		GameControls(frameTime);
 
-		// If we're in the second part of the game, we need to send characters.
-		if ( GameState::GetInstance().InMainGameMode() )
+		// Send characters for destroying the letters.
+		if ( GameState::GetInstance().AreEducating() 
+		  || GameState::GetInstance().InMainGameMode())
 		{
 			SendCharacters();
 		}
@@ -161,7 +167,7 @@ bool InputController::WasKeyDown(unsigned int key)
 void InputController::GameControls(float frameTime)
 {
 	// If we're in education mode, we can't control the player.
-	if ( GameState::GetInstance().AreEducating() )
+	if ( GameState::GetInstance().TargettingEducation() )
 	{
 		return;
 	}
@@ -193,6 +199,14 @@ void InputController::GameControls(float frameTime)
 			// Make the player fire a rocket.
 			Game::GetInstance().GetPlayer().Fire();
 		}
+	}
+}
+
+void InputController::MainMenu()
+{
+	if ( IsKeyDown(SPACEBAR) )
+	{
+		GameState::GetInstance().GoToGame();
 	}
 }
 

@@ -11,10 +11,20 @@
 #include <string>
 #include <istream>
 #include <fstream>
+#include <map>
 
 // Forward declare Game to allow access to Game singleton.
 class Game;
 class Enemy;
+
+enum eGameState
+{
+	MENU = 0,
+	INITIAL_GAME,
+	MAIN_GAME,
+	EDUCATION,
+	GAME_OVER
+};
 
 class GameState
 {
@@ -29,6 +39,8 @@ class GameState
 		void Update(float frameTime);
 		// The render function is used entirely to render UI elements and overlays.
 		void Render();
+		void RenderLogo();
+		void RenderMenu();
 		void RenderPauseScreen();
 		void RenderGreeting();
 		void RenderUI();
@@ -48,6 +60,10 @@ class GameState
 		// Used to recalculate game difficulty based on number of enemies alive.
 		void RecalculateDifficulty();
 
+		// State transitioning.
+		void UpdateState(float frameTime);
+		void UpdateTransition(float frameTime);
+
 		// Move to the second game mode, where education is key.
 		bool ShouldTransitionToMainGameMode();
 		void TransitionToMainGameMode(float frameTime);
@@ -55,6 +71,7 @@ class GameState
 		// Lock into educating an invader.
 		void StartEducation(Enemy* tutee);
 		void EndEducation();
+		void UpdateEducation(float frameTime);
 		void TransitionToEducation();
 		void TransitionFromEducation();
 
@@ -67,6 +84,8 @@ class GameState
 
 		//---------------------------------------------------------------------
 		// Accessors
+		inline void GoToGame() { m_targetState = INITIAL_GAME; }
+
 		inline bool IsPaused() const { return m_paused; }
 		inline void SetIsPaused(bool value) { m_paused = value; }
 
@@ -76,11 +95,11 @@ class GameState
 		inline int GetWaveNumber() const { return m_waveNumber; }
 		inline void IncrementScore(int amount) { m_playerScore += amount; }
 		
-		inline bool IsGameOver() const { return m_gameOver; }
-		inline void SetGameOver() { m_gameOver = true; }
+		inline bool IsGameOver() const { return m_gameState == GAME_OVER; }
+		inline void SetGameOver() { m_gameState = GAME_OVER; }
 
-		inline bool InMainGameMode() const { return m_inMainGameMode; }
-		inline void SetEducating(bool value) { m_transitioningToEducation = value; }
+		inline bool InMenu() const { return m_gameState == MENU; }
+		inline bool InMainGameMode() const { return m_gameState == MAIN_GAME; }
 
 		inline Enemy* GetTutee() const { return mp_tutee; }
 		
@@ -89,13 +108,20 @@ class GameState
 
 		// We consider the point where we are transitioning into education mode
 		// as true for this accessor
-		inline bool AreEducating() const 
-			{ return m_inEducationMode || m_transitioningToEducation; }
-		inline bool InEducationMode() const { return m_inEducationMode; }
+		inline bool AreEducating() const
+			{ return m_gameState == EDUCATION || m_targetState == EDUCATION; }
+		inline bool InEducationMode() const { return m_gameState == EDUCATION; }
+		inline bool TargettingEducation() const { return m_targetState == EDUCATION; }
 
 	private:
 		// Is the game paused?
 		bool m_paused;
+
+		// The logo is a map of characters to positions.
+		std::map<IDirect3DTexture9*, Vector2> m_logo;
+		static const int MAX_LETTERS = 20;		
+		float m_letterOffset[MAX_LETTERS];
+		float m_wiggleTime[MAX_LETTERS];
 
 		int m_playerScore;
 		int m_highScore;
@@ -104,11 +130,9 @@ class GameState
 
 		int m_difficulty;
 
-		// Is the game finished?
-		bool m_gameOver;
-
-		// Are we on our way to the main game.
-		bool m_toMainGame;
+		eGameState m_gameState;
+		eGameState m_previousState;
+		eGameState m_targetState;
 
 		//---------------------------------------------------------------------
 		// Transition text.
@@ -120,14 +144,7 @@ class GameState
 		float m_textTimer;
 
 		// Reusable bool to check when we're done transitioning.
-		bool m_transitioningToEducation;
-		bool m_transitioningFromEducation;
 		Enemy* mp_tutee;
-
-		// Have we progressed into the second mode?
-		bool m_inMainGameMode;
-		// Are we currently educating an Invader?
-		bool m_inEducationMode;
 
 		// How long have we been educating for?
 		float m_timeEducating;
@@ -152,6 +169,11 @@ class GameState
 		static const int UI_PADDING = 10;
 		static const int UI_PADDING_SMALL = 5;
 		static const int TEXT_BLOB_WIDTH = 40;
+
+		static const int LOGO_FONT_SIZE = 100;
+
+		static const int WIGGLE_FREQUENCY_SCALAR = 100;
+		static const int WIGGLE_AMPLITUDE = 3;
 
 		// Private default ctor to facilitate Singleton pattern.
 		GameState();

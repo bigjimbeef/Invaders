@@ -11,11 +11,11 @@
 
 struct IDirect3DTexture9;
 
-class IRenderable
+class RenderableBase
 {
 	public:
-		IRenderable();
-		virtual ~IRenderable();
+		RenderableBase();
+		virtual ~RenderableBase();
 
 		// This pure virtual function marks this class as an abstract base
 		// class.

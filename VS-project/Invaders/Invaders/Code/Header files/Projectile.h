@@ -10,11 +10,11 @@
 // Include our base class.
 #include "Renderable.h"
 
-class IProjectile : public IRenderable
+class ProjectileBase : public RenderableBase
 {
 	public:
-		IProjectile();
-		virtual ~IProjectile();
+		ProjectileBase();
+		virtual ~ProjectileBase();
 
 		virtual void Update(float frameTime) { }
 		virtual void Render() { }

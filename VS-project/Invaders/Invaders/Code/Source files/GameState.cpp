@@ -8,18 +8,15 @@ GameState::GameState() :
 	m_playerScore(0),
 	m_highScore(0),
 	m_difficulty(0),
-	m_gameOver(false),
-	m_toMainGame(false),
+	m_gameState(MAIN_GAME),
+	m_previousState(MAIN_GAME),
+	m_targetState(MAIN_GAME),
 	m_highScoreFilePath("Code/Resource files/hiscore.txt"),
 	m_greetingFilePath("Code/Resource files/greeting.txt"),
 	m_explanationString(""),
 	m_currentExplanation(""),
 	m_textTimer(0.0f),
-	m_transitioningToEducation(false),
-	m_transitioningFromEducation(false),
 	mp_tutee(NULL),
-	m_inMainGameMode(true),
-	m_inEducationMode(false),
 	m_timeEducating(0.0f),
 	m_waveNumber(0)
 {
@@ -28,6 +25,37 @@ GameState::GameState() :
 
 	// Read the high score into memory.
 	ReadHighScore();
+
+	m_logo = std::map<IDirect3DTexture9*, Vector2>();
+	// Initialise the logo.
+	std::string title = "invaders";
+	// Work out how much space this will occupy.
+	int width = title.length() * LOGO_FONT_SIZE;
+	float baseXPos = 
+		static_cast<float>( Renderer::GetScreenWidth() - width ) / 2.0f;
+	float baseYPos = 
+		static_cast<float>( Renderer::GetScreenHeight() - LOGO_FONT_SIZE ) / 2.0f;
+	Vector2 basePos(baseXPos, baseYPos);
+	for ( unsigned int i = 0; i < title.length(); ++i )
+	{
+		char current = title[i];
+
+		Vector2 thisPos = basePos;
+		thisPos.x += ( i * LOGO_FONT_SIZE );
+
+		IDirect3DTexture9* sprite = 
+			Game::GetInstance().GetResourceManager().GetLetterSprite(current);
+
+		m_logo.insert(
+			std::pair<IDirect3DTexture9*, Vector2>(sprite, thisPos)
+		);
+	}
+
+	for ( unsigned int i = 0; i < title.length(); ++i )
+	{
+		m_letterOffset[i] = 0.0f;
+		m_wiggleTime[i] = static_cast<float>(i);
+	}
 }
 GameState::~GameState()
 {
@@ -120,58 +148,50 @@ void GameState::RecalculateDifficulty()
 
 void GameState::TransitionToEducation()
 {
-	if ( m_transitioningToEducation )
-	{
-		float target = 0.1f;
-		float speed = Game::GetInstance().GetSpeedFactor();
-		float diff = speed - target;
+	float target = 0.1f;
+	float speed = Game::GetInstance().GetSpeedFactor();
+	float diff = speed - target;
 
-		MathsHelper::Lerp(speed, target, 0.025f);
-		Game::GetInstance().SetSpeedFactor(speed);
+	MathsHelper::Lerp(speed, target, 0.025f);
+	Game::GetInstance().SetSpeedFactor(speed);
 
-		if ( MathsHelper::Abs(diff) < 0.1f ) {
-			m_transitioningToEducation = false;
-			m_inEducationMode = true;
+	if ( MathsHelper::Abs(diff) < 0.1f ) {
+		m_gameState = EDUCATION;
 
-			// Set-up the word to educate with.
-			StartTeaching();
-		}
+		// Set-up the word to educate with.
+		StartTeaching();
 	}
 }
 void GameState::TransitionFromEducation()
 {
-	m_inEducationMode = false;
+	float target = 1.0f;
+	float speed = Game::GetInstance().GetSpeedFactor();
+	float diff = speed - target;
 
-	if ( m_transitioningFromEducation )
-	{
-		float target = 1.0f;
-		float speed = Game::GetInstance().GetSpeedFactor();
-		float diff = speed - target;
+	MathsHelper::Lerp(speed, target, 0.025f);
+	Game::GetInstance().SetSpeedFactor(speed);
 
-		MathsHelper::Lerp(speed, target, 0.025f);
-		Game::GetInstance().SetSpeedFactor(speed);
+	if ( MathsHelper::Abs(diff) < 0.1f ) {
+		// Lock back to 100% play speed.
+		Game::GetInstance().SetSpeedFactor(target);
 
-		if ( MathsHelper::Abs(diff) < 0.1f ) {
-			// Lock back to 100% play speed.
-			Game::GetInstance().SetSpeedFactor(target);
-
-			m_transitioningFromEducation = false;
-		}
+		m_gameState = MAIN_GAME;
 	}
 }
 
 void GameState::StartEducation(Enemy* tutee)
 {
 	mp_tutee = tutee;
-	m_transitioningFromEducation = false;
-	m_transitioningToEducation = true;
+
+	m_targetState = EDUCATION;
 }
 
 void GameState::EndEducation()
 {
 	m_timeEducating = 0.0f;
 	mp_tutee = NULL;
-	m_transitioningFromEducation = true;
+
+	m_targetState = MAIN_GAME;
 }
 
 bool GameState::ShouldTransitionToMainGameMode()
@@ -182,7 +202,7 @@ bool GameState::ShouldTransitionToMainGameMode()
 	int total = Game::GetInstance().GetEnemyManager().GetTotalEnemies();
 	if ( total - remaining >= KILLS_TO_CHANGE )
 	{
-		m_toMainGame = true;
+		m_targetState = MAIN_GAME;
 		return true;
 	}
 
@@ -190,7 +210,7 @@ bool GameState::ShouldTransitionToMainGameMode()
 	float timePassed = Game::GetInstance().GetTotalTime() / 1000.0f;
 	if ( timePassed >= SECONDS_TO_CHANGE )
 	{
-		m_toMainGame = true;
+		m_targetState = MAIN_GAME;
 		return true;
 	}
 
@@ -199,7 +219,7 @@ bool GameState::ShouldTransitionToMainGameMode()
 	int playerHealthNow = Game::GetInstance().GetPlayer().GetCurrentHealth();
 	if ( playerHealthTotal - playerHealthNow >= DAMAGE_TO_CHANGE )
 	{
-		m_toMainGame = true;
+		m_targetState = MAIN_GAME;
 		return true;
 	}
 
@@ -232,58 +252,130 @@ void GameState::TransitionToMainGameMode(float frameTime)
 			if ( m_textTimer > FINAL_WAIT_TIME )
 			{
 				// Let's do this.
-				m_inMainGameMode = true;
-				m_toMainGame = false;
+				m_gameState = MAIN_GAME;
+
 				m_paused = false;
 			}
 		}
 	}
 }
 
-void GameState::Update(float frameTime)
+void GameState::UpdateEducation(float frameTime)
 {
-	// Check to see if we need to move to the second game mode.
-	if ( !m_inMainGameMode )
+	// Increase the timer.
+	m_timeEducating += ( frameTime / 1000.0f );
+
+	float targetTime = static_cast<float>(BASE_EDUCATION_TIME);
+	if ( m_timeEducating > targetTime )
 	{
-		if ( m_toMainGame || ShouldTransitionToMainGameMode() )
+		// End the education mode.
+		EndEducation();
+
+		// Fire a massive letter.
+		Game::GetInstance().GetEnemyManager().FireMammothLetter();
+
+		// Destroy the word.
+		Game::GetInstance().GetEnemyManager().RemoveWord();
+	}
+}
+
+void GameState::UpdateState(float frameTime)
+{
+	switch(m_gameState)
+	{
+	case MENU:
+		m_paused = true;
+
+		for ( unsigned int i = 0; i < m_logo.size(); ++i )
+		{
+			m_wiggleTime[i] += 
+				static_cast<float>(frameTime / WIGGLE_FREQUENCY_SCALAR);
+			float deviation = 
+				static_cast<float>(WIGGLE_AMPLITUDE * sin(m_wiggleTime[i]));
+			m_letterOffset[i] = deviation;
+		}
+
+		break;
+	case INITIAL_GAME:
+		// Check if it's time to move to the main game.
+		if ( ShouldTransitionToMainGameMode() )
 		{
 			// Do the transition!
 			m_paused = true;
 			Game::GetInstance().GetInputController().SetControlsBlocked(true);
 
+			// We are moving to the main game.
+			m_targetState = MAIN_GAME;
+		}
+		break;
+	case MAIN_GAME:
+		// Nothing special to be done here.
+		break;
+	case EDUCATION:
+		if ( m_targetState != MAIN_GAME )
+		{
+			// Update the progress of the Invader's education.
+			UpdateEducation(frameTime);
+		}
+		break;
+	case GAME_OVER:
+		// Don't need to be updating game state anymore.
+		break;
+	default:
+		break;
+	}
+
+	// Cache the previous state.
+	m_previousState = m_gameState;
+}
+
+void GameState::UpdateTransition(float frameTime)
+{
+	switch(m_targetState)
+	{
+	case MENU:
+		break;
+	case INITIAL_GAME:
+		// Can only transition here from the menu.
+		// Start the music!
+		Game::GetInstance().GetAudioManager().PlayMusic();
+		m_paused = false;
+		m_gameState = INITIAL_GAME;
+		break;
+	case MAIN_GAME:
+		if ( m_previousState == INITIAL_GAME )
+		{
+			// To the main game mode.. stat!
 			TransitionToMainGameMode(frameTime);
 		}
-	}
-	else
-	{
-		if ( m_transitioningToEducation )
-		{
-			TransitionToEducation();
-		}
-		else if ( m_transitioningFromEducation )
+		else if ( m_previousState == EDUCATION )
 		{
 			TransitionFromEducation();
 		}
 
-		if ( m_inEducationMode )
+		break;
+	case EDUCATION:
+		if ( m_previousState == MAIN_GAME )
 		{
-			// Increase the timer.
-			m_timeEducating += ( frameTime / 1000.0f );
-
-			float targetTime = static_cast<float>(BASE_EDUCATION_TIME);
-			if ( m_timeEducating > targetTime )
-			{
-				// End the education mode.
-				EndEducation();
-
-				// Fire a massive letter.
-				Game::GetInstance().GetEnemyManager().FireMammothLetter();
-
-				// Destroy the word.
-				Game::GetInstance().GetEnemyManager().RemoveWord();
-			}
+			TransitionToEducation();
 		}
+		
+		break;
+	case GAME_OVER:
+		// Doesn't matter how we ended up here.
+		break;
+	default:
+		break;
 	}
+}
+
+void GameState::Update(float frameTime)
+{
+	// Update our current state.
+	UpdateState(frameTime);
+
+	// Update the transitioning, if we are doing so.
+	UpdateTransition(frameTime);
 }
 
 void GameState::StartTeaching()
@@ -305,27 +397,104 @@ void GameState::IncTimeEducating(float value)
 void GameState::Render()
 {
 #ifdef _DEBUG
+	Vector2 pos(0.0f, 100.0f);
 	std::stringstream ss;
 	int score = GameState::GetInstance().GetDifficulty();
 	ss << "Difficulty: " << score;
-	Game::GetInstance().GetRenderer().DrawText(ss.str(), Vector2());
+	Game::GetInstance().GetRenderer().DrawText(ss.str(), pos);
+
+	ss.str("");
+	ss << "Prev: " << m_previousState;
+	pos.y += 30.0f;
+	Game::GetInstance().GetRenderer().DrawText(ss.str(), pos);
+
+	ss.str("");
+	ss << "Curr: " << m_gameState;
+	pos.y += 30.0f;
+	Game::GetInstance().GetRenderer().DrawText(ss.str(), pos);
+
+	ss.str("");
+	ss << "Next: " << m_targetState;
+	pos.y += 30.0f;
+	Game::GetInstance().GetRenderer().DrawText(ss.str(), pos);
 #endif
 
-	if ( m_paused && !m_toMainGame )
+	switch(m_gameState)
 	{
-		RenderPauseScreen();
-	}
-	else if ( m_paused && m_toMainGame )
-	{
-		RenderGreeting();
+	case MENU:
+		RenderMenu();
+		break;
+	case INITIAL_GAME:
+		if ( m_paused && m_targetState == MAIN_GAME )
+		{
+			RenderGreeting();
+		}
+		else if ( m_paused )
+		{
+			RenderPauseScreen();
+		}
+		break;
+	case MAIN_GAME:
+		if ( m_paused )
+		{
+			RenderPauseScreen();
+		}
+		break;
+	case EDUCATION:
+		break;
+	case GAME_OVER:
+		// Not done here. It must be drawn above all else.
+		break;
+	default:
+		break;
 	}
 
-	RenderUI();
+	if ( m_gameState != MENU )
+	{
+		RenderUI();
+	}
 
-	if ( m_gameOver )
+	if ( m_gameState == GAME_OVER )
 	{
 		RenderGameOverScreen();
 	}
+}
+
+void GameState::RenderLogo()
+{
+	std::map<IDirect3DTexture9*, Vector2>::const_iterator it = m_logo.begin();
+	int count = 0;
+	for ( it; it != m_logo.end(); ++it )
+	{
+		Vector2 pos = (*it).second;
+		float yPos = pos.y + m_letterOffset[count];
+
+		Game::GetInstance().GetRenderer().DrawSprite(
+			it->first, pos.x, yPos, LOGO_FONT_SIZE, LOGO_FONT_SIZE
+		);
+
+		count++;
+	}
+}
+
+void GameState::RenderMenu()
+{
+	// This is used for rendering the ticking text greeting.
+	int opaque = 255;
+	Game::GetInstance().GetRenderer().RenderOverlay(opaque);
+
+	// Render the floating logo.
+	RenderLogo();
+
+	std::string menu = "Press spacebar to begin!";
+	RECT fontDimensions = Game::GetInstance().GetRenderer().MeasureString(menu, true);
+	int width = fontDimensions.right - fontDimensions.left;
+	int height = fontDimensions.bottom - fontDimensions.top;
+	float xPos = static_cast<float>( Renderer::GetScreenWidth() - width ) / 2.0f;
+	float yPos = static_cast<float>( Renderer::GetScreenHeight() - height ) / 2.0f;
+	yPos += 100.0f;
+
+	Game::GetInstance().GetRenderer().DrawText(menu, Vector2(xPos, yPos), true);
 }
 
 void GameState::RenderGreeting()
@@ -389,18 +558,18 @@ void GameState::RenderUI()
 	// Render the player's current score.
 	Game::GetInstance().GetRenderer().DrawText(ss.str(), Vector2(xPos, yPos), true);
 
-
 	// Render the player's remaining life.
 	int remaining = Game::GetInstance().GetPlayer().GetCurrentHealth();
-	DWORD colour =
-		remaining == 3
-		// Bright green if n == 3
-		? Renderer::GetColour(0, 255, 0)
-		: remaining == 2
-		// Orange if n == 2
-		? Renderer::GetColour(255, 127, 0)
-		// Red if n == 1
-		: Renderer::GetColour(255, 0, 0);
+	// Bright green if n == 3, Orange if n == 2, Red if n == 1
+	DWORD colour = Renderer::GetColour(0, 255, 0);
+	if ( remaining == 2)
+	{
+		colour = Renderer::GetColour(255, 127, 0);
+	}
+	else if ( remaining == 1 )
+	{
+		colour = Renderer::GetColour(255, 0, 0);
+	}
 	
 	int blobHeight = height - ( UI_PADDING_SMALL * 2 );
 	

@@ -14,10 +14,6 @@
 
 #include "Vector2.h"
 
-// TODO: Are these ok?
-#pragma comment(lib,"d3d9.lib")
-#pragma comment(lib,"d3dx9.lib")
-
 // Our custom FVF, which describes our custom vertex structure
 #define D3DFVF_CUSTOMVERTEX (D3DFVF_XYZRHW|D3DFVF_DIFFUSE|D3DFVF_TEX1)
 
@@ -163,6 +159,8 @@ class Renderer
 		LPDIRECT3DVERTEXBUFFER9 mp_VB;
 
 		bool m_fullScreen;
+		int m_overrideWidth;
+		int m_overrideHeight;
 
 		// The background colour we clear to.
 		DWORD m_bgColour;
@@ -178,6 +176,7 @@ class Renderer
 
 		static const int BACKBUFFER_WIDTH = 800;
 		static const int BACKBUFFER_HEIGHT = 600;
+
 		static const int SIXTY_HERTZ = 60;
 		static const int SCORE_DURATION = 1;
 		static const int SMALL_FONT_HEIGHT = 24;

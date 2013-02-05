@@ -46,6 +46,8 @@ Renderer::Renderer() :
 	mp_d3dDevice(NULL),
 	mp_VB(NULL),
 	m_fullScreen(false),
+	m_overrideWidth(-1),
+	m_overrideHeight(-1),
 	m_bgColour(0),
 	mp_smallFont(NULL),
 	mp_largeFont(NULL)
@@ -194,7 +196,6 @@ void Renderer::PreRender()
 	mp_d3dDevice->SetRenderState(D3DRS_LIGHTING,false);
 	mp_d3dDevice->SetRenderState(D3DRS_CULLMODE,D3DCULL_NONE);
 
-	D3DVIEWPORT9 vp = { 0,0, BACKBUFFER_WIDTH, BACKBUFFER_HEIGHT, 0, 1};
 	mp_d3dDevice->SetFVF( D3DFVF_CUSTOMVERTEX );
 
 	// Begin the scene

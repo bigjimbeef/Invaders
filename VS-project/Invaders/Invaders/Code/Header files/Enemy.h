@@ -18,7 +18,14 @@
 // Forward declare Game to allow access to Game singleton.
 class Game;
 
-class Enemy : public IRenderable
+enum eEnemyType
+{
+	OCTO = 0,
+	CRABBY,
+	JELLY
+};
+
+class Enemy : public RenderableBase
 {
 	public:
 		// Default ctor.
@@ -81,6 +88,9 @@ class Enemy : public IRenderable
 
 		// Can this enemy fire?
 		bool m_canFire;
+
+		// What type of enemy is this?
+		eEnemyType m_type;
 
 		bool m_gettingAngry;
 		int m_anger;

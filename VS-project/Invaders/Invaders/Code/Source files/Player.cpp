@@ -11,9 +11,9 @@ Player::Player() :
 	m_health(STARTING_HEALTH),
 	mp_rocket(NULL)
 {
-	m_spriteWidth = 32;
-	m_spriteHeight = 32;
-	m_spriteClipWidth = 32;
+	m_spriteWidth = 64;
+	m_spriteHeight = 64;
+	m_spriteClipWidth = 56;
 	m_spriteClipHeight = 32;
 
 	// Initialise the player's position.
@@ -35,8 +35,8 @@ Player::~Player()
 {
 }
 
-bool Player::BroadPhase(const IRenderable& objectOne, 
-						const IRenderable& objectTwo)
+bool Player::BroadPhase(const RenderableBase& objectOne, 
+						const RenderableBase& objectTwo)
 {
 	Vector2 onePos = objectOne.GetPosition();
 	Vector2 twoPos = objectTwo.GetPosition();
@@ -54,8 +54,8 @@ bool Player::BroadPhase(const IRenderable& objectOne,
 		if ( abs(onePos.y - twoPos.y) < overlap )
 		{
 #ifdef _DEBUG
-			const_cast<IRenderable&>(objectOne).DEBUG_SetColliding(true);
-			const_cast<IRenderable&>(objectTwo).DEBUG_SetColliding(true);
+			const_cast<RenderableBase&>(objectOne).DEBUG_SetColliding(true);
+			const_cast<RenderableBase&>(objectTwo).DEBUG_SetColliding(true);
 #endif
 
 			return true;
@@ -63,14 +63,14 @@ bool Player::BroadPhase(const IRenderable& objectOne,
 	}
 
 #ifdef _DEBUG
-	const_cast<IRenderable&>(objectOne).DEBUG_SetColliding(false);
-	const_cast<IRenderable&>(objectTwo).DEBUG_SetColliding(false);
+	const_cast<RenderableBase&>(objectOne).DEBUG_SetColliding(false);
+	const_cast<RenderableBase&>(objectTwo).DEBUG_SetColliding(false);
 #endif
 
 	return false;
 }
 
-Vector2 Player::GetCollisionMidpoint(const IRenderable& object)
+Vector2 Player::GetCollisionMidpoint(const RenderableBase& object)
 {
 	Vector2 currentPos = object.GetPosition();
 
@@ -82,8 +82,8 @@ Vector2 Player::GetCollisionMidpoint(const IRenderable& object)
 	return Vector2(midX, midY);
 }
 
-bool Player::NarrowPhase(const IRenderable& objectOne,
-						 const IRenderable& objectTwo)
+bool Player::NarrowPhase(const RenderableBase& objectOne,
+						 const RenderableBase& objectTwo)
 {
 	// Get the centers of each object.
 	Vector2 midOne = GetCollisionMidpoint(objectOne);
@@ -103,8 +103,8 @@ bool Player::NarrowPhase(const IRenderable& objectOne,
 	return false;
 }
 
-bool Player::CheckCollision(const IRenderable& objectOne,
-							const IRenderable& objectTwo)
+bool Player::CheckCollision(const RenderableBase& objectOne,
+							const RenderableBase& objectTwo)
 {
 	// Check if the two objects are within the same 32x32 grid.
 	if ( BroadPhase(objectOne, objectTwo) )
@@ -171,10 +171,10 @@ void Player::Update(float frameTime)
 	}
 
 	// Get a local projectile list.
-	const std::list<IProjectile*>& projectileList 
+	const std::list<ProjectileBase*>& projectileList 
 		= Game::GetInstance().GetProjectileManager().GetProjectileList();
 
-	std::list<IProjectile*>::const_iterator projIt = projectileList.begin();
+	std::list<ProjectileBase*>::const_iterator projIt = projectileList.begin();
 	for ( projIt; projIt != projectileList.end(); ++projIt )
 	{
 		// We only want to examine enemy projectiles.
@@ -184,15 +184,18 @@ void Player::Update(float frameTime)
 
 			// If the EnemyProjectile has a word, we use the sprite for that
 			// for collision instead.
-			IRenderable* obj = 
+			RenderableBase* obj = 
 				( p_proj->GetWord() != NULL )
-				? static_cast<IRenderable*>(p_proj->GetWord())
-				: static_cast<IRenderable*>(p_proj);
+				? static_cast<RenderableBase*>(p_proj->GetWord())
+				: static_cast<RenderableBase*>(p_proj);
 
 			if ( CheckCollision(*this, *obj) )
 			{
 				// We've been hit!
 				m_health--;
+
+				// Make a loud noise to indicate the player being hit.
+				Game::GetInstance().GetAudioManager().PlaySoundEffect("hurt", 255);
 
 				// Destroy the offending projectile.
 				p_proj->Kill();
@@ -254,11 +257,14 @@ void Player::Fire()
 
 		// ... and move it back onto the screen.
 		Vector2 pos = m_position;
-		pos.y += ROCKET_OFFSET;
+		pos.x += (m_spriteWidth - mp_rocket->GetSpriteWidth() ) / 2;
 		mp_rocket->SetPosition(pos);
 
 		// Add the rocket back into list in the ProjectileManager.
 		Game::GetInstance().GetProjectileManager().SpawnProjectile(*mp_rocket);
+
+		// Play the shooting sound effect.
+		Game::GetInstance().GetAudioManager().PlaySoundEffect("playershoot");
 	}
 }
 

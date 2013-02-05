@@ -14,10 +14,10 @@
 // Forward declare Game to allow access to Game singleton.
 class Game;
 
-class Word : public IRenderable
+class Word : public RenderableBase
 {
 	public:
-		Word(IRenderable& owner, const char* text = "", bool mammoth = false);
+		Word(RenderableBase& owner, const char* text = "", bool mammoth = false);
 		~Word();
 
 		// Implement this function to show that this class is not abstract.
@@ -43,7 +43,7 @@ class Word : public IRenderable
 		char GetRandomLetter();
 
 		// The IRenderable that owns this Word.
-		IRenderable& m_owner;
+		RenderableBase& m_owner;
 
 		// What does the word say?
 		std::string m_wordText;

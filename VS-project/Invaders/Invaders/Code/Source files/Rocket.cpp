@@ -8,7 +8,7 @@ Rocket::Rocket(Vector2 position) :
 {
 	m_spriteWidth = 8;
 	m_spriteHeight = 16;
-	m_spriteClipWidth = 8;
+	m_spriteClipWidth = 6;
 	m_spriteClipHeight = 16;
 
 	// Create the sprite for the rocket.

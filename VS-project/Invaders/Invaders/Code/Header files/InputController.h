@@ -36,6 +36,9 @@ class InputController
 			{ m_controlsBlocked = blocked; }
 
 	private:
+		// Handle pressing space to start the game.
+		void MainMenu();
+
 		// Controls for whilst the game is running.
 		void GameControls(float frameTime);
 

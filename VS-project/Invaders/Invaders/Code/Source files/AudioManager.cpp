@@ -7,7 +7,7 @@ AudioManager::AudioManager() :
 	m_musicPath("Code/Resource files/Audio/bgmusic2.wav"),
 	mp_musicStream(NULL),
 
-	m_musicVolume(0.1f),
+	m_musicVolume(0.3f),
 	m_soundVolume(0.2f),
 
 	m_musicChannel(0),
@@ -24,12 +24,24 @@ AudioManager::AudioManager() :
 
 	LoadSoundEffect("explosion", basePath + "explosion.aiff");
 	LoadSoundEffect("letter", basePath + "coin.aiff");
-	LoadSoundEffect("laser", basePath + "letter.aiff");
+	LoadSoundEffect("playershoot", basePath + "laserlo.aiff");
 	LoadSoundEffect("tick", basePath + "blipveryhi.aiff");
+	LoadSoundEffect("LETTERCEPTION", basePath + "letterception.mp3");
+	LoadSoundEffect("enemyshoot", basePath + "enemyshoot.wav");
+	LoadSoundEffect("lettergood", basePath + "letter.aiff");
+	LoadSoundEffect("letterbad", basePath + "badletter.wav");
+	LoadSoundEffect("hurt", basePath + "playerhurt.aiff");
 }
 AudioManager::~AudioManager()
 {
-	// TODO: Free all sound effects.
+	// Free all sound effects.
+	std::map<std::string, FSOUND_SAMPLE*>::const_iterator it = m_sounds.begin();
+	for ( it; it != m_sounds.end(); ++it )
+	{
+		// Free the sample.
+		FSOUND_Sample_Free(it->second);
+	}
+
 	StopMusic();
 }
 
@@ -43,8 +55,6 @@ void AudioManager::Update(float frameTime)
 
 		// Now set the frequency.
 		FSOUND_SetFrequency(m_musicChannel, newFreq);
-
-		// TODO: Set all frequency-modulated sound effect frequencies.
 
 		m_lastPlaybackSpeed = m_playbackSpeed;
 	}
@@ -96,7 +106,7 @@ void AudioManager::LoadSoundEffect(std::string name, std::string effectPath,
 	m_sounds[name] = soundEffect;
 }
 
-int AudioManager::PlaySoundEffect(std::string name)
+int AudioManager::PlaySoundEffect(std::string name, int volume)
 {
 	// Locate the sound in the sound effect map using its name.
 	FSOUND_SAMPLE* soundEffect = NULL;
@@ -115,8 +125,10 @@ int AudioManager::PlaySoundEffect(std::string name)
 
 	int channel = FSOUND_PlaySound(FSOUND_FREE, soundEffect);
 
-	int volume = static_cast<int>(m_soundVolume * 255);
-	FSOUND_SetVolume(channel, volume);
+	int playVol = volume == -1 
+		? static_cast<int>(m_soundVolume * 255)
+		: volume;
+	FSOUND_SetVolume(channel, playVol);
 
 	return channel;
 }

@@ -6,7 +6,7 @@
 ProjectileManager::ProjectileManager()
 {
 	// Create a new vector for holding projectiles.
-	m_projectiles = std::list<IProjectile*>(); 
+	m_projectiles = std::list<ProjectileBase*>(); 
 }
 ProjectileManager::~ProjectileManager()
 {
@@ -24,7 +24,7 @@ void ProjectileManager::Update(float frameTime)
 {
 	frameTime /= 1000.0f;
 
-	std::list<IProjectile*>::iterator it = m_projectiles.begin();
+	std::list<ProjectileBase*>::iterator it = m_projectiles.begin();
 	for ( it = m_projectiles.begin(); it != m_projectiles.end(); )
 	{
 		// Update this individual projectile.
@@ -51,7 +51,7 @@ void ProjectileManager::Update(float frameTime)
 
 void ProjectileManager::Render()
 {
-	std::list<IProjectile*>::const_iterator it = m_projectiles.begin();
+	std::list<ProjectileBase*>::const_iterator it = m_projectiles.begin();
 	for ( it; it != m_projectiles.end(); ++it )
 	{
 		// Render the projectile.
@@ -59,7 +59,7 @@ void ProjectileManager::Render()
 	}
 }
 
-void ProjectileManager::SpawnProjectile(IProjectile& proj)
+void ProjectileManager::SpawnProjectile(ProjectileBase& proj)
 {
 	// Initialise and add the passed projectile to the list of projectiles.
 	m_projectiles.push_back(&proj);
@@ -67,7 +67,7 @@ void ProjectileManager::SpawnProjectile(IProjectile& proj)
 
 void ProjectileManager::SendCharacter(char letter)
 {
-	std::list<IProjectile*>::iterator it = m_projectiles.begin();
+	std::list<ProjectileBase*>::iterator it = m_projectiles.begin();
 	for ( it; it != m_projectiles.end(); ++it )
 	{
 		if ( (*it)->IsAlive() )

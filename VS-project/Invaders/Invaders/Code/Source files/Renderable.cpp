@@ -3,7 +3,7 @@
 // Include within .cpp file to match forward declare in .h
 #include "Game.h"
 
-IRenderable::IRenderable() :
+RenderableBase::RenderableBase() :
 	m_position(0.0f, 0.0f),
 	m_spriteWidth(0),
 	m_spriteHeight(0),
@@ -17,6 +17,6 @@ IRenderable::IRenderable() :
 #endif
 }
 
-IRenderable::~IRenderable()
+RenderableBase::~RenderableBase()
 {
 }

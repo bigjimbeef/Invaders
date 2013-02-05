@@ -5,9 +5,10 @@
 
 Enemy::Enemy(float xPos, float yPos, int width, int height, 
 			 int row, int col, int score) :
-	m_alive(1),
-	m_canFire(0),
-	m_gettingAngry(0),
+	m_alive(true),
+	m_canFire(false),
+	m_type(JELLY),
+	m_gettingAngry(false),
 	m_anger(0),
 	m_currentJitter(0.0f, 0.0f),
 	m_jitterTimer(0.0f),
@@ -19,21 +20,39 @@ Enemy::Enemy(float xPos, float yPos, int width, int height,
 	m_altSprite(0),
 	mp_word(NULL)
 {
-	m_spriteWidth= width;
-	m_spriteHeight = height;
-	m_spriteClipWidth = ( row < 2 ) ? 32 : 44;
-	m_spriteClipHeight = ( row < 2 ) ? 32 : 32;
-
     // Create a std::list for holding the projectiles.
     m_projectiles = std::list<EnemyProjectile*>();
 
 	// Initialise the enemy's position.
 	m_position = Vector2(xPos, yPos);
 
-	// TODO: Need to add in the the third enemy type
-	mp_sprite = ( m_row < 2 ) ? 
-		Game::GetInstance().GetResourceManager().GetEnemyOneSprite() :
-		Game::GetInstance().GetResourceManager().GetEnemyTwoSprite();
+	// Alter enemy type.
+	if ( m_row > 1 )
+	{
+		m_type = m_row > 3 ? OCTO : CRABBY;
+	}
+
+	// Load sprite based on enemy type.
+	m_spriteWidth= width;
+	m_spriteHeight = height;
+	m_spriteClipHeight = 32;
+	switch ( m_type )
+	{
+		case JELLY:
+			mp_sprite = Game::GetInstance().GetResourceManager().GetEnemyOneSprite();
+			m_spriteClipWidth = 32;
+			break;
+		case CRABBY:
+			mp_sprite = Game::GetInstance().GetResourceManager().GetEnemyTwoSprite();
+			m_spriteClipWidth = 44;
+			break;
+		case OCTO:
+			mp_sprite = Game::GetInstance().GetResourceManager().GetEnemyThreeSprite();
+			m_spriteClipWidth = 48;
+			break;
+		default:
+			return;
+	}
 }
 Enemy::~Enemy()
 {
@@ -70,12 +89,10 @@ void Enemy::Update(float frameTime)
 	// Ensure we can't fire too many projectiles.
     if ( m_projectiles.size() < MAX_PROJECTILES )
     {
-		// We randomly pick a number in 5000.
+		// We randomly pick a number in 2500.
 		// If the number exceeds our anger threshold (that is, the number which
 		// defines the percentage chance we'll start getting angry), we begin
 		// getting ANGRY. And thus jittering.
-
-		// TODO: Probably a better way of choosing whether or not to fire?
 		int random = ( rand() % ANGER_POOL );
 		if ( random <= ANGER_THRESHOLD )
 		{
@@ -85,10 +102,20 @@ void Enemy::Update(float frameTime)
 				m_gettingAngry = true;
 				m_anger = 1;
 
-				// TODO: Extend.
-				mp_sprite = ( m_row < 2 )
-					? Game::GetInstance().GetResourceManager().GetEnemyOneAlt()
-					: Game::GetInstance().GetResourceManager().GetEnemyTwoAlt();
+				switch ( m_type )
+				{
+					case JELLY:
+						mp_sprite = Game::GetInstance().GetResourceManager().GetEnemyOneAlt();
+						break;
+					case CRABBY:
+						mp_sprite = Game::GetInstance().GetResourceManager().GetEnemyTwoAlt();
+						break;
+					case OCTO:
+						mp_sprite = Game::GetInstance().GetResourceManager().GetEnemyThreeAlt();
+						break;
+					default:
+						return;
+				}
 			}
 			else 
 			{
@@ -116,7 +143,7 @@ void Enemy::Render()
 	float xPos = m_position.x + m_currentJitter.x;
 	float yPos = m_position.y + m_currentJitter.y;
 
-	DWORD colour = GameState::GetInstance().AreEducating()
+	DWORD colour = GameState::GetInstance().TargettingEducation()
 		? Renderer::GetColour(255,255,255,100)
 		: Renderer::GetColour(255,255,255);
 
@@ -244,6 +271,14 @@ void Enemy::Fire(bool mammoth)
 	// Create a new proj, then spawn it with the projectile manager.
     EnemyProjectile* p_enemyProj = new EnemyProjectile(*this, mammoth);
     Game::GetInstance().GetProjectileManager().SpawnProjectile(*p_enemyProj);
+	if ( mammoth )
+	{
+		Game::GetInstance().GetAudioManager().PlaySoundEffect("LETTERCEPTION", 255);
+	}
+	else
+	{
+		Game::GetInstance().GetAudioManager().PlaySoundEffect("enemyshoot", 200);
+	}
             
 	// We also manage the list internally too, though the memory
 	// management is handled in the ProjectileManager.
@@ -255,9 +290,20 @@ void Enemy::Fire(bool mammoth)
 
 void Enemy::CalmDown()
 {
-	mp_sprite = ( m_row < 2 )
-		? Game::GetInstance().GetResourceManager().GetEnemyOneSprite()
-		: Game::GetInstance().GetResourceManager().GetEnemyTwoSprite();
+	switch ( m_type )
+	{
+		case JELLY:
+			mp_sprite = Game::GetInstance().GetResourceManager().GetEnemyOneSprite();
+			break;
+		case CRABBY:
+			mp_sprite = Game::GetInstance().GetResourceManager().GetEnemyTwoSprite();
+			break;
+		case OCTO:
+			mp_sprite = Game::GetInstance().GetResourceManager().GetEnemyThreeSprite();
+			break;
+		default:
+			return;
+	}
 
 	m_gettingAngry = false;
 	m_anger = 0;

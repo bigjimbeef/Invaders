@@ -22,7 +22,7 @@ enum MoveDirection
 	MOVE_RIGHT = 1,
 };
 
-class Player : public IRenderable
+class Player : public RenderableBase
 {
 	public:
 		Player();
@@ -50,10 +50,10 @@ class Player : public IRenderable
 		void KillRocket();
 
 		// Check collision between two Renderable objects.
-		bool CheckCollision(const IRenderable& objectOne, const IRenderable& objectTwo);
-		Vector2 GetCollisionMidpoint(const IRenderable& object);
-		bool BroadPhase(const IRenderable& objectOne, const IRenderable& objectTwo);
-		bool NarrowPhase(const IRenderable& objectOne, const IRenderable& objectTwo);
+		bool CheckCollision(const RenderableBase& objectOne, const RenderableBase& objectTwo);
+		Vector2 GetCollisionMidpoint(const RenderableBase& object);
+		bool BroadPhase(const RenderableBase& objectOne, const RenderableBase& objectTwo);
+		bool NarrowPhase(const RenderableBase& objectOne, const RenderableBase& objectTwo);
 
 		//---------------------------------------------------------------------
 		// Accessors

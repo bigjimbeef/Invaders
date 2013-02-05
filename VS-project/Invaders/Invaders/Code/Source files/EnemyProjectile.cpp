@@ -27,8 +27,8 @@ EnemyProjectile::EnemyProjectile(Enemy& projOwner, bool mammoth) :
 		(m_projOwner.GetSpriteHeight() 
 		+ m_projOwner.GetClipHeight() - m_spriteHeight) / 2;
 
-	// If we're in the game's second (main) mode.
-	if ( GameState::GetInstance().InMainGameMode() ) 
+	// If we're in the game's second (main) mode, or we're firing a mammoth.
+	if ( mammoth || GameState::GetInstance().InMainGameMode() ) 
 	{
 		mp_word = new Word(*this, "", mammoth);
 	}
@@ -55,7 +55,7 @@ void EnemyProjectile::Update(float frameTime)
 		float offset = frameTime * PROJ_VELOCITY * Game::GetInstance().GetSpeedFactor();
 		
 		// We stop moving the projectile when we're fully transitioned into education mode.
-		if ( !GameState::GetInstance().InEducationMode() )
+		if ( !GameState::GetInstance().TargettingEducation() )
 		{
 			m_position.y += offset;
 		}
